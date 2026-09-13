@@ -34,6 +34,7 @@ $bwfd_pages = array(
 	'other-books'         => array( 'Other books', 'bwfd/page-other-books', '' ),
 	'enjoyed'             => array( 'Enjoyed?', 'bwfd/page-enjoyed', '' ),
 	'churches-and-retail' => array( 'Churches & retail', 'bwfd/page-churches-retail', '' ),
+	'privacy-policy'      => array( 'Privacy policy', 'bwfd/page-privacy-policy', 'page-with-title' ),
 );
 
 $bwfd_nav = array(
@@ -169,6 +170,12 @@ if ( in_array( get_option( 'blogname' ), array( 'biblicalwisdomfordads', 'My Wor
 	update_option( 'blogname', 'Biblical Wisdom for Dads' );
 	update_option( 'blogdescription', 'By Stephen Parker. Foreword by Richard Blackaby.' );
 	WP_CLI::log( 'Set the site title and tagline.' );
+}
+
+// Privacy policy page (WordPress links it from the login screen).
+if ( isset( $bwfd_ids['privacy-policy'] ) && (int) get_option( 'wp_page_for_privacy_policy' ) !== $bwfd_ids['privacy-policy'] ) {
+	update_option( 'wp_page_for_privacy_policy', $bwfd_ids['privacy-policy'] );
+	WP_CLI::log( 'Set the privacy policy page.' );
 }
 
 // Front page.

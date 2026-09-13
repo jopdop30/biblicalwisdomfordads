@@ -65,6 +65,9 @@ declare( strict_types=1 );
 			<!-- wp:paragraph -->
 			<p>&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> Stephen Parker. <?php esc_html_e( 'All rights reserved.', 'bwfd' ); ?></p>
 			<!-- /wp:paragraph -->
+			<!-- wp:paragraph -->
+			<p><a href="<?php echo esc_url( home_url( '/privacy-policy/' ) ); ?>"><?php esc_html_e( 'Privacy policy', 'bwfd' ); ?></a></p>
+			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:group -->
 	</div>

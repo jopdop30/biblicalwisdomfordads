@@ -10,10 +10,10 @@ Block theme (full site editing) for [biblicalwisdomfordads.au](https://www.bibli
 | `style.css` | Texture surfaces, button/table/group block styles, header and footer, layout helpers. Loaded on the front end and in the editor. |
 | `templates/` | `page` (default, no title – the designed pages carry their own heading), `page-with-title`, `page-plain` (white sheet), `single`, `index`, `search`, `404`. |
 | `parts/` | `header` and `footer`, each rendering a PHP pattern so links can use `home_url()`. |
-| `patterns/` | Eight complete page patterns (category **BWFD pages**) and reusable sections (category **BWFD sections**): navy call-to-action band, endorsement sets, key information reveals, bulk order cards. |
+| `patterns/` | Nine complete page patterns (category **BWFD pages**) and reusable sections (category **BWFD sections**): navy call-to-action band, endorsement sets, key information reveals, bulk order cards. |
 | `src/blocks/` | Custom block sources (see below). Built to `build/` with `@wordpress/scripts`. |
 | `inc/` | Block registration, block style variations, pattern categories, SVG icon library. |
-| `bin/import-pages.php` | WP-CLI script that creates/updates the eight pages from the patterns, imports the images into the Media Library, sets the front page and writes the primary navigation. |
+| `bin/import-pages.php` | WP-CLI script that creates/updates the nine pages from the patterns, imports the images into the Media Library, sets the front page, the privacy policy page and writes the primary navigation. |
 | `assets/` | Imagery from the design as right-sized WebP (covers 800–900px wide, textures 1000–1600px), favicon set, and the two variable fonts (latin subsets). |
 
 ## Custom blocks
@@ -65,7 +65,9 @@ wp eval-file wp-content/themes/bwfd/bin/fix-heading-levels.php
 
 It walks each published page's blocks in order and promotes any heading that skips a level (h1 then h3 becomes h1 then h2), updating both the block attributes and the markup. Pass slugs to limit it to those pages. It is idempotent and prints every change.
 
-Pass page slugs to update only those pages (`... import-pages.php home`). The script is idempotent. It creates or updates Home, About the book, About the author, Purchase, Small Group Guide, Other books, Enjoyed? and Churches & retail from the page patterns (nested patterns inlined so every page is literal, editable content), imports the design imagery into the Media Library, sets Home as the static front page, writes the primary navigation menu and drafts the default Sample Page.
+Pass page slugs to update only those pages (`... import-pages.php home`). The script is idempotent.
+
+WordPress caches the list of pattern files in a site transient unless `WP_DEBUG` is on, so after adding a file under `patterns/` on a site without debug mode run `wp eval 'wp_get_theme()->delete_pattern_cache();'` before importing, otherwise the import warns that the pattern is not registered. It creates or updates Home, About the book, About the author, Purchase, Small Group Guide, Other books, Enjoyed?, Churches & retail and Privacy policy from the page patterns (nested patterns inlined so every page is literal, editable content), imports the design imagery into the Media Library, sets Home as the static front page, writes the primary navigation menu and drafts the default Sample Page.
 
 ## Deploying with cPanel Git Version Control
 
@@ -87,7 +89,7 @@ The theme folder holds the design, blocks, templates and patterns, but the site'
 **A. Fresh install (recommended for launch)**
 
 1. Copy `wp-content/themes/bwfd` to the new site, or clone the repository. If you clone, run `npm install && npm run build` (Node 22) so `build/` exists; it is git-ignored. Alternatively copy the folder with `build/` included and skip Node on the server.
-2. Activate the theme, then run `wp eval-file wp-content/themes/bwfd/bin/import-pages.php`. This creates the eight pages, imports the imagery into the Media Library, sets the front page, writes the primary menu, sets the site title, tagline, site icon and pretty permalinks. Without WP-CLI: create each page and insert its **BWFD pages** pattern, then set the front page under Settings → Reading and pick the menu in the header's Navigation block.
+2. Activate the theme, then run `wp eval-file wp-content/themes/bwfd/bin/import-pages.php`. This creates the nine pages, imports the imagery into the Media Library, sets the front page, writes the primary menu, sets the site title, tagline, site icon and pretty permalinks. Without WP-CLI: create each page and insert its **BWFD pages** pattern, then set the front page under Settings → Reading and pick the menu in the header's Navigation block.
 3. Check Settings → Reading → "Discourage search engines" is off, and Settings → General has the right site URL.
 
 **B. Full site migration**
@@ -106,6 +108,7 @@ Any WordPress migration (Local's export, a migration plugin, or a database plus 
 * Header and footer are template parts; the menu is a normal Navigation block menu ("Primary navigation"). The "Buy the book" item is styled as a button through the `bwfd-nav-button` CSS class on that link.
 * The Facebook feed card on the home page embeds the page timeline; change the page URL or tabs in the block sidebar.
 * Purchase and media-kit links marked "URL TBA" / `#` are placeholders awaiting final URLs.
+* The Privacy policy page (`patterns/page-privacy-policy.php`, template *Page with title*, linked from the footer) describes what the site does today: email contact, Square checkout, server and Cloudflare logs, the Facebook page embed and Google Analytics via Site Kit. Update it and its "Last updated" date when a form, newsletter, comments or another third-party service is added.
 
 ## SEO and performance
 
