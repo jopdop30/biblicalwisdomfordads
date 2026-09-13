@@ -15,15 +15,13 @@ Tags: block-theme, full-site-editing, one-column, custom-colors, custom-logo, ed
 */
 
 /* -------------------------------------------------------------------------
- * Design tokens that theme.json cannot express (texture images, rules).
- * Relative URLs resolve against this stylesheet, so they work on the front
- * end and inside the editor iframe.
+ * Design tokens that theme.json cannot express.
+ * The texture image variables (--bwfd-tex-navy, --bwfd-tex-apricot,
+ * --bwfd-tex-marble, --bwfd-tex-blue) are printed by functions.php with
+ * absolute URLs: browsers resolve url() inside a custom property against the
+ * document when another stylesheet consumes it, so relative paths break.
  * ---------------------------------------------------------------------- */
 :root {
-	--bwfd-tex-navy: url(assets/images/tex-navy.jpg);
-	--bwfd-tex-apricot: url(assets/images/tex-apricot.jpg);
-	--bwfd-tex-marble: url(assets/images/tex-white.jpg);
-	--bwfd-tex-blue: url(assets/images/tex-blue.jpg);
 	--bwfd-focus: 2px solid var(--wp--preset--color--blue);
 }
 
