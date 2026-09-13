@@ -59,6 +59,24 @@ wp eval-file wp-content/themes/bwfd/bin/import-pages.php
 
 Pass page slugs to update only those pages (`... import-pages.php home`). The script is idempotent. It creates or updates Home, About the book, About the author, Purchase, Small Group Guide, Other books, Enjoyed? and Churches & retail from the page patterns (nested patterns inlined so every page is literal, editable content), imports the design imagery into the Media Library, sets Home as the static front page, writes the primary navigation menu and drafts the default Sample Page.
 
+## Deploying to another site
+
+The theme folder holds the design, blocks, templates and patterns, but the site's *content* lives in the WordPress database and uploads folder. Two ways to move it:
+
+**A. Fresh install (recommended for launch)**
+
+1. Copy `wp-content/themes/bwfd` to the new site, or clone the repository. If you clone, run `npm install && npm run build` (Node 22) so `build/` exists; it is git-ignored. Alternatively copy the folder with `build/` included and skip Node on the server.
+2. Activate the theme, then run `wp eval-file wp-content/themes/bwfd/bin/import-pages.php`. This creates the eight pages, imports the imagery into the Media Library, sets the front page, writes the primary menu, sets the site title, tagline, site icon and pretty permalinks. Without WP-CLI: create each page and insert its **BWFD pages** pattern, then set the front page under Settings → Reading and pick the menu in the header's Navigation block.
+3. Check Settings → Reading → "Discourage search engines" is off, and Settings → General has the right site URL.
+
+**B. Full site migration**
+
+Any WordPress migration (Local's export, a migration plugin, or a database plus `wp-content/uploads` copy with a search-replace of the domain) brings the pages, menu, media, site icon and any edits made in the editor. Bring the theme folder with `build/` as in step 1.
+
+**Server requirements**: PHP 8.0+, WordPress 6.8+ (built on 7.1), and an image library with WebP support (GD or Imagick) for WebP upload sub-sizes.
+
+**Not in the theme**: page Excerpts written for meta descriptions, template or style changes made in the Site Editor (stored in the database), and the placeholder purchase/download URLs once you fill them in. All of these travel with a full migration, or need re-entering after a fresh install.
+
 ## Editing
 
 * Every page is ordinary block content: open it in the editor and change text, links, images or cards directly.

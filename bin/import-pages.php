@@ -226,6 +226,38 @@ if ( $bwfd_menus ) {
 	WP_CLI::log( 'Created navigation menu #' . $bwfd_menu_id );
 }
 
+// Site icon from the theme's icon set, unless one is already chosen.
+if ( ! get_option( 'site_icon' ) ) {
+	$bwfd_icon_file = BWFD_DIR . '/assets/icons/icon-512.png';
+	if ( file_exists( $bwfd_icon_file ) ) {
+		$bwfd_tmp = wp_tempnam( 'bwfd-site-icon.png' );
+		copy( $bwfd_icon_file, $bwfd_tmp );
+		$bwfd_site_icon = new WP_Site_Icon();
+		add_filter( 'intermediate_image_sizes_advanced', array( $bwfd_site_icon, 'additional_sizes' ) );
+		$bwfd_icon_id = media_handle_sideload(
+			array(
+				'name'     => 'bwfd-site-icon.png',
+				'tmp_name' => $bwfd_tmp,
+			),
+			0,
+			'Biblical Wisdom for Dads site icon'
+		);
+		remove_filter( 'intermediate_image_sizes_advanced', array( $bwfd_site_icon, 'additional_sizes' ) );
+		if ( ! is_wp_error( $bwfd_icon_id ) ) {
+			update_post_meta( $bwfd_icon_id, '_wp_attachment_context', 'site-icon' );
+			update_option( 'site_icon', $bwfd_icon_id );
+			WP_CLI::log( 'Set the site icon.' );
+		}
+	}
+}
+
+// Permalinks: pretty URLs are assumed by the navigation and footer links.
+if ( ! get_option( 'permalink_structure' ) ) {
+	update_option( 'permalink_structure', '/%postname%/' );
+	flush_rewrite_rules();
+	WP_CLI::log( 'Set permalinks to /%postname%/.' );
+}
+
 // Tidy the default sample page.
 $bwfd_sample = get_page_by_path( 'sample-page', OBJECT, 'page' );
 if ( $bwfd_sample && 'publish' === $bwfd_sample->post_status ) {
