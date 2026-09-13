@@ -5,9 +5,15 @@
 # "Update from Remote" then "Deploy HEAD Commit"; cPanel runs these tasks.
 # DEPLOYPATH is the WordPress theme folder for the site.
 # tar is used rather than rsync because rsync is not installed on the host.
+# The deploy runs with a restrictive umask, so permissions are normalised
+# afterwards (directories 755, files 644) or the web server cannot serve
+# the theme's static files.
 deployment:
   tasks:
     - export DEPLOYPATH=/home/runningf/biblicalwisdomfordads.au/wp-content/themes/bwfd
+    - umask 022
     - /bin/mkdir -p "$DEPLOYPATH"
-    - /bin/tar --exclude=./.git --exclude=./node_modules --exclude=./src --exclude=./.cpanel.yml --exclude=./.gitignore --exclude=./package.json --exclude=./package-lock.json -cf - . | /bin/tar -xf - -C "$DEPLOYPATH"
+    - /bin/tar --exclude=./.git --exclude=./node_modules --exclude=./src --exclude=./.cpanel.yml --exclude=./.gitignore --exclude=./package.json --exclude=./package-lock.json -cf - . | /bin/tar -xf - --no-same-permissions -C "$DEPLOYPATH"
     - /bin/rm -rf "$DEPLOYPATH/.git" "$DEPLOYPATH/node_modules" "$DEPLOYPATH/src"
+    - /bin/find "$DEPLOYPATH" -type d -exec /bin/chmod 755 {} +
+    - /bin/find "$DEPLOYPATH" -type f -exec /bin/chmod 644 {} +
