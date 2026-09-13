@@ -133,11 +133,11 @@ $bwfd_art   = bwfd_image( 'art-silhouette.jpg' );
 
 			<!-- wp:buttons {"style":{"spacing":{"blockGap":"12px"}}} -->
 			<div class="wp-block-buttons">
-				<!-- wp:button {"className":"is-style-bwfd-social"} -->
-				<div class="wp-block-button is-style-bwfd-social"><a class="wp-block-button__link wp-element-button" href="https://facebook.com/biblicalwisdomfordads" target="_blank" rel="noreferrer noopener">Facebook</a></div>
+				<!-- wp:button {"className":"is-style-bwfd-facebook"} -->
+				<div class="wp-block-button is-style-bwfd-facebook"><a class="wp-block-button__link wp-element-button" href="https://facebook.com/biblicalwisdomfordads" target="_blank" rel="noreferrer noopener">Facebook</a></div>
 				<!-- /wp:button -->
-				<!-- wp:button {"className":"is-style-bwfd-social"} -->
-				<div class="wp-block-button is-style-bwfd-social"><a class="wp-block-button__link wp-element-button" href="https://instagram.com/biblicalwisdomfordads" target="_blank" rel="noreferrer noopener">Instagram</a></div>
+				<!-- wp:button {"className":"is-style-bwfd-instagram"} -->
+				<div class="wp-block-button is-style-bwfd-instagram"><a class="wp-block-button__link wp-element-button" href="https://instagram.com/biblicalwisdomfordads" target="_blank" rel="noreferrer noopener">Instagram</a></div>
 				<!-- /wp:button -->
 			</div>
 			<!-- /wp:buttons -->

@@ -25,6 +25,8 @@ function bwfd_register_block_styles(): void {
 			'bwfd-cta'       => __( 'Large call to action', 'bwfd' ),
 			'bwfd-compact'   => __( 'Compact', 'bwfd' ),
 			'bwfd-social'    => __( 'Social', 'bwfd' ),
+			'bwfd-facebook'  => __( 'Facebook', 'bwfd' ),
+			'bwfd-instagram' => __( 'Instagram', 'bwfd' ),
 		),
 		'core/table'  => array(
 			'bwfd-key-info' => __( 'Key information', 'bwfd' ),
