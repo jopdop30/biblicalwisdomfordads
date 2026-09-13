@@ -22,22 +22,78 @@ add_action( 'init', 'bwfd_seo_page_excerpts' );
 /**
  * Book facts used for structured data. Filter `bwfd_book_data` to change.
  *
+ * Prices and postage describe the direct (Square) purchase of the paperback.
+ * `release_date` drives offer availability: PreOrder before it, InStock after.
+ *
  * @return array<string, mixed>
  */
 function bwfd_book_data(): array {
 	return apply_filters(
 		'bwfd_book_data',
 		array(
-			'name'        => 'Biblical Wisdom for Dads',
-			'author'      => 'Stephen Parker',
-			'publisher'   => 'Running Forever Press',
-			'isbn'        => '978-1-7635863-3-8',
-			'isbn_ebook'  => '978-1-7635863-4-5',
-			'isbn_audio'  => '978-1-7635863-5-2',
-			'pages'       => 142,
-			'language'    => 'en',
-			'image'       => BWFD_URI . '/assets/images/bwfd-cover.webp',
-			'description' => 'In 40 short, practical chapters, dads discover how our Heavenly Father sets the ultimate example in compassion, strength, discipline, instruction and more.',
+			'name'         => 'Biblical Wisdom for Dads',
+			'author'       => 'Stephen Parker',
+			'publisher'    => 'Running Forever Press',
+			'foreword'     => 'Richard Blackaby',
+			'isbn'         => '978-1-7635863-3-8',
+			'isbn_ebook'   => '978-1-7635863-4-5',
+			'isbn_audio'   => '978-1-7635863-5-2',
+			'pages'        => 142,
+			'language'     => 'en',
+			'release_date' => '2026-10-27',
+			'genre'        => 'Christian living',
+			'audience'     => 'Christian fathers',
+			'image'        => BWFD_URI . '/assets/images/bwfd-cover.webp',
+			'image_width'  => 800,
+			'image_height' => 1215,
+			'description'  => 'In 40 short, practical chapters, dads discover how our Heavenly Father sets the ultimate example in compassion, strength, discipline, instruction and more.',
+			'sku'          => 'BWFD-PB',
+			'price'        => '24.99',
+			'postage'      => '9.99',
+			'currency'     => 'AUD',
+			'ships_to'     => 'AU',
+			'buy_url'      => 'https://square.link/u/dQKD6ORW',
+			'social'       => array(
+				'https://www.facebook.com/biblicalwisdomfordads',
+				'https://www.instagram.com/biblicalwisdomfordads',
+			),
+		)
+	);
+}
+
+/**
+ * Author facts used for structured data. Filter `bwfd_author_data` to change.
+ *
+ * @return array<string, mixed>
+ */
+function bwfd_author_data(): array {
+	return apply_filters(
+		'bwfd_author_data',
+		array(
+			'name'         => 'Stephen Parker',
+			'job_title'    => 'Author and Associate Professor',
+			'employer'     => 'Australian College of Ministries',
+			'email'        => 'stephen@biblicalwisdomfordads.au',
+			'image'        => BWFD_URI . '/assets/images/stephen-headshot.webp',
+			'image_width'  => 900,
+			'image_height' => 1350,
+			'description'  => 'Stephen Parker loves being a dad, and is fascinated by the wisdom found in the pages of Scripture. He is a husband, father, runner and loved child of God, with one wonderful wife and four delightful daughters. With 30 years of ministry experience, he is currently an Associate Professor at the Australian College of Ministries.',
+			'same_as'      => array(
+				'https://www.linkedin.com/in/stephendparkeraus',
+				'https://www.facebook.com/Stephendparker',
+			),
+			'other_books'  => array(
+				array(
+					'name'  => 'There is No Finish: The Backyard Ultra Story',
+					'image' => BWFD_URI . '/assets/images/no-finish-front.webp',
+					'url'   => 'https://www.amazon.com/dp/B0DD42GD27',
+				),
+				array(
+					'name'  => 'The Heart of an Elder',
+					'image' => BWFD_URI . '/assets/images/heart-elder-front.webp',
+					'url'   => 'https://amzn.to/3VhFBf1',
+				),
+			),
 		)
 	);
 }
@@ -189,108 +245,269 @@ function bwfd_seo_meta(): void {
 add_action( 'wp_head', 'bwfd_seo_meta', 2 );
 
 /**
- * JSON-LD: WebSite and Organization on every page; the Book on the front
- * page and the About the book page; WebPage for the current request.
+ * Offer availability for the paperback: PreOrder until the launch date
+ * (with `availabilityStarts`), InStock from then on.
+ *
+ * @param array<string, mixed> $book Book data.
+ * @return array{0:string,1:?string}
+ */
+function bwfd_book_availability( array $book ): array {
+	$release = (string) ( $book['release_date'] ?? '' );
+	if ( '' !== $release && $release > current_time( 'Y-m-d' ) ) {
+		return array( 'https://schema.org/PreOrder', $release );
+	}
+	return array( 'https://schema.org/InStock', null );
+}
+
+/**
+ * JSON-LD graph for the current request.
+ *
+ * Every page: Organization (publisher), WebSite and WebPage.
+ * Book pages (Home, About the book, Purchase, Churches & retail): the Book
+ * as a work with its three editions, the paperback edition doubling as a
+ * Product (Google's "co-type Product with Book" guidance) carrying the
+ * direct-purchase Offer, plus the author Person.
+ * About the author: WebPage becomes a ProfilePage whose mainEntity is the
+ * author Person.
+ * Other books: Book entries for the author's earlier titles.
+ *
+ * Note: Google's "Book actions" feature is fed by partner data feeds, not
+ * on-page markup, so the Book nodes here are for general search engines
+ * and knowledge-graph use; the Product and ProfilePage nodes target Google
+ * rich results.
  */
 function bwfd_seo_json_ld(): void {
 	if ( is_admin() || is_feed() || is_embed() || is_404() ) {
 		return;
 	}
 
-	$book    = bwfd_book_data();
-	$site_id = home_url( '/#website' );
-	$org_id  = home_url( '/#organization' );
-	$logo    = get_site_icon_url( 512 );
+	$book   = bwfd_book_data();
+	$author = bwfd_author_data();
+	$home   = home_url( '/' );
+	$ids    = array(
+		'site'      => $home . '#website',
+		'org'       => $home . '#organization',
+		'person'    => $home . '#author',
+		'book'      => $home . '#book',
+		'paperback' => $home . '#book-paperback',
+		'ebook'     => $home . '#book-ebook',
+		'audiobook' => $home . '#book-audiobook',
+	);
+	$ref    = static fn( string $key ) => array( '@id' => $ids[ $key ] );
 
+	$slug          = '';
+	$post          = is_singular() ? get_queried_object() : null;
+	if ( $post instanceof WP_Post ) {
+		$slug = $post->post_name;
+	}
+	$is_book_page   = is_front_page() || in_array( $slug, array( 'about-the-book', 'purchase', 'churches-and-retail' ), true );
+	$is_author_page = 'about-the-author' === $slug;
+	$is_other_books = 'other-books' === $slug;
+
+	$logo  = get_site_icon_url( 512 );
 	$graph = array(
 		array(
-			'@type'    => 'Organization',
-			'@id'      => $org_id,
-			'name'     => $book['publisher'],
-			'url'      => home_url( '/' ),
-			'logo'     => $logo ?: null,
-			'sameAs'   => array(
-				'https://www.facebook.com/biblicalwisdomfordads',
-				'https://www.instagram.com/biblicalwisdomfordads',
-			),
+			'@type'  => 'Organization',
+			'@id'    => $ids['org'],
+			'name'   => $book['publisher'],
+			'url'    => $home,
+			'logo'   => $logo ?: null,
+			'sameAs' => $book['social'],
 		),
 		array(
 			'@type'       => 'WebSite',
-			'@id'         => $site_id,
-			'url'         => home_url( '/' ),
+			'@id'         => $ids['site'],
+			'url'         => $home,
 			'name'        => get_bloginfo( 'name' ),
 			'description' => get_bloginfo( 'description' ),
-			'publisher'   => array( '@id' => $org_id ),
+			'publisher'   => $ref( 'org' ),
 			'inLanguage'  => get_bloginfo( 'language' ),
 		),
 	);
 
-	if ( is_singular() ) {
-		$post    = get_queried_object();
-		$graph[] = array(
-			'@type'         => is_singular( 'post' ) ? 'Article' : 'WebPage',
-			'@id'           => get_permalink() . '#webpage',
-			'url'           => get_permalink(),
-			'name'          => wp_get_document_title(),
-			'headline'      => get_the_title(),
-			'description'   => bwfd_seo_description(),
-			'isPartOf'      => array( '@id' => $site_id ),
-			'inLanguage'    => get_bloginfo( 'language' ),
-			'datePublished' => get_the_date( DATE_W3C, $post ),
-			'dateModified'  => get_the_modified_date( DATE_W3C, $post ),
+	if ( $post instanceof WP_Post ) {
+		$type = 'WebPage';
+		if ( is_singular( 'post' ) ) {
+			$type = 'Article';
+		} elseif ( $is_author_page ) {
+			$type = 'ProfilePage';
+		}
+
+		$page = array(
+			'@type'              => $type,
+			'@id'                => get_permalink() . '#webpage',
+			'url'                => get_permalink(),
+			'name'               => html_entity_decode( wp_get_document_title(), ENT_QUOTES, 'UTF-8' ),
+			'headline'           => html_entity_decode( get_the_title(), ENT_QUOTES, 'UTF-8' ),
+			'description'        => bwfd_seo_description(),
+			'isPartOf'           => $ref( 'site' ),
+			'inLanguage'         => get_bloginfo( 'language' ),
+			'datePublished'      => get_the_date( DATE_W3C, $post ),
+			'dateModified'       => get_the_modified_date( DATE_W3C, $post ),
 			'primaryImageOfPage' => array(
 				'@type' => 'ImageObject',
 				'url'   => bwfd_seo_image()['url'],
 			),
 		);
+
+		if ( $is_author_page ) {
+			$page['dateCreated'] = get_the_date( DATE_W3C, $post );
+			$page['mainEntity']  = $ref( 'person' );
+		} elseif ( 'purchase' === $slug ) {
+			$page['mainEntity'] = $ref( 'paperback' );
+		} elseif ( $is_book_page && ! is_front_page() ) {
+			$page['mainEntity'] = $ref( 'book' );
+		}
+
+		$graph[] = $page;
 	}
 
-	$is_book_page = is_front_page() || ( is_page() && 'about-the-book' === get_queried_object()->post_name );
+	if ( $is_book_page || $is_author_page || $is_other_books ) {
+		$graph[] = array(
+			'@type'       => 'Person',
+			'@id'         => $ids['person'],
+			'name'        => $author['name'],
+			'url'         => home_url( '/about-the-author/' ),
+			'image'       => array(
+				'@type'  => 'ImageObject',
+				'url'    => $author['image'],
+				'width'  => $author['image_width'],
+				'height' => $author['image_height'],
+			),
+			'description' => $author['description'],
+			'jobTitle'    => $author['job_title'],
+			'worksFor'    => array(
+				'@type' => 'Organization',
+				'name'  => $author['employer'],
+			),
+			'email'       => $author['email'],
+			'sameAs'      => $author['same_as'],
+		);
+	}
+
 	if ( $is_book_page ) {
+		$cover = array(
+			'@type'  => 'ImageObject',
+			'url'    => $book['image'],
+			'width'  => $book['image_width'],
+			'height' => $book['image_height'],
+		);
+
+		// The work, with the paperback referenced and the other editions inline.
 		$graph[] = array(
 			'@type'         => 'Book',
-			'@id'           => home_url( '/#book' ),
+			'@id'           => $ids['book'],
 			'name'          => $book['name'],
-			'author'        => array(
+			'author'        => $ref( 'person' ),
+			'contributor'   => array(
 				'@type' => 'Person',
-				'name'  => $book['author'],
-				'url'   => home_url( '/about-the-author/' ),
+				'name'  => $book['foreword'],
 			),
-			'publisher'     => array( '@id' => $org_id ),
-			'isbn'          => $book['isbn'],
-			'numberOfPages' => $book['pages'],
-			'inLanguage'    => $book['language'],
-			'image'         => $book['image'],
-			'description'   => $book['description'],
-			'bookFormat'    => 'https://schema.org/Paperback',
+			'publisher'     => $ref( 'org' ),
 			'url'           => home_url( '/about-the-book/' ),
+			'image'         => $cover,
+			'description'   => $book['description'],
+			'datePublished' => $book['release_date'],
+			'inLanguage'    => $book['language'],
+			'numberOfPages' => $book['pages'],
+			'genre'         => $book['genre'],
+			'audience'      => array(
+				'@type'        => 'PeopleAudience',
+				'audienceType' => $book['audience'],
+			),
 			'workExample'   => array(
+				$ref( 'paperback' ),
 				array(
 					'@type'      => 'Book',
+					'@id'        => $ids['ebook'],
+					'name'       => $book['name'],
+					'author'     => $ref( 'person' ),
 					'isbn'       => $book['isbn_ebook'],
 					'bookFormat' => 'https://schema.org/EBook',
+					'inLanguage' => $book['language'],
 				),
 				array(
 					'@type'      => 'Book',
+					'@id'        => $ids['audiobook'],
+					'name'       => $book['name'],
+					'author'     => $ref( 'person' ),
 					'isbn'       => $book['isbn_audio'],
 					'bookFormat' => 'https://schema.org/AudiobookFormat',
+					'inLanguage' => $book['language'],
 				),
 			),
 		);
-	}
 
-	if ( is_page() && 'about-the-author' === get_queried_object()->post_name ) {
+		// The paperback edition, also a Product so Google can show price and availability.
+		list( $availability, $available_from ) = bwfd_book_availability( $book );
+
+		$offer = array(
+			'@type'           => 'Offer',
+			'url'             => home_url( '/purchase/' ),
+			'price'           => $book['price'],
+			'priceCurrency'   => $book['currency'],
+			'availability'    => $availability,
+			'itemCondition'   => 'https://schema.org/NewCondition',
+			'eligibleRegion'  => array(
+				'@type' => 'Country',
+				'name'  => $book['ships_to'],
+			),
+			'seller'          => $ref( 'org' ),
+			'shippingDetails' => array(
+				'@type'               => 'OfferShippingDetails',
+				'shippingRate'        => array(
+					'@type'    => 'MonetaryAmount',
+					'value'    => $book['postage'],
+					'currency' => $book['currency'],
+				),
+				'shippingDestination' => array(
+					'@type'          => 'DefinedRegion',
+					'addressCountry' => $book['ships_to'],
+				),
+			),
+		);
+		if ( $available_from ) {
+			$offer['availabilityStarts'] = $available_from;
+		}
+
 		$graph[] = array(
-			'@type'    => 'Person',
-			'@id'      => home_url( '/about-the-author/#person' ),
-			'name'     => $book['author'],
-			'url'      => get_permalink(),
-			'jobTitle' => 'Author',
-			'email'    => 'mailto:stephen@biblicalwisdomfordads.au',
+			'@type'         => array( 'Product', 'Book' ),
+			'@id'           => $ids['paperback'],
+			'name'          => $book['name'],
+			'image'         => array( $book['image'] ),
+			'description'   => $book['description'],
+			'sku'           => $book['sku'],
+			'isbn'          => $book['isbn'],
+			'gtin13'        => preg_replace( '/\D+/', '', $book['isbn'] ),
+			'brand'         => array(
+				'@type' => 'Brand',
+				'name'  => $book['publisher'],
+			),
+			'category'      => 'Media > Books',
+			'author'        => $ref( 'person' ),
+			'publisher'     => $ref( 'org' ),
+			'bookFormat'    => 'https://schema.org/Paperback',
+			'inLanguage'    => $book['language'],
+			'numberOfPages' => $book['pages'],
+			'datePublished' => $book['release_date'],
+			'exampleOfWork' => $ref( 'book' ),
+			'offers'        => $offer,
 		);
 	}
 
-	// Drop null values.
+	if ( $is_other_books ) {
+		foreach ( $author['other_books'] as $title ) {
+			$graph[] = array(
+				'@type'  => 'Book',
+				'name'   => $title['name'],
+				'author' => $ref( 'person' ),
+				'image'  => $title['image'],
+				'url'    => $title['url'],
+			);
+		}
+	}
+
+	// Drop null and empty values from each node.
 	$graph = array_map(
 		static fn( array $node ): array => array_filter( $node, static fn( $v ) => null !== $v && '' !== $v ),
 		$graph
@@ -303,7 +520,7 @@ function bwfd_seo_json_ld(): void {
 				'@context' => 'https://schema.org',
 				'@graph'   => $graph,
 			),
-			JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+			JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG
 		)
 	);
 }
