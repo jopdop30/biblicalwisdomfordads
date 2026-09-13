@@ -65,8 +65,8 @@ $bwfd_art   = bwfd_image( 'art-silhouette.webp' );
 	<div class="wp-block-bwfd-card-grid bwfd-card-grid bwfd-card-grid--auto" style="--bwfd-grid-min:268px;--bwfd-grid-gap:24px">
 		<!-- wp:bwfd/card -->
 		<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-regular">
-			<!-- wp:heading {"level":3,"style":{"typography":{"fontSize":"23px"}}} -->
-			<h3 class="wp-block-heading" style="font-size:23px">Buy the book</h3>
+			<!-- wp:heading {"level":2,"style":{"typography":{"fontSize":"23px"}}} -->
+			<h2 class="wp-block-heading" style="font-size:23px">Buy the book</h2>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph {"fontSize":"base"} -->
 			<p class="has-base-font-size"><em>Biblical Wisdom for Dads</em> is available in retail stores, through Amazon as a paper or eBook, or as a direct purchase.</p>
@@ -83,8 +83,8 @@ $bwfd_art   = bwfd_image( 'art-silhouette.webp' );
 
 		<!-- wp:bwfd/card -->
 		<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-regular">
-			<!-- wp:heading {"level":3,"style":{"typography":{"fontSize":"23px"}}} -->
-			<h3 class="wp-block-heading" style="font-size:23px">Small Group Guide</h3>
+			<!-- wp:heading {"level":2,"style":{"typography":{"fontSize":"23px"}}} -->
+			<h2 class="wp-block-heading" style="font-size:23px">Small Group Guide</h2>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph {"fontSize":"base"} -->
 			<p class="has-base-font-size">Please feel free to download the free PDF discussion guides to help your small group.</p>
@@ -101,8 +101,8 @@ $bwfd_art   = bwfd_image( 'art-silhouette.webp' );
 
 		<!-- wp:bwfd/card -->
 		<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-regular">
-			<!-- wp:heading {"level":3,"style":{"typography":{"fontSize":"23px"}}} -->
-			<h3 class="wp-block-heading" style="font-size:23px">Bulk orders</h3>
+			<!-- wp:heading {"level":2,"style":{"typography":{"fontSize":"23px"}}} -->
+			<h2 class="wp-block-heading" style="font-size:23px">Bulk orders</h2>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph {"fontSize":"base"} -->
 			<p class="has-base-font-size">For churches or other groups who would like bulk orders of 20 or more, a discounted price of $15.99 per book is available.</p>

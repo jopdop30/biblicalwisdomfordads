@@ -76,21 +76,35 @@ function bwfd_url( string $path = '/' ): string {
 }
 
 /**
- * Texture image tokens as absolute URLs, for the front end and the editor
- * canvas alike (enqueue_block_assets fires in both).
+ * Texture image tokens as absolute URLs.
+ *
+ * In the editor they sit on :root so any block can use them. On the front
+ * end each token is declared only on the selectors that paint it: Chrome
+ * downloads url() values held in custom properties as soon as they are
+ * computed, so a :root declaration fetched every texture on every page,
+ * including the blue one that only the editor canvas uses.
  */
 function bwfd_texture_tokens(): void {
 	$textures = array(
-		'navy'    => 'tex-navy.webp',
-		'apricot' => 'tex-apricot.webp',
-		'marble'  => 'tex-white.webp',
-		'blue'    => 'tex-blue.webp',
+		'navy'    => array( 'tex-navy.webp', '.is-style-bwfd-navy,.bwfd-card--navy,.bwfd-endorsements' ),
+		'apricot' => array( 'tex-apricot.webp', '.is-style-bwfd-apricot,.bwfd-card--apricot,.bwfd-framed-image__panel,.wp-block-bwfd-icon.bwfd-icon--circle' ),
+		'marble'  => array( 'tex-white.webp', '.is-style-bwfd-marble,.bwfd-card--marble' ),
+		'blue'    => array( 'tex-blue.webp', '' ),
 	);
-	$css = ':root{';
-	foreach ( $textures as $token => $file ) {
-		$css .= sprintf( '--bwfd-tex-%s:url(%s);', $token, bwfd_image( $file ) );
+	$css = '';
+	if ( is_admin() ) {
+		$css = ':root{';
+		foreach ( $textures as $token => list( $file ) ) {
+			$css .= sprintf( '--bwfd-tex-%s:url(%s);', $token, bwfd_image( $file ) );
+		}
+		$css .= '}';
+	} else {
+		foreach ( $textures as $token => list( $file, $selectors ) ) {
+			if ( '' !== $selectors ) {
+				$css .= sprintf( '%s{--bwfd-tex-%s:url(%s)}', $selectors, $token, bwfd_image( $file ) );
+			}
+		}
 	}
-	$css .= '}';
 
 	wp_register_style( 'bwfd-tokens', false, array(), BWFD_VERSION );
 	wp_add_inline_style( 'bwfd-tokens', $css );

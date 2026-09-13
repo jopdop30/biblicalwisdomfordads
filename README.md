@@ -57,6 +57,14 @@ With the theme active:
 wp eval-file wp-content/themes/bwfd/bin/import-pages.php
 ```
 
+To fix heading levels on pages edited on the live site (PageSpeed's accessibility check flags an h3 directly under an h1), run:
+
+```bash
+wp eval-file wp-content/themes/bwfd/bin/fix-heading-levels.php
+```
+
+It walks each published page's blocks in order and promotes any heading that skips a level (h1 then h3 becomes h1 then h2), updating both the block attributes and the markup. Pass slugs to limit it to those pages. It is idempotent and prints every change.
+
 Pass page slugs to update only those pages (`... import-pages.php home`). The script is idempotent. It creates or updates Home, About the book, About the author, Purchase, Small Group Guide, Other books, Enjoyed? and Churches & retail from the page patterns (nested patterns inlined so every page is literal, editable content), imports the design imagery into the Media Library, sets Home as the static front page, writes the primary navigation menu and drafts the default Sample Page.
 
 ## Deploying with cPanel Git Version Control
@@ -116,6 +124,8 @@ Any WordPress migration (Local's export, a migration plugin, or a database plus 
 * **Phone-sized hero artwork.** When the hero's artwork is in the Media Library, the block's inline `background-image` is swapped for two custom properties and the stylesheet uses the smallest same-ratio sub-size of at least 640px (normally `medium_large`) below 640px, where the artwork sits under an almost opaque navy wash. The preloads carry matching `media` attributes so a phone fetches only the small file.
 * **Lighter WebP.** Generated WebP sub-sizes use quality 75 rather than core's 86 (`wp_editor_set_quality`), roughly a third smaller at these display sizes. Run `wp media regenerate` on an existing site to re-encode earlier uploads.
 * **Trimmed global styles.** Core still prints the default colour, gradient, font-size and spacing presets that theme.json switches off; `wp_theme_json_data_default` drops them since nothing in the theme uses them.
+* **Font fallbacks without layout shift.** Metric-matched `Source Sans 3 Fallback` and `Bitter Fallback` faces (`size-adjust` and ascent/descent overrides against Arial and Times New Roman) sit after the web fonts in theme.json's font stacks, so the swap from system text to the web font does not move anything.
+* **Textures only where painted.** The texture custom properties are declared on the selectors that use them rather than on `:root`: Chrome fetches `url()` values in custom properties as soon as they are computed, so `:root` cost every page four texture downloads whether or not it used them. Textures the page does paint are preloaded.
 * **Responsive framed images.** Framed image blocks whose file is in the Media Library get `srcset`/`sizes` at render time (the block saves a plain `<img>`, so core's `wp-image-{id}` filter does not apply). Inside the hero the `sizes` mirror the hero's 220px phone and 260px tablet caps. A 440px sub-size (`bwfd-framed-sm`) is registered for high-density phones; after activating the theme on an existing site run `wp media regenerate --only-missing` so earlier uploads gain it.
 * **Inlined CSS.** `style.css` is inlined with the block styles core already inlines (`styles_inline_size_limit` raised to 80 KB), removing the render-blocking stylesheet requests. The page HTML grows by roughly 6 KB compressed in exchange.
 * **Compositor-friendly carousel.** The endorsements progress bar animates `transform: scaleX()` rather than `width`.

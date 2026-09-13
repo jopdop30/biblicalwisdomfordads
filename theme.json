@@ -64,7 +64,7 @@
 				{
 					"slug": "serif",
 					"name": "Bitter",
-					"fontFamily": "Bitter, Georgia, 'Times New Roman', serif",
+					"fontFamily": "Bitter, 'Bitter Fallback', Georgia, 'Times New Roman', serif",
 					"fontFace": [
 						{
 							"fontFamily": "Bitter",
@@ -85,7 +85,7 @@
 				{
 					"slug": "sans",
 					"name": "Source Sans 3",
-					"fontFamily": "'Source Sans 3', system-ui, -apple-system, 'Segoe UI', sans-serif",
+					"fontFamily": "'Source Sans 3', 'Source Sans 3 Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif",
 					"fontFace": [
 						{
 							"fontFamily": "Source Sans 3",

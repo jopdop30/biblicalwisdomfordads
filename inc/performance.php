@@ -360,3 +360,46 @@ function bwfd_perf_preload_hero(): void {
 	}
 }
 add_action( 'wp_head', 'bwfd_perf_preload_hero', 1 );
+
+/**
+ * Metric-matched fallback faces so text set in the system font before the
+ * web fonts arrive occupies the same space (font-display: swap otherwise
+ * shifts the paragraphs below the fold heading; PageSpeed measured 0.09 CLS
+ * on About the book). Values from the fonts' hhea/OS/2 tables against Arial
+ * and Times New Roman, which Linux maps to the metric-compatible Liberation
+ * faces. theme.json lists the fallback families after the web fonts.
+ */
+function bwfd_perf_font_fallbacks(): void {
+	$css = '@font-face{font-family:"Source Sans 3 Fallback";src:local("Arial"),local("Liberation Sans");size-adjust:90.22%;ascent-override:113.5%;descent-override:44.34%;line-gap-override:0%}'
+		. '@font-face{font-family:"Bitter Fallback";src:local("Times New Roman"),local("Liberation Serif");size-adjust:114.09%;ascent-override:81.95%;descent-override:23.23%;line-gap-override:0%}';
+	wp_add_inline_style( 'bwfd-tokens', $css );
+}
+add_action( 'enqueue_block_assets', 'bwfd_perf_font_fallbacks', 11 );
+
+/**
+ * Preload the textures the page paints above the fold. On pages without a
+ * hero the first textured card or navy band is the Largest Contentful Paint
+ * element, and its background is otherwise only discovered after style and
+ * layout. The files are 4-11 KB each.
+ */
+function bwfd_perf_preload_textures(): void {
+	if ( ! is_singular() ) {
+		return;
+	}
+	$post = get_queried_object();
+	if ( ! $post instanceof WP_Post ) {
+		return;
+	}
+	$content  = $post->post_content;
+	$textures = array(
+		'tex-white.webp'   => '/bwfd-card--marble|is-style-bwfd-marble/',
+		'tex-navy.webp'    => '/is-style-bwfd-navy|bwfd-card--navy|wp:bwfd\/endorsements/',
+		'tex-apricot.webp' => '/is-style-bwfd-apricot|bwfd-card--apricot|"panel":true|"variant":"circle"/',
+	);
+	foreach ( $textures as $file => $pattern ) {
+		if ( preg_match( $pattern, $content ) ) {
+			printf( '<link rel="preload" as="image" href="%s">' . "\n", bwfd_image( $file ) );
+		}
+	}
+}
+add_action( 'wp_head', 'bwfd_perf_preload_textures', 1 );
