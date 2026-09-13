@@ -1,0 +1,1 @@
+import{getContext as e,store as t}from"@wordpress/interactivity";t("bwfd/reveal",{state:{get label(){const t=e();return t.open?t.closeLabel:t.openLabel}},actions:{toggle(){const t=e();t.open=!t.open}}});

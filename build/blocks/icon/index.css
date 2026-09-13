@@ -1,0 +1,1 @@
+.bwfd-icon-picker{display:grid;gap:4px;grid-template-columns:repeat(6,1fr);margin-bottom:16px}.bwfd-icon-picker .components-button{border:1px solid #ddd;border-radius:3px;color:#00385b;height:40px;justify-content:center}.bwfd-icon-picker .components-button.is-pressed,.bwfd-icon-picker .components-button.is-selected{background:#00385b;color:#fff}

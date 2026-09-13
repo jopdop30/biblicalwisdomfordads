@@ -1,0 +1,61 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "bwfd/section-heading",
+  "version": "1.0.0",
+  "title": "Section heading",
+  "category": "bwfd",
+  "icon": "heading",
+  "description": "A heading with the apricot rule beneath it. Used for page titles and section titles.",
+  "keywords": [
+    "heading",
+    "title",
+    "rule"
+  ],
+  "textdomain": "bwfd",
+  "attributes": {
+    "content": {
+      "type": "rich-text",
+      "source": "rich-text",
+      "selector": ".bwfd-section-heading__title"
+    },
+    "level": {
+      "type": "number",
+      "default": 2
+    },
+    "size": {
+      "type": "string",
+      "default": "xxl"
+    },
+    "showRule": {
+      "type": "boolean",
+      "default": true
+    },
+    "textAlign": {
+      "type": "string",
+      "default": "left"
+    }
+  },
+  "supports": {
+    "anchor": true,
+    "html": false,
+    "color": {
+      "text": true,
+      "background": false,
+      "link": false
+    },
+    "spacing": {
+      "margin": true
+    }
+  },
+  "example": {
+    "attributes": {
+      "content": "About the book",
+      "level": 1,
+      "size": "display"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css"
+}

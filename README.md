@@ -47,7 +47,7 @@ npm run start      # watch mode
 
 The build uses `wp-scripts` with `--experimental-modules` so the Interactivity API `view.js` files ship as script modules, and `--blocks-manifest` so blocks register through `wp_register_block_types_from_metadata_collection()`.
 
-`build/` and `node_modules/` are git-ignored. Run `npm run build` after cloning, or commit `build/` for deployments without Node.
+`node_modules/` is git-ignored. `build/` **is committed** so the theme deploys to hosts without Node (cPanel). Run `npm run build` before committing any change under `src/`.
 
 ## Provisioning a site
 
@@ -58,6 +58,19 @@ wp eval-file wp-content/themes/bwfd/bin/import-pages.php
 ```
 
 Pass page slugs to update only those pages (`... import-pages.php home`). The script is idempotent. It creates or updates Home, About the book, About the author, Purchase, Small Group Guide, Other books, Enjoyed? and Churches & retail from the page patterns (nested patterns inlined so every page is literal, editable content), imports the design imagery into the Media Library, sets Home as the static front page, writes the primary navigation menu and drafts the default Sample Page.
+
+## Deploying with cPanel Git Version Control
+
+The repository includes `.cpanel.yml`, so cPanel can deploy the theme straight into WordPress:
+
+1. Push this repository to a remote (GitHub, Bitbucket or GitLab; a private repo is fine).
+2. In cPanel open **Git™ Version Control → Create**, turn on *Clone a Repository*, paste the clone URL, set the repository path to something outside the web root such as `/home/runningf/repositories/bwfd`, and create it. For a private repo use the SSH clone URL and add the key from cPanel's **SSH Access → Manage SSH Keys** as a deploy key on the remote.
+3. Edit `DEPLOYPATH` in `.cpanel.yml` to the site's theme folder (see the comment in the file), commit and push.
+4. To release: push to the remote, then in cPanel Git Version Control choose **Manage → Pull or Deploy → Update from Remote**, then **Deploy HEAD Commit**. cPanel copies the files into the theme folder; WordPress picks them up immediately.
+
+The alternative without a remote is to push directly to the cPanel repository over SSH (`git remote add cpanel ssh://runningf@server:/home/runningf/repositories/bwfd`); deploying on push happens automatically when `.cpanel.yml` is present.
+
+Content changes (pages, media, settings) are not part of the theme repository and are made on the live site.
 
 ## Deploying to another site
 

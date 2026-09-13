@@ -1,0 +1,54 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "bwfd/card-grid",
+  "version": "1.0.0",
+  "title": "Card grid",
+  "category": "bwfd",
+  "icon": "grid-view",
+  "description": "Responsive grid of cards. Auto-fits columns to the available width, or fixes a column count.",
+  "keywords": [
+    "grid",
+    "cards",
+    "columns"
+  ],
+  "textdomain": "bwfd",
+  "attributes": {
+    "columns": {
+      "type": "number",
+      "default": 0
+    },
+    "minWidth": {
+      "type": "number",
+      "default": 268
+    },
+    "gap": {
+      "type": "number",
+      "default": 22
+    },
+    "centered": {
+      "type": "boolean",
+      "default": false
+    },
+    "maxWidth": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "allowedBlocks": [
+    "bwfd/card",
+    "core/group",
+    "core/image"
+  ],
+  "supports": {
+    "anchor": true,
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ]
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css"
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "bwfd/hero",
+  "version": "1.0.0",
+  "title": "Hero",
+  "category": "bwfd",
+  "icon": "cover-image",
+  "description": "Full-width hero on the navy silhouette artwork with a choice of colour washes. Holds the cover image and headline.",
+  "keywords": [
+    "hero",
+    "banner",
+    "cover"
+  ],
+  "textdomain": "bwfd",
+  "attributes": {
+    "align": {
+      "type": "string",
+      "default": "full"
+    },
+    "wash": {
+      "type": "string",
+      "default": "radial"
+    },
+    "reverse": {
+      "type": "boolean",
+      "default": false
+    },
+    "backgroundId": {
+      "type": "number"
+    },
+    "backgroundUrl": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "supports": {
+    "anchor": true,
+    "html": false,
+    "align": [
+      "full"
+    ]
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css"
+}

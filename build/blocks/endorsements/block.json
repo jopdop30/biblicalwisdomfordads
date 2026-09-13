@@ -1,0 +1,53 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "bwfd/endorsements",
+  "version": "1.0.0",
+  "title": "Endorsements carousel",
+  "category": "bwfd",
+  "icon": "format-quote",
+  "description": "Rotating endorsement quotes on the navy texture, with previous/next, pause and a progress bar. Powered by the Interactivity API.",
+  "keywords": [
+    "endorsements",
+    "testimonials",
+    "quotes",
+    "carousel",
+    "slider"
+  ],
+  "textdomain": "bwfd",
+  "attributes": {
+    "interval": {
+      "type": "number",
+      "default": 8000
+    },
+    "autoplay": {
+      "type": "boolean",
+      "default": true
+    },
+    "navigation": {
+      "type": "string",
+      "default": "dots"
+    },
+    "minHeight": {
+      "type": "string",
+      "default": "300px"
+    }
+  },
+  "allowedBlocks": [
+    "bwfd/endorsement"
+  ],
+  "supports": {
+    "anchor": true,
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "interactivity": true
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "viewScriptModule": "file:./view.js"
+}

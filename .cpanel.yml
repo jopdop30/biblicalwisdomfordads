@@ -1,0 +1,13 @@
+---
+# cPanel Git Version Control deployment.
+#
+# In cPanel > Git Version Control, after "Update from Remote" click
+# "Deploy HEAD Commit" (or push to the repository) and cPanel runs these tasks.
+# Set DEPLOYPATH to the site's theme folder, e.g.
+#   /home/runningf/public_html/wp-content/themes/bwfd            (primary domain)
+#   /home/runningf/biblicalwisdomfordads.au/wp-content/themes/bwfd (addon domain document root)
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/runningf/biblicalwisdomfordads.au/wp-content/themes/bwfd
+    - /bin/mkdir -p "$DEPLOYPATH"
+    - /usr/bin/rsync -a --delete --exclude '.git' --exclude 'node_modules' --exclude 'src' --exclude '.cpanel.yml' --exclude '.gitignore' --exclude 'package.json' --exclude 'package-lock.json' ./ "$DEPLOYPATH"/

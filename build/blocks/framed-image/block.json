@@ -1,0 +1,73 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "bwfd/framed-image",
+  "version": "1.0.0",
+  "title": "Framed image",
+  "category": "bwfd",
+  "icon": "format-image",
+  "description": "Book cover or portrait with a soft shadow and an optional apricot panel behind it.",
+  "keywords": [
+    "image",
+    "cover",
+    "portrait",
+    "book"
+  ],
+  "textdomain": "bwfd",
+  "attributes": {
+    "id": {
+      "type": "number"
+    },
+    "url": {
+      "type": "string",
+      "source": "attribute",
+      "selector": "img",
+      "attribute": "src"
+    },
+    "alt": {
+      "type": "string",
+      "source": "attribute",
+      "selector": "img",
+      "attribute": "alt",
+      "default": ""
+    },
+    "width": {
+      "type": "number"
+    },
+    "height": {
+      "type": "number"
+    },
+    "panel": {
+      "type": "boolean",
+      "default": false
+    },
+    "shadow": {
+      "type": "string",
+      "default": "cover"
+    },
+    "maxWidth": {
+      "type": "string",
+      "default": "360px"
+    },
+    "aspectRatio": {
+      "type": "string",
+      "default": ""
+    },
+    "align": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "supports": {
+    "anchor": true,
+    "html": false,
+    "align": [
+      "left",
+      "center",
+      "right"
+    ]
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css"
+}
