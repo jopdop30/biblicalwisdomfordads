@@ -113,7 +113,22 @@ $navy: rgba(0, 56, 91, 1);
 		}
 	}
 
-	@media (max-width: 781px) {
+	/* Tablets keep the two-column hero with a smaller cover. */
+	@media (max-width: 899px) and (min-width: 640px) {
+		&__inner {
+			grid-template-columns: minmax(180px, 0.6fr) minmax(0, 1.4fr);
+			gap: 36px;
+			padding-top: 56px;
+			padding-bottom: 60px;
+		}
+
+		&__inner > .bwfd-framed-image {
+			max-width: 260px !important;
+		}
+	}
+
+	/* Phones stack the hero on a solid navy wash for legible text. */
+	@media (max-width: 639px) {
 		&__overlay,
 		&--reverse &__overlay {
 			background: linear-gradient(rgba(0, 56, 91, 0.86), rgba(0, 56, 91, 0.97)) !important;
@@ -121,13 +136,14 @@ $navy: rgba(0, 56, 91, 1);
 
 		&__inner {
 			grid-template-columns: minmax(0, 1fr);
-			gap: 36px;
-			padding-top: 48px;
-			padding-bottom: 56px;
+			gap: 32px;
+			padding-top: 40px;
+			padding-bottom: 48px;
 		}
 
 		&__inner > .bwfd-framed-image {
-			max-width: 240px !important;
+			max-width: 220px !important;
+			justify-self: center;
 		}
 
 		&--reverse .wp-block-heading,
@@ -145,6 +161,11 @@ $navy: rgba(0, 56, 91, 1);
 		&--reverse .wp-block-button.is-style-bwfd-apricot .wp-block-button__link {
 			background: var(--wp--preset--color--apricot);
 			color: var(--wp--preset--color--navy);
+		}
+
+		.wp-block-heading,
+		h1 {
+			font-size: clamp(30px, 8.5vw, 36px);
 		}
 	}
 }

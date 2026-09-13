@@ -12,6 +12,14 @@
 		padding: 28px;
 	}
 
+	@media (max-width: 600px) {
+		padding: 24px 20px;
+
+		&--pad-compact {
+			padding: 22px 20px;
+		}
+	}
+
 	&--accent-apricot {
 		border-top-color: var(--wp--preset--color--apricot);
 	}
