@@ -565,3 +565,17 @@ img {
 	flex-direction: column;
 	gap: 22px;
 }
+
+/* Consecutive full-width bands (hero, navy band) sit flush, as in the design. */
+.wp-block-post-content > .alignfull + .alignfull {
+	margin-block-start: 0 !important;
+}
+
+.wp-block-post-content > .alignfull:first-child {
+	margin-block-start: 0 !important;
+}
+
+/* Header, main and footer stack flush; sections manage their own spacing. */
+.wp-site-blocks > * + * {
+	margin-block-start: 0 !important;
+}

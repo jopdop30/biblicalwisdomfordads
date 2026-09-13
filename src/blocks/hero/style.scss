@@ -127,7 +127,7 @@ $navy: rgba(0, 56, 91, 1);
 		}
 
 		&__inner > .bwfd-framed-image {
-			max-width: 240px;
+			max-width: 240px !important;
 		}
 
 		&--reverse .wp-block-heading,
