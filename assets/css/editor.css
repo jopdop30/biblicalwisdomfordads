@@ -1,0 +1,31 @@
+/*
+ * Editor-only styles (loaded via add_editor_style, scoped to the canvas).
+ *
+ * theme.json paints the blue marble texture on <body>, and in the editor that
+ * selector becomes the editing canvas. On the front end the white "sheet"
+ * wash comes from the <main class="bwfd-sheet"> group in the templates, which
+ * is absent when a page is edited without the template shown. Apply the same
+ * wash to the canvas so content is edited on the surface visitors see.
+ */
+body.editor-styles-wrapper {
+	background-image:
+		linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)),
+		url(../images/tex-blue.jpg);
+	background-size: cover;
+	background-position: center center;
+	background-attachment: scroll;
+}
+
+/* With the template shown, the sheet is already washed by the canvas. */
+.editor-styles-wrapper .bwfd-sheet {
+	background: transparent;
+}
+
+.editor-styles-wrapper .bwfd-sheet--plain {
+	background: var(--wp--preset--color--white);
+}
+
+/* Give the post title (Page with title template) breathing room in the canvas. */
+.editor-styles-wrapper .editor-post-title {
+	margin-top: var(--wp--preset--spacing--70);
+}

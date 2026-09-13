@@ -23,7 +23,7 @@ require_once BWFD_DIR . '/inc/patterns.php';
  */
 function bwfd_setup(): void {
 	add_theme_support( 'editor-styles' );
-	add_editor_style( 'style.css' );
+	add_editor_style( array( 'style.css', 'assets/css/editor.css' ) );
 	add_theme_support( 'responsive-embeds' );
 	add_theme_support( 'post-thumbnails' );
 	add_theme_support( 'html5', array( 'style', 'script', 'search-form', 'gallery', 'caption' ) );
