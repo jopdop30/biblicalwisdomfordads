@@ -113,6 +113,9 @@ Any WordPress migration (Local's export, a migration plugin, or a database plus 
 `inc/performance.php` targets what PageSpeed measures on the designed pages:
 
 * **Hero preloads.** On any page that opens with a Hero block, the silhouette background (the Largest Contentful Paint element, otherwise only discoverable from an inline style) and the cover image are preloaded from `<head>`. The cover preload carries the same `imagesrcset`/`imagesizes` as the `<img>`, so the browser downloads one candidate once.
+* **Phone-sized hero artwork.** When the hero's artwork is in the Media Library, the block's inline `background-image` is swapped for two custom properties and the stylesheet uses the smallest same-ratio sub-size of at least 640px (normally `medium_large`) below 640px, where the artwork sits under an almost opaque navy wash. The preloads carry matching `media` attributes so a phone fetches only the small file.
+* **Lighter WebP.** Generated WebP sub-sizes use quality 75 rather than core's 86 (`wp_editor_set_quality`), roughly a third smaller at these display sizes. Run `wp media regenerate` on an existing site to re-encode earlier uploads.
+* **Trimmed global styles.** Core still prints the default colour, gradient, font-size and spacing presets that theme.json switches off; `wp_theme_json_data_default` drops them since nothing in the theme uses them.
 * **Responsive framed images.** Framed image blocks whose file is in the Media Library get `srcset`/`sizes` at render time (the block saves a plain `<img>`, so core's `wp-image-{id}` filter does not apply). Inside the hero the `sizes` mirror the hero's 220px phone and 260px tablet caps. A 440px sub-size (`bwfd-framed-sm`) is registered for high-density phones; after activating the theme on an existing site run `wp media regenerate --only-missing` so earlier uploads gain it.
 * **Inlined CSS.** `style.css` is inlined with the block styles core already inlines (`styles_inline_size_limit` raised to 80 KB), removing the render-blocking stylesheet requests. The page HTML grows by roughly 6 KB compressed in exchange.
 * **Compositor-friendly carousel.** The endorsements progress bar animates `transform: scaleX()` rather than `width`.
@@ -122,4 +125,4 @@ Framed image blocks output `width`/`height` so the browser reserves space and ca
 
 ## Fonts
 
-Bitter and Source Sans 3 are bundled as variable woff2 files (latin subset, SIL Open Font License) and declared in `theme.json`, so no requests go to Google Fonts.
+Bitter and Source Sans 3 are bundled as variable woff2 files (SIL Open Font License) and declared in `theme.json`, so no requests go to Google Fonts. The files are subset with `pyftsubset` to ASCII, Latin-1, Œ/œ, typographic punctuation (dashes, curly quotes, ellipsis, bullets), the euro, trade mark, minus and the fi/fl ligatures, which is about 15% smaller than Google's latin subset. Rename the files when replacing them: they are cached for a year.

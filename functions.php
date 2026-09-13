@@ -51,7 +51,7 @@ add_action( 'wp_enqueue_scripts', 'bwfd_enqueue_assets' );
  * Preload the two variable fonts so the hero heading does not flash.
  */
 function bwfd_preload_fonts(): void {
-	$fonts = array( 'bitter-latin.woff2', 'source-sans-3-latin.woff2' );
+	$fonts = array( 'bitter-latin-2.woff2', 'source-sans-3-latin-2.woff2' );
 	foreach ( $fonts as $font ) {
 		printf(
 			'<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>' . "\n",

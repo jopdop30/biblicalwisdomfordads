@@ -71,14 +71,14 @@
 							"fontStyle": "normal",
 							"fontWeight": "100 900",
 							"fontDisplay": "swap",
-							"src": [ "file:./assets/fonts/bitter-latin.woff2" ]
+							"src": [ "file:./assets/fonts/bitter-latin-2.woff2" ]
 						},
 						{
 							"fontFamily": "Bitter",
 							"fontStyle": "italic",
 							"fontWeight": "400",
 							"fontDisplay": "swap",
-							"src": [ "file:./assets/fonts/bitter-italic-latin.woff2" ]
+							"src": [ "file:./assets/fonts/bitter-italic-latin-2.woff2" ]
 						}
 					]
 				},
@@ -92,14 +92,14 @@
 							"fontStyle": "normal",
 							"fontWeight": "200 900",
 							"fontDisplay": "swap",
-							"src": [ "file:./assets/fonts/source-sans-3-latin.woff2" ]
+							"src": [ "file:./assets/fonts/source-sans-3-latin-2.woff2" ]
 						},
 						{
 							"fontFamily": "Source Sans 3",
 							"fontStyle": "italic",
 							"fontWeight": "400",
 							"fontDisplay": "swap",
-							"src": [ "file:./assets/fonts/source-sans-3-italic-latin.woff2" ]
+							"src": [ "file:./assets/fonts/source-sans-3-italic-latin-2.woff2" ]
 						}
 					]
 				}

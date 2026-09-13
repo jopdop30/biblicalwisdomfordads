@@ -38,6 +38,37 @@ function bwfd_perf_image_sizes(): void {
 add_action( 'after_setup_theme', 'bwfd_perf_image_sizes' );
 
 /**
+ * WebP sub-sizes at quality 75 rather than core's 86: indistinguishable at
+ * these display sizes and roughly a third smaller. Existing uploads need
+ * `wp media regenerate` to be re-encoded.
+ */
+add_filter( 'wp_editor_set_quality', static fn( int $quality, string $mime_type ): int => 'image/webp' === $mime_type ? 75 : $quality, 10, 2 );
+
+/**
+ * Core prints the default colour, gradient, duotone, font-size and spacing
+ * presets even though theme.json switches them off, and nothing in the theme
+ * or its patterns uses them. Dropping them trims the global styles CSS that
+ * ships inline with every page.
+ */
+function bwfd_perf_trim_default_presets( WP_Theme_JSON_Data $theme_json ): WP_Theme_JSON_Data {
+	return $theme_json->update_with(
+		array(
+			'version'  => 3,
+			'settings' => array(
+				'color'      => array(
+					'palette'   => array(),
+					'gradients' => array(),
+					'duotone'   => array(),
+				),
+				'typography' => array( 'fontSizes' => array() ),
+				'spacing'    => array( 'spacingSizes' => array() ),
+			),
+		)
+	);
+}
+add_filter( 'wp_theme_json_data_default', 'bwfd_perf_trim_default_presets' );
+
+/**
  * Attachment ID for an upload URL, cached because the lookup is a query
  * and the same cover appears on several pages.
  */
@@ -169,6 +200,73 @@ function bwfd_perf_framed_image_srcset( string $content, array $block ): string 
 add_filter( 'render_block_bwfd/framed-image', 'bwfd_perf_framed_image_srcset', 10, 2 );
 
 /**
+ * A phone-sized version of the hero artwork: the smallest same-ratio
+ * sub-size at least 640px wide (normally medium_large, 768px). Phones show
+ * the artwork under an 86-97% navy wash, so the original's detail is wasted
+ * there; the 768px file is about a quarter of the bytes.
+ *
+ * @param string $url Full-size artwork URL (the block's backgroundUrl).
+ * @param int    $id  Attachment ID when known.
+ * @return string Sub-size URL, or '' when none is suitable.
+ */
+function bwfd_perf_hero_small_background( string $url, int $id = 0 ): string {
+	$id = $id ?: bwfd_perf_attachment_id( $url );
+	if ( ! $id ) {
+		return '';
+	}
+	$meta = wp_get_attachment_metadata( $id );
+	if ( empty( $meta['sizes'] ) || empty( $meta['width'] ) || empty( $meta['height'] ) ) {
+		return '';
+	}
+	$best = null;
+	foreach ( $meta['sizes'] as $name => $size ) {
+		if ( $size['width'] < 640 || $size['width'] >= $meta['width'] ) {
+			continue;
+		}
+		if ( ! wp_image_matches_ratio( $size['width'], $size['height'], $meta['width'], $meta['height'] ) ) {
+			continue;
+		}
+		if ( ! $best || $size['width'] < $meta['sizes'][ $best ]['width'] ) {
+			$best = $name;
+		}
+	}
+	if ( ! $best ) {
+		return '';
+	}
+	$small = wp_get_attachment_image_url( $id, $best );
+	return $small && $small !== $url ? $small : '';
+}
+
+/**
+ * Swap the hero's inline background-image for two custom properties so the
+ * stylesheet can pick the phone-sized artwork below 640px.
+ *
+ * @param string $content Block HTML.
+ * @param array  $block   Parsed block.
+ * @return string
+ */
+function bwfd_perf_hero_background( string $content, array $block ): string {
+	$url = (string) ( $block['attrs']['backgroundUrl'] ?? '' );
+	if ( '' === $url || '' === $content ) {
+		return $content;
+	}
+	$small = bwfd_perf_hero_small_background( $url, (int) ( $block['attrs']['backgroundId'] ?? 0 ) );
+	if ( '' === $small ) {
+		return $content;
+	}
+	$processor = new WP_HTML_Tag_Processor( $content );
+	if ( ! $processor->next_tag( array( 'class_name' => 'bwfd-hero' ) ) ) {
+		return $content;
+	}
+	$style = (string) $processor->get_attribute( 'style' );
+	$style = trim( (string) preg_replace( '#background-image:\s*url\([^)]*\)\s*;?#i', '', $style ), "; \t" );
+	$style = ( '' !== $style ? $style . ';' : '' ) . sprintf( '--bwfd-hero-bg:url(%s);--bwfd-hero-bg-sm:url(%s)', esc_url( $url ), esc_url( $small ) );
+	$processor->set_attribute( 'style', $style );
+	return $processor->get_updated_html();
+}
+add_filter( 'render_block_bwfd/hero', 'bwfd_perf_hero_background', 10, 2 );
+
+/**
  * First hero block in a parsed block tree.
  *
  * @param array $blocks Parsed blocks.
@@ -216,7 +314,13 @@ function bwfd_perf_preload_hero(): void {
 		$background = $m[1];
 	}
 	if ( '' !== $background ) {
-		printf( '<link rel="preload" as="image" href="%s" fetchpriority="high">' . "\n", esc_url( $background ) );
+		$small = bwfd_perf_hero_small_background( $background, (int) ( $hero['attrs']['backgroundId'] ?? 0 ) );
+		if ( '' !== $small ) {
+			printf( '<link rel="preload" as="image" href="%s" media="(max-width: 639px)" fetchpriority="high">' . "\n", esc_url( $small ) );
+			printf( '<link rel="preload" as="image" href="%s" media="(min-width: 640px)" fetchpriority="high">' . "\n", esc_url( $background ) );
+		} else {
+			printf( '<link rel="preload" as="image" href="%s" fetchpriority="high">' . "\n", esc_url( $background ) );
+		}
 	}
 
 	foreach ( $hero['innerBlocks'] ?? array() as $inner ) {

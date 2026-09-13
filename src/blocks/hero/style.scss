@@ -3,6 +3,9 @@ $navy: rgba(0, 56, 91, 1);
 .bwfd-hero {
 	position: relative;
 	background-color: var(--wp--preset--color--navy);
+	/* Set by inc/performance.php when the artwork is in the Media Library;
+	   otherwise the block's inline background-image applies. */
+	background-image: var(--bwfd-hero-bg-sm, var(--bwfd-hero-bg));
 	background-position: center bottom;
 	background-size: cover;
 	background-repeat: no-repeat;
@@ -125,6 +128,10 @@ $navy: rgba(0, 56, 91, 1);
 		&__inner > .bwfd-framed-image {
 			max-width: 260px !important;
 		}
+	}
+
+	@media (min-width: 640px) {
+		background-image: var(--bwfd-hero-bg);
 	}
 
 	/* Phones stack the hero on a solid navy wash for legible text. */
