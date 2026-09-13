@@ -353,21 +353,3 @@ function bwfd_seo_webp_uploads( array $formats ): array {
 	return $formats;
 }
 add_filter( 'image_editor_output_format', 'bwfd_seo_webp_uploads' );
-
-/**
- * The hero cover is the largest above-the-fold image on the front page:
- * preload it so the browser fetches it before parsing the content.
- */
-function bwfd_seo_preload_hero(): void {
-	if ( ! is_front_page() || ! is_singular() ) {
-		return;
-	}
-	$post = get_queried_object();
-	if ( ! $post instanceof WP_Post || ! has_block( 'bwfd/hero', $post ) ) {
-		return;
-	}
-	if ( preg_match( '#<section[^>]*bwfd-hero[^>]*>.*?<img[^>]+src="([^"]+)"#si', $post->post_content, $m ) ) {
-		printf( '<link rel="preload" as="image" href="%s" fetchpriority="high">' . "\n", esc_url( $m[1] ) );
-	}
-}
-add_action( 'wp_head', 'bwfd_seo_preload_hero', 1 );

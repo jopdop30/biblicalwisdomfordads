@@ -15,15 +15,18 @@
 		z-index: 2;
 	}
 
+	/* Scaled on the compositor rather than animating width, which forces layout. */
 	&__bar {
 		height: 100%;
-		width: 0;
+		width: 100%;
+		transform: scaleX(0);
+		transform-origin: left center;
 		background: var(--wp--preset--color--apricot);
 		transition: none;
 
 		&.is-running {
-			width: 100%;
-			transition: width var(--bwfd-interval, 8000ms) linear;
+			transform: scaleX(1);
+			transition: transform var(--bwfd-interval, 8000ms) linear;
 		}
 
 		&.is-paused {

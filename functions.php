@@ -18,6 +18,7 @@ require_once BWFD_DIR . '/inc/blocks.php';
 require_once BWFD_DIR . '/inc/block-styles.php';
 require_once BWFD_DIR . '/inc/patterns.php';
 require_once BWFD_DIR . '/inc/seo.php';
+require_once BWFD_DIR . '/inc/performance.php';
 
 /**
  * Theme supports and editor assets.

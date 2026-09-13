@@ -106,9 +106,17 @@ Any WordPress migration (Local's export, a migration plugin, or a database plus 
 * `<meta name="description">` from the page **Excerpt** (pages gain an Excerpt panel), falling back to the first substantial paragraphs of the page, then the tagline.
 * Open Graph and Twitter card tags; the share image is the featured image, else the first image in the content, else the book cover.
 * JSON-LD: Organization, WebSite and WebPage on every page, the Book (with ISBNs and formats) on Home and About the book, and the author Person on About the author. Facts live in `bwfd_book_data()` and can be changed with the `bwfd_book_data` filter.
-* Emoji script, generator tag, shortlink and RSD/WLW links removed; Facebook preconnect only on pages with the feed; the hero cover is preloaded on the front page.
+* Emoji script, generator tag, shortlink and RSD/WLW links removed; Facebook preconnect only on pages with the feed.
 * Uploaded JPEG/PNG images get WebP sub-sizes (`image_editor_output_format`).
 * Core provides the rest: title tag, canonical, robots, XML sitemap at `/wp-sitemap.xml`.
+
+`inc/performance.php` targets what PageSpeed measures on the designed pages:
+
+* **Hero preloads.** On any page that opens with a Hero block, the silhouette background (the Largest Contentful Paint element, otherwise only discoverable from an inline style) and the cover image are preloaded from `<head>`. The cover preload carries the same `imagesrcset`/`imagesizes` as the `<img>`, so the browser downloads one candidate once.
+* **Responsive framed images.** Framed image blocks whose file is in the Media Library get `srcset`/`sizes` at render time (the block saves a plain `<img>`, so core's `wp-image-{id}` filter does not apply). Inside the hero the `sizes` mirror the hero's 220px phone and 260px tablet caps. A 440px sub-size (`bwfd-framed-sm`) is registered for high-density phones; after activating the theme on an existing site run `wp media regenerate --only-missing` so earlier uploads gain it.
+* **Inlined CSS.** `style.css` is inlined with the block styles core already inlines (`styles_inline_size_limit` raised to 80 KB), removing the render-blocking stylesheet requests. The page HTML grows by roughly 6 KB compressed in exchange.
+* **Compositor-friendly carousel.** The endorsements progress bar animates `transform: scaleX()` rather than `width`.
+* **Cache headers.** The theme's own `.htaccess` gives fonts and imagery under `assets/` a one-year immutable cache lifetime. Uploads and core assets keep the server's default; set the browser cache TTL for those in the host or Cloudflare if wanted. Rename a theme image when it changes (and purge the CDN) rather than editing it in place.
 
 Framed image blocks output `width`/`height` so the browser reserves space and can lazy-load below-the-fold images.
 
