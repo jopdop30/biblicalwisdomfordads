@@ -6,6 +6,9 @@
  *
  *   wp eval-file wp-content/themes/bwfd/bin/import-pages.php
  *
+ * Pass page slugs to limit the run, e.g. `... import-pages.php home purchase`
+ * (existing edits on other pages are then left untouched).
+ *
  * It is idempotent: pages are matched by slug and updated in place, images
  * are imported into the Media Library once, the primary navigation menu is
  * written, and the home page is set as the front page.
@@ -79,6 +82,14 @@ function bwfd_import_theme_image( string $file ): string {
 	update_post_meta( $id, '_bwfd_source', $file );
 	WP_CLI::log( "Imported $file as attachment $id" );
 	return wp_get_attachment_url( $id );
+}
+
+$bwfd_only = array_values( array_filter( array_map( 'sanitize_title', (array) ( $args ?? array() ) ) ) );
+if ( $bwfd_only ) {
+	$bwfd_pages = array_intersect_key( $bwfd_pages, array_flip( $bwfd_only ) );
+	if ( ! $bwfd_pages ) {
+		WP_CLI::error( 'No matching page slugs: ' . implode( ', ', $bwfd_only ) );
+	}
 }
 
 $bwfd_registry = WP_Block_Patterns_Registry::get_instance();
@@ -161,13 +172,17 @@ if ( in_array( get_option( 'blogname' ), array( 'biblicalwisdomfordads', 'My Wor
 }
 
 // Front page.
-if ( isset( $bwfd_ids['home'] ) ) {
+if ( isset( $bwfd_ids['home'] ) && 'page' !== get_option( 'show_on_front' ) ) {
 	update_option( 'show_on_front', 'page' );
 	update_option( 'page_on_front', $bwfd_ids['home'] );
 	WP_CLI::log( 'Set Home as the static front page.' );
 }
 
 // Primary navigation (wp_navigation post used by the header's Navigation block).
+if ( $bwfd_only ) {
+	WP_CLI::success( 'Updated: ' . implode( ', ', array_keys( $bwfd_ids ) ) . '. Navigation left unchanged for a partial run.' );
+	return;
+}
 $bwfd_links = '';
 foreach ( $bwfd_nav as list( $bwfd_label, $bwfd_slug, $bwfd_class ) ) {
 	if ( ! isset( $bwfd_ids[ $bwfd_slug ] ) ) {

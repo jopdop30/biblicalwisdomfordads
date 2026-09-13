@@ -6,7 +6,7 @@
  * Block Types: core/post-content
  * Post Types: page
  * Viewport Width: 1280
- * Description: Hero, navy call to action, three endorsements, three info cards and the social media section.
+ * Description: Hero, navy call to action, three endorsements, three info cards, social links and the Facebook page feed.
  *
  * @package bwfd
  */
@@ -146,14 +146,12 @@ $bwfd_art   = bwfd_image( 'art-silhouette.jpg' );
 
 		<!-- wp:column {"verticalAlignment":"center"} -->
 		<div class="wp-block-column is-vertically-aligned-center">
-			<!-- wp:bwfd/card {"accent":"none","padding":"compact","className":"bwfd-feed-placeholder"} -->
-			<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-none bwfd-card--marble bwfd-card--pad-compact bwfd-feed-placeholder">
+			<!-- wp:bwfd/card {"accent":"none","padding":"compact","style":{"spacing":{"blockGap":"16px"}}} -->
+			<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-none bwfd-card--marble bwfd-card--pad-compact" style="gap:16px">
 				<!-- wp:paragraph {"align":"center","className":"bwfd-kicker","textColor":"blue"} -->
 				<p class="has-text-align-center bwfd-kicker has-blue-color has-text-color">Facebook page feed</p>
 				<!-- /wp:paragraph -->
-				<!-- wp:paragraph {"align":"center"} -->
-				<p class="has-text-align-center">The live feed from the <em>Biblical Wisdom for Dads</em> page embeds here. Replace this text with an embed or plugin shortcode.</p>
-				<!-- /wp:paragraph -->
+				<!-- wp:bwfd/facebook-page {"url":"https://www.facebook.com/biblicalwisdomfordads","height":520} /-->
 			</div>
 			<!-- /wp:bwfd/card -->
 		</div>

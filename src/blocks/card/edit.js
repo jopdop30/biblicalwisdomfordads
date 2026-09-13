@@ -21,6 +21,7 @@ const ALLOWED_BLOCKS = [
 	'bwfd/icon',
 	'bwfd/badge',
 	'bwfd/framed-image',
+	'bwfd/facebook-page',
 ];
 
 const TEMPLATE = [

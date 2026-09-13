@@ -28,6 +28,7 @@ All blocks live under the **Biblical Wisdom for Dads** inserter category.
 | Framed image | Cover/portrait with a soft shadow, optional apricot offset panel, ratio crop and max width. |
 | Badge | Small uppercase status pill ("Coming soon", "URL TBA"). |
 | Icon | One of thirteen line icons, plain or in an apricot circle. Rendered server-side from `inc/icons.php`. |
+| Facebook page feed | Facebook Page Plugin embed (timeline by default) for facebook.com/biblicalwisdomfordads. Page URL, tabs, height, header and cover options in the sidebar; sized to its container. |
 | Hero | Full-width hero on the silhouette artwork with radial, linear or solid navy wash (and a reversed, pale-behind-text option). |
 | Endorsements carousel | Interactivity API carousel: autoplay with progress bar, pause, previous/next, dots or "n of N" counter, keyboard arrows, hover pause, reduced-motion aware. Child block: Endorsement. |
 | Reveal panel | Interactivity API disclosure ("Key information" / "Hide key information") wrapping any blocks. |
@@ -56,7 +57,7 @@ With the theme active:
 wp eval-file wp-content/themes/bwfd/bin/import-pages.php
 ```
 
-The script is idempotent. It creates or updates Home, About the book, About the author, Purchase, Small Group Guide, Other books, Enjoyed? and Churches & retail from the page patterns (nested patterns inlined so every page is literal, editable content), imports the design imagery into the Media Library, sets Home as the static front page, writes the primary navigation menu and drafts the default Sample Page.
+Pass page slugs to update only those pages (`... import-pages.php home`). The script is idempotent. It creates or updates Home, About the book, About the author, Purchase, Small Group Guide, Other books, Enjoyed? and Churches & retail from the page patterns (nested patterns inlined so every page is literal, editable content), imports the design imagery into the Media Library, sets Home as the static front page, writes the primary navigation menu and drafts the default Sample Page.
 
 ## Editing
 
@@ -64,7 +65,7 @@ The script is idempotent. It creates or updates Home, About the book, About the 
 * To start a new page from a design layout, add a page and pick a layout from the **BWFD pages** patterns in the "Choose a pattern" modal, or insert a **BWFD sections** pattern anywhere.
 * Colours, fonts, spacing and button styles are managed in **Appearance → Editor → Styles** via `theme.json`.
 * Header and footer are template parts; the menu is a normal Navigation block menu ("Primary navigation"). The "Buy the book" item is styled as a button through the `bwfd-nav-button` CSS class on that link.
-* The Facebook feed card on the home page is a placeholder: replace its paragraph with the feed embed or plugin shortcode when available.
+* The Facebook feed card on the home page embeds the page timeline; change the page URL or tabs in the block sidebar.
 * Purchase and media-kit links marked "URL TBA" / `#` are placeholders awaiting final URLs.
 
 ## Fonts
