@@ -95,3 +95,42 @@ function bwfd_texture_tokens(): void {
 	wp_enqueue_style( 'bwfd-tokens' );
 }
 add_action( 'enqueue_block_assets', 'bwfd_texture_tokens' );
+
+/**
+ * Edit pages inside their template ("template-locked" rendering).
+ *
+ * The designed pages carry their own heading in the content, and the default
+ * page template does not render the post title, so editing with the template
+ * shown avoids a duplicate title field above the content. Templates that do
+ * render the title (Page with title) still show it as an editable block.
+ *
+ * WordPress resolves the mode from, in order: the user's own toggle, the post
+ * type's editor support `default-mode`, then the editor setting.
+ */
+function bwfd_page_rendering_mode_support(): void {
+	$existing = get_all_post_type_supports( 'page' )['editor'] ?? true;
+	$args     = is_array( $existing ) ? array_values( $existing ) : array();
+	foreach ( $args as $arg ) {
+		if ( is_array( $arg ) && isset( $arg['default-mode'] ) ) {
+			return;
+		}
+	}
+	$args[] = array( 'default-mode' => 'template-locked' );
+	add_post_type_support( 'page', 'editor', ...$args );
+}
+add_action( 'init', 'bwfd_page_rendering_mode_support', 20 );
+
+/**
+ * Fallback for the same default via the editor settings.
+ *
+ * @param array                   $settings Editor settings.
+ * @param WP_Block_Editor_Context $context  Editor context.
+ * @return array
+ */
+function bwfd_page_rendering_mode_setting( array $settings, WP_Block_Editor_Context $context ): array {
+	if ( isset( $context->post ) && 'page' === $context->post->post_type ) {
+		$settings['defaultRenderingMode'] = 'template-locked';
+	}
+	return $settings;
+}
+add_filter( 'block_editor_settings_all', 'bwfd_page_rendering_mode_setting', 10, 2 );
