@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "bwfd/reveal",
+	"version": "1.0.0",
+	"title": "Reveal panel",
+	"category": "bwfd",
+	"icon": "arrow-down-alt2",
+	"description": "A text link that reveals extra content, such as key book information. Powered by the Interactivity API.",
+	"keywords": [ "toggle", "details", "reveal", "expand", "accordion" ],
+	"textdomain": "bwfd",
+	"attributes": {
+		"openLabel": { "type": "string", "default": "Key information" },
+		"closeLabel": { "type": "string", "default": "Hide key information" },
+		"defaultOpen": { "type": "boolean", "default": false }
+	},
+	"supports": {
+		"anchor": true,
+		"html": false,
+		"interactivity": true
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScriptModule": "file:./view.js"
+}

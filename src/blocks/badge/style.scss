@@ -1,0 +1,21 @@
+.wp-block-bwfd-badge {
+	display: inline-block;
+	align-self: flex-start;
+	padding: 5px 12px;
+	border-radius: var(--wp--custom--radius--small, 3px);
+	background: var(--wp--preset--color--white);
+	color: var(--wp--preset--color--grey);
+	font-size: var(--wp--preset--font-size--sm, 13.5px);
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	line-height: 1.4;
+
+	&.has-background {
+		background-color: var(--wp--preset--color--white);
+	}
+
+	span[contenteditable] {
+		min-width: 4em;
+		display: inline-block;
+	}
+}

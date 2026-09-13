@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "bwfd/badge",
+	"version": "1.0.0",
+	"title": "Badge",
+	"category": "bwfd",
+	"icon": "tag",
+	"description": "Small uppercase status label, such as “Coming soon” or “URL TBA”.",
+	"keywords": [ "badge", "label", "status", "pill" ],
+	"textdomain": "bwfd",
+	"attributes": {
+		"content": {
+			"type": "rich-text",
+			"source": "rich-text",
+			"selector": "span"
+		}
+	},
+	"supports": {
+		"html": false,
+		"color": { "text": true, "background": true, "link": false },
+		"typography": { "fontSize": true }
+	},
+	"example": { "attributes": { "content": "Coming soon" } },
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css"
+}

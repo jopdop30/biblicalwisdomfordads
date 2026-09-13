@@ -1,0 +1,36 @@
+.bwfd-card-grid {
+	display: grid;
+	gap: var(--bwfd-grid-gap, 22px);
+	grid-template-columns: repeat(auto-fit, minmax(min(var(--bwfd-grid-min, 268px), 100%), 1fr));
+
+	> * {
+		min-width: 0;
+	}
+
+	&--fixed {
+		grid-template-columns: repeat(var(--bwfd-grid-cols, 2), minmax(0, 1fr));
+
+		@media (max-width: 781px) {
+			grid-template-columns: repeat(auto-fit, minmax(min(var(--bwfd-grid-min, 268px), 100%), 1fr));
+		}
+	}
+
+	&--centered {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+
+		> * {
+			flex: 1 1 var(--bwfd-grid-min, 268px);
+			max-width: calc(33.333% - (var(--bwfd-grid-gap, 22px) * 2 / 3));
+
+			@media (max-width: 899px) {
+				max-width: calc(50% - (var(--bwfd-grid-gap, 22px) / 2));
+			}
+
+			@media (max-width: 599px) {
+				max-width: 100%;
+			}
+		}
+	}
+}

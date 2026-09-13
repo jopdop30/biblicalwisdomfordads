@@ -1,0 +1,144 @@
+.bwfd-endorsements {
+	position: relative;
+	border-radius: var(--wp--custom--radius--medium, 4px);
+	overflow: hidden;
+	background: var(--wp--preset--color--navy) var(--bwfd-tex-navy) center / cover no-repeat;
+	color: var(--wp--preset--color--white);
+
+	&__progress {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 3px;
+		background: rgba(255, 255, 255, 0.18);
+		z-index: 2;
+	}
+
+	&__bar {
+		height: 100%;
+		width: 0;
+		background: var(--wp--preset--color--apricot);
+		transition: none;
+
+		&.is-running {
+			width: 100%;
+			transition: width var(--bwfd-interval, 8000ms) linear;
+		}
+
+		&.is-paused {
+			opacity: 0.25;
+		}
+	}
+
+	&__frame {
+		position: absolute;
+		inset: 18px;
+		border: 1px solid rgba(248, 187, 124, 0.7);
+		border-radius: var(--wp--custom--radius--small, 3px);
+		pointer-events: none;
+	}
+
+	&__inner {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 22px;
+		text-align: center;
+		min-height: var(--bwfd-min-height, 300px);
+		padding: clamp(38px, 5vw, 66px) clamp(34px, 6vw, 86px);
+		box-sizing: border-box;
+	}
+
+	&__slides {
+		display: grid;
+		width: 100%;
+	}
+
+	&__slide {
+		grid-area: 1 / 1;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 20px;
+		opacity: 0;
+		visibility: hidden;
+		transform: translateY(10px);
+		transition: opacity 320ms ease, transform 320ms ease, visibility 0s linear 320ms;
+
+		&.is-active {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+			transition: opacity 320ms ease 120ms, transform 320ms ease 120ms, visibility 0s;
+		}
+	}
+
+	&__controls {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		margin-top: 4px;
+	}
+
+	&__btn {
+		width: 40px;
+		height: 40px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid rgba(248, 187, 124, 0.6);
+		background: transparent;
+		color: var(--wp--preset--color--apricot);
+		border-radius: var(--wp--custom--radius--small, 3px);
+		cursor: pointer;
+		font-size: 18px;
+		font-family: inherit;
+		line-height: 1;
+		transition: background-color 160ms ease;
+
+		&:hover,
+		&:focus-visible {
+			background: rgba(248, 187, 124, 0.16);
+		}
+
+		&--pause {
+			font-size: 13px;
+			letter-spacing: 1px;
+		}
+	}
+
+	&__dots {
+		display: flex;
+		gap: 8px;
+	}
+
+	&__dot {
+		width: 9px;
+		height: 9px;
+		padding: 0;
+		border: 0;
+		border-radius: 50%;
+		cursor: pointer;
+		background: rgba(255, 255, 255, 0.35);
+		transition: background-color 200ms ease;
+
+		&.is-active {
+			background: var(--wp--preset--color--apricot);
+		}
+	}
+
+	&__count {
+		font-size: var(--wp--preset--font-size--sm, 13.5px);
+		letter-spacing: 0.1em;
+		color: rgba(255, 255, 255, 0.75);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.bwfd-endorsements__slide {
+		transition: none;
+	}
+}

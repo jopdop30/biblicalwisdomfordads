@@ -1,0 +1,26 @@
+.bwfd-endorsements.is-editing {
+	.bwfd-endorsements__inner {
+		align-items: stretch;
+		text-align: left;
+	}
+
+	.bwfd-endorsements__editor-note {
+		margin: 0;
+		font-size: 12px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--wp--preset--color--apricot);
+		text-align: center;
+	}
+
+	.bwfd-endorsements__slides {
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+	}
+
+	.wp-block-bwfd-endorsement {
+		padding-bottom: 24px;
+		border-bottom: 1px dashed rgba(248, 187, 124, 0.5);
+	}
+}

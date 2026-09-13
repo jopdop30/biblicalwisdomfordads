@@ -1,0 +1,6 @@
+.bwfd-card-grid {
+	> .block-list-appender {
+		grid-column: 1 / -1;
+		flex-basis: 100%;
+	}
+}

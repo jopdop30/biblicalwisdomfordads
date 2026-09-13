@@ -1,0 +1,567 @@
+/*
+Theme Name: Biblical Wisdom for Dads
+Theme URI: https://www.biblicalwisdomfordads.au
+Author: The Code Co
+Author URI: https://thecode.co
+Description: Block theme for the Biblical Wisdom for Dads book site by Stephen Parker. Built for the WordPress site editor with custom blocks for cards, framed imagery, section headings, the endorsements carousel and reveal panels.
+Requires at least: 6.7
+Tested up to: 7.1
+Requires PHP: 8.0
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: bwfd
+Tags: block-theme, full-site-editing, one-column, custom-colors, custom-logo, editor-style, block-patterns, block-styles
+*/
+
+/* -------------------------------------------------------------------------
+ * Design tokens that theme.json cannot express (texture images, rules).
+ * Relative URLs resolve against this stylesheet, so they work on the front
+ * end and inside the editor iframe.
+ * ---------------------------------------------------------------------- */
+:root {
+	--bwfd-tex-navy: url(assets/images/tex-navy.jpg);
+	--bwfd-tex-apricot: url(assets/images/tex-apricot.jpg);
+	--bwfd-tex-marble: url(assets/images/tex-white.jpg);
+	--bwfd-tex-blue: url(assets/images/tex-blue.jpg);
+	--bwfd-focus: 2px solid var(--wp--preset--color--blue);
+}
+
+::selection {
+	background: var(--wp--preset--color--gold);
+	color: var(--wp--preset--color--ink);
+}
+
+:focus-visible {
+	outline: var(--bwfd-focus);
+	outline-offset: 3px;
+}
+
+body {
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+p {
+	text-wrap: pretty;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	text-wrap: balance;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+}
+
+/* -------------------------------------------------------------------------
+ * Page structure
+ * ---------------------------------------------------------------------- */
+
+/* The white "sheet" that sits over the blue texture on the body. */
+.bwfd-sheet {
+	background: linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88));
+}
+
+.bwfd-sheet--plain {
+	background: var(--wp--preset--color--white);
+}
+
+/* Brand gradient stripe (header / footer). */
+.bwfd-stripe {
+	height: 4px;
+	min-height: 4px;
+	padding: 0 !important;
+}
+
+/* Apricot rule under headings (also used standalone). */
+.bwfd-rule {
+	width: var(--wp--custom--rule--width);
+	height: var(--wp--custom--rule--height);
+	background: var(--wp--preset--color--apricot);
+}
+
+/* Narrow measure helpers for prose. */
+.bwfd-measure {
+	max-width: var(--wp--custom--content--text);
+}
+
+.bwfd-measure-narrow {
+	max-width: var(--wp--custom--content--narrow);
+}
+
+/* Kicker / eyebrow text. */
+.bwfd-kicker {
+	font-size: var(--wp--preset--font-size--xs);
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+}
+
+/* -------------------------------------------------------------------------
+ * Texture surfaces – block styles on core/group.
+ * ---------------------------------------------------------------------- */
+.is-style-bwfd-navy {
+	background: var(--wp--preset--color--navy) var(--bwfd-tex-navy) center / cover no-repeat;
+	color: var(--wp--preset--color--white);
+}
+
+.is-style-bwfd-apricot {
+	background: var(--wp--preset--color--apricot) var(--bwfd-tex-apricot) center / cover no-repeat;
+	color: var(--wp--preset--color--ink);
+}
+
+.is-style-bwfd-marble {
+	background: var(--wp--preset--color--white) var(--bwfd-tex-marble) center / cover no-repeat;
+	color: var(--wp--preset--color--ink);
+}
+
+.is-style-bwfd-navy,
+.is-style-bwfd-navy .wp-block-heading,
+.is-style-bwfd-navy h1,
+.is-style-bwfd-navy h2,
+.is-style-bwfd-navy h3 {
+	color: var(--wp--preset--color--white);
+}
+
+.is-style-bwfd-navy a:where(:not(.wp-element-button)) {
+	color: var(--wp--preset--color--gold);
+}
+
+.is-style-bwfd-navy a:where(:not(.wp-element-button)):hover {
+	color: var(--wp--preset--color--white);
+}
+
+.is-style-bwfd-apricot .wp-block-heading,
+.is-style-bwfd-marble .wp-block-heading {
+	color: var(--wp--preset--color--navy);
+}
+
+/* -------------------------------------------------------------------------
+ * Buttons – block styles on core/button.
+ * ---------------------------------------------------------------------- */
+.wp-block-button .wp-block-button__link {
+	transition: background-color 160ms ease, color 160ms ease, opacity 160ms ease;
+}
+
+/* Apricot fill (hero / CTA). */
+.wp-block-button.is-style-bwfd-apricot .wp-block-button__link {
+	background-color: var(--wp--preset--color--apricot);
+	color: var(--wp--preset--color--navy);
+}
+
+.wp-block-button.is-style-bwfd-apricot .wp-block-button__link:hover,
+.wp-block-button.is-style-bwfd-apricot .wp-block-button__link:focus {
+	background-color: var(--wp--preset--color--gold);
+	color: var(--wp--preset--color--navy);
+}
+
+/* Outline (core style, restyled). */
+.wp-block-button.is-style-outline .wp-block-button__link,
+.wp-block-button.is-style-outline > .wp-block-button__link:not(.has-text-color) {
+	background-color: transparent;
+	border: 1px solid currentColor;
+	color: var(--wp--preset--color--navy);
+	padding: 12px 24px;
+}
+
+.wp-block-button.is-style-outline .wp-block-button__link:hover,
+.wp-block-button.is-style-outline .wp-block-button__link:focus {
+	background-color: var(--wp--preset--color--navy);
+	color: var(--wp--preset--color--white);
+}
+
+.is-style-bwfd-navy .wp-block-button.is-style-outline .wp-block-button__link,
+.bwfd-hero .wp-block-button.is-style-outline .wp-block-button__link {
+	color: var(--wp--preset--color--apricot);
+}
+
+.is-style-bwfd-navy .wp-block-button.is-style-outline .wp-block-button__link:hover,
+.bwfd-hero .wp-block-button.is-style-outline .wp-block-button__link:hover {
+	background-color: rgba(248, 187, 124, 0.16);
+	color: var(--wp--preset--color--gold);
+}
+
+/* Text link with apricot underline. */
+.wp-block-button.is-style-bwfd-text-link .wp-block-button__link {
+	background: transparent;
+	color: var(--wp--preset--color--navy);
+	padding: 0 0 2px;
+	border-radius: 0;
+	border-bottom: 2px solid var(--wp--preset--color--apricot);
+	line-height: 1.3;
+}
+
+.wp-block-button.is-style-bwfd-text-link .wp-block-button__link:hover,
+.wp-block-button.is-style-bwfd-text-link .wp-block-button__link:focus {
+	background: transparent;
+	color: var(--wp--preset--color--blue);
+}
+
+.is-style-bwfd-navy .wp-block-button.is-style-bwfd-text-link .wp-block-button__link,
+.bwfd-hero .wp-block-button.is-style-bwfd-text-link .wp-block-button__link {
+	color: var(--wp--preset--color--white);
+}
+
+.is-style-bwfd-navy .wp-block-button.is-style-bwfd-text-link .wp-block-button__link:hover,
+.bwfd-hero .wp-block-button.is-style-bwfd-text-link .wp-block-button__link:hover {
+	color: var(--wp--preset--color--gold);
+}
+
+/* Large serif call-to-action button (navy band). */
+.wp-block-button.is-style-bwfd-cta .wp-block-button__link {
+	background-color: var(--wp--preset--color--apricot);
+	color: var(--wp--preset--color--navy);
+	font-family: var(--wp--preset--font-family--serif);
+	font-size: var(--wp--preset--font-size--2xl);
+	padding: 20px 46px;
+}
+
+.wp-block-button.is-style-bwfd-cta .wp-block-button__link:hover,
+.wp-block-button.is-style-bwfd-cta .wp-block-button__link:focus {
+	background-color: var(--wp--preset--color--gold);
+	color: var(--wp--preset--color--navy);
+}
+
+/* Compact button used inside cards. */
+.wp-block-button.is-style-bwfd-compact .wp-block-button__link {
+	padding: 13px 22px;
+	font-size: var(--wp--preset--font-size--base);
+}
+
+/* Icon + label pill (social buttons). */
+.wp-block-button.is-style-bwfd-social .wp-block-button__link {
+	background: transparent;
+	border: 1px solid var(--wp--preset--color--navy);
+	color: var(--wp--preset--color--navy);
+	padding: 11px 20px;
+	font-size: var(--wp--preset--font-size--base);
+}
+
+.wp-block-button.is-style-bwfd-social .wp-block-button__link:hover,
+.wp-block-button.is-style-bwfd-social .wp-block-button__link:focus {
+	background: var(--wp--preset--color--navy);
+	color: var(--wp--preset--color--white);
+}
+
+/* -------------------------------------------------------------------------
+ * Header
+ * ---------------------------------------------------------------------- */
+.bwfd-header {
+	position: relative;
+	z-index: 20;
+}
+
+.bwfd-brand {
+	font-family: var(--wp--preset--font-family--serif);
+	font-weight: 600;
+	font-size: clamp(22px, 2.8vw, 30px);
+	line-height: 1.05;
+	letter-spacing: -0.01em;
+	margin: 0;
+}
+
+.bwfd-brand a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.bwfd-brand .has-inline-color {
+	background: none;
+}
+
+.bwfd-header .wp-block-navigation .wp-block-navigation-item__content {
+	padding: 4px 0;
+	border-bottom: 2px solid transparent;
+	text-decoration: none;
+	transition: color 160ms ease, border-color 160ms ease;
+}
+
+.bwfd-header .wp-block-navigation .current-menu-item > .wp-block-navigation-item__content,
+.bwfd-header .wp-block-navigation .current-menu-ancestor > .wp-block-navigation-item__content {
+	color: var(--wp--preset--color--apricot);
+	border-bottom-color: var(--wp--preset--color--apricot);
+}
+
+/* "Buy the book" nav item styled as a button. */
+.bwfd-header .wp-block-navigation .bwfd-nav-button > .wp-block-navigation-item__content {
+	margin-left: 6px;
+	padding: 8px 18px;
+	border-radius: var(--wp--custom--radius--small);
+	border-bottom: 0;
+	background: var(--wp--preset--color--apricot);
+	color: var(--wp--preset--color--navy);
+	font-weight: 600;
+}
+
+.bwfd-header .wp-block-navigation .bwfd-nav-button > .wp-block-navigation-item__content:hover {
+	background: var(--wp--preset--color--gold);
+	color: var(--wp--preset--color--navy);
+}
+
+.bwfd-header .wp-block-navigation__responsive-container.is-menu-open .bwfd-nav-button > .wp-block-navigation-item__content {
+	margin-left: 0;
+	margin-top: 8px;
+}
+
+.bwfd-header .wp-block-navigation__responsive-container-open,
+.bwfd-header .wp-block-navigation__responsive-container-close {
+	color: var(--wp--preset--color--white);
+}
+
+/* -------------------------------------------------------------------------
+ * Footer
+ * ---------------------------------------------------------------------- */
+.bwfd-footer {
+	color: var(--wp--preset--color--white);
+}
+
+.bwfd-footer .bwfd-brand {
+	font-size: 21px;
+}
+
+.bwfd-footer a:where(:not(.wp-element-button)) {
+	color: var(--wp--preset--color--white);
+	text-decoration: none;
+	transition: color 160ms ease;
+}
+
+.bwfd-footer a:where(:not(.wp-element-button)):hover {
+	color: var(--wp--preset--color--apricot);
+}
+
+.bwfd-footer .bwfd-footer-email a {
+	color: var(--wp--preset--color--gold);
+}
+
+.bwfd-footer .bwfd-footer-muted {
+	color: rgba(255, 255, 255, 0.7);
+}
+
+.bwfd-footer-links {
+	list-style: none;
+	margin: 0;
+	padding: 0 !important;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.bwfd-footer-links li {
+	margin: 0;
+}
+
+/* -------------------------------------------------------------------------
+ * Tables – key information and pricing.
+ * ---------------------------------------------------------------------- */
+.wp-block-table.is-style-bwfd-key-info table {
+	border-collapse: collapse;
+	max-width: 46em;
+}
+
+.wp-block-table.is-style-bwfd-key-info td,
+.wp-block-table.is-style-bwfd-key-info th {
+	border: 0;
+	padding: 6px 22px 6px 0;
+	vertical-align: top;
+	line-height: 1.45;
+}
+
+.wp-block-table.is-style-bwfd-key-info tr > :first-child {
+	width: 1%;
+	white-space: nowrap;
+	font-size: 12px;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--blue);
+	padding-top: 9px;
+}
+
+.wp-block-table.is-style-bwfd-pricing table {
+	border-collapse: collapse;
+	max-width: 46em;
+}
+
+.wp-block-table.is-style-bwfd-pricing thead th {
+	background: var(--wp--preset--color--navy);
+	color: var(--wp--preset--color--white);
+	font-weight: 600;
+	border: 0;
+	padding: 10px 14px;
+	text-align: left;
+}
+
+.wp-block-table.is-style-bwfd-pricing thead th:not(:first-child),
+.wp-block-table.is-style-bwfd-pricing tbody td:not(:first-child) {
+	text-align: right;
+}
+
+.wp-block-table.is-style-bwfd-pricing tbody td {
+	border: 0;
+	border-bottom: 1px solid var(--wp--preset--color--line);
+	padding: 10px 14px;
+}
+
+.wp-block-table.is-style-bwfd-pricing tbody tr:nth-child(even) td {
+	background: var(--wp--preset--color--surface);
+}
+
+/* -------------------------------------------------------------------------
+ * Layout helpers used by the page patterns.
+ * ---------------------------------------------------------------------- */
+
+/* Two column feature split: text + framed image. Stacks under 782px. */
+.bwfd-split {
+	display: grid;
+	gap: var(--wp--preset--spacing--70) 56px;
+	align-items: start;
+}
+
+.bwfd-split--text-image {
+	grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+}
+
+.bwfd-split--image-text {
+	grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+}
+
+.bwfd-split--book {
+	grid-template-columns: minmax(0, 0.45fr) minmax(0, 1.55fr);
+	gap: 44px;
+}
+
+.bwfd-split--purchase {
+	grid-template-columns: minmax(0, 65fr) minmax(230px, 35fr);
+	gap: 40px;
+}
+
+.bwfd-split > * {
+	min-width: 0;
+}
+
+@media (max-width: 781px) {
+	.bwfd-split--text-image,
+	.bwfd-split--image-text,
+	.bwfd-split--book,
+	.bwfd-split--purchase {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.bwfd-split--image-text > .bwfd-framed-image,
+	.bwfd-split--text-image > .bwfd-framed-image {
+		max-width: 320px;
+	}
+
+	.bwfd-split--book > .wp-block-image {
+		max-width: 260px;
+	}
+}
+
+/* Section spacing rhythm. */
+.bwfd-section {
+	padding-top: var(--wp--preset--spacing--90);
+}
+
+.bwfd-section--first {
+	padding-top: var(--wp--preset--spacing--80);
+}
+
+.bwfd-section--last {
+	padding-bottom: var(--wp--preset--spacing--100);
+}
+
+@media (max-width: 600px) {
+	.bwfd-section {
+		padding-top: var(--wp--preset--spacing--70);
+	}
+
+	.bwfd-section--first {
+		padding-top: var(--wp--preset--spacing--70);
+	}
+
+	.bwfd-section--last {
+		padding-bottom: var(--wp--preset--spacing--80);
+	}
+}
+
+/* Facebook feed placeholder. */
+.bwfd-feed-placeholder {
+	min-height: 250px;
+	border: 1px solid var(--wp--preset--color--line);
+	text-align: center;
+}
+
+/* Blog / archive content sheet. */
+.bwfd-prose {
+	max-width: var(--wp--custom--content--text);
+}
+
+.bwfd-prose > * + * {
+	margin-block-start: var(--wp--preset--spacing--50);
+}
+
+/* Screen reader only. */
+.screen-reader-text {
+	border: 0;
+	clip-path: inset(50%);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+	word-wrap: normal !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+	}
+}
+
+/* Social buttons carry a masked SVG icon based on their destination. */
+.wp-block-button.is-style-bwfd-social .wp-block-button__link {
+	display: inline-flex;
+	align-items: center;
+	gap: 9px;
+}
+
+.wp-block-button.is-style-bwfd-social .wp-block-button__link::before {
+	content: "";
+	display: inline-block;
+	width: 19px;
+	height: 19px;
+	background: currentColor;
+	-webkit-mask: var(--bwfd-social-icon) center / contain no-repeat;
+	mask: var(--bwfd-social-icon) center / contain no-repeat;
+}
+
+.wp-block-button.is-style-bwfd-social .wp-block-button__link[href*="facebook"] {
+	--bwfd-social-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z'/%3E%3C/svg%3E");
+}
+
+.wp-block-button.is-style-bwfd-social .wp-block-button__link[href*="instagram"] {
+	--bwfd-social-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2c2.7 0 3 0 4.1.1 1 0 1.8.2 2.4.5.7.3 1.2.6 1.7 1.2.6.5.9 1 1.2 1.7.3.6.4 1.4.5 2.4 0 1.1.1 1.4.1 4.1s0 3-.1 4.1c0 1-.2 1.8-.5 2.4-.3.7-.6 1.2-1.2 1.7-.5.6-1 .9-1.7 1.2-.6.3-1.4.4-2.4.5-1.1 0-1.4.1-4.1.1s-3 0-4.1-.1c-1 0-1.8-.2-2.4-.5-.7-.3-1.2-.6-1.7-1.2-.6-.5-.9-1-1.2-1.7-.3-.6-.4-1.4-.5-2.4C2 15 2 14.7 2 12s0-3 .1-4.1c0-1 .2-1.8.5-2.4.3-.7.6-1.2 1.2-1.7.5-.6 1-.9 1.7-1.2.6-.3 1.4-.4 2.4-.5C9 2 9.3 2 12 2Zm0 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0 8.2a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4ZM18.4 6.8a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0Z'/%3E%3C/svg%3E");
+}
+
+/* Apricot note panel. */
+.bwfd-note {
+	max-width: 52em;
+	border-radius: var(--wp--custom--radius--medium);
+}
+
+.bwfd-note .wp-block-heading,
+.bwfd-note .has-serif-font-family {
+	color: var(--wp--preset--color--navy);
+}
+
+/* Cards stacked in a sidebar column. */
+.bwfd-stack {
+	display: flex;
+	flex-direction: column;
+	gap: 22px;
+}

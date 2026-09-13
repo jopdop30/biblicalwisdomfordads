@@ -1,0 +1,32 @@
+.bwfd-section-heading {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 8px;
+
+	&.has-text-align-center {
+		align-items: center;
+		text-align: center;
+	}
+
+	&.has-text-align-right {
+		align-items: flex-end;
+		text-align: right;
+	}
+
+	&__title {
+		margin: 0;
+		max-width: 20em;
+	}
+
+	&.has-text-color &__title {
+		color: inherit;
+	}
+
+	&__rule {
+		display: block;
+		width: var(--wp--custom--rule--width, 72px);
+		height: var(--wp--custom--rule--height, 4px);
+		background: var(--wp--preset--color--apricot);
+	}
+}

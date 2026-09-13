@@ -1,0 +1,20 @@
+.bwfd-icon-picker {
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	gap: 4px;
+	margin-bottom: 16px;
+
+	.components-button {
+		justify-content: center;
+		height: 40px;
+		border: 1px solid #ddd;
+		border-radius: 3px;
+		color: #00385b;
+
+		&.is-pressed,
+		&.is-selected {
+			background: #00385b;
+			color: #fff;
+		}
+	}
+}

@@ -1,0 +1,20 @@
+.wp-block-bwfd-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 0;
+	color: var(--wp--preset--color--blue);
+	flex-shrink: 0;
+
+	svg {
+		display: block;
+	}
+
+	&.bwfd-icon--circle {
+		width: var(--bwfd-icon-size, 64px);
+		height: var(--bwfd-icon-size, 64px);
+		border-radius: 50%;
+		background: var(--wp--preset--color--apricot) var(--bwfd-tex-apricot) center / cover no-repeat;
+		color: var(--wp--preset--color--navy);
+	}
+}

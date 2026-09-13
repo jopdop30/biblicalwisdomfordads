@@ -1,0 +1,35 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "bwfd/card",
+	"version": "1.0.0",
+	"title": "Card",
+	"category": "bwfd",
+	"icon": "index-card",
+	"description": "A textured card with an accent top border. Holds a heading, text and a link, badge or button.",
+	"keywords": [ "card", "panel", "box" ],
+	"textdomain": "bwfd",
+	"attributes": {
+		"accent": { "type": "string", "default": "blue" },
+		"surface": { "type": "string", "default": "marble" },
+		"padding": { "type": "string", "default": "regular" },
+		"minHeight": { "type": "string", "default": "" },
+		"lift": { "type": "boolean", "default": false }
+	},
+	"supports": {
+		"anchor": true,
+		"html": false,
+		"align": false,
+		"spacing": { "blockGap": true }
+	},
+	"example": {
+		"attributes": { "accent": "blue", "surface": "marble" },
+		"innerBlocks": [
+			{ "name": "core/heading", "attributes": { "level": 3, "content": "Buy the book", "fontSize": "xl" } },
+			{ "name": "core/paragraph", "attributes": { "content": "Available in retail stores, through Amazon, or as a direct purchase.", "fontSize": "base" } }
+		]
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

@@ -1,0 +1,12 @@
+.bwfd-reveal.is-editing {
+	.bwfd-reveal__toggle {
+		display: inline-block;
+		min-width: 6em;
+	}
+
+	.bwfd-reveal__panel {
+		padding: 16px;
+		border: 1px dashed var(--wp--preset--color--line, #e4e4e6);
+		border-radius: 3px;
+	}
+}

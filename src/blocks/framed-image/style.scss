@@ -1,0 +1,51 @@
+.bwfd-framed-image {
+	position: relative;
+	margin: 0;
+	width: 100%;
+	max-width: 360px;
+	box-sizing: border-box;
+
+	&.aligncenter {
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	&.alignright {
+		margin-left: auto;
+	}
+
+	&--panel {
+		margin-top: 0;
+		margin-bottom: 16px;
+	}
+
+	&__panel {
+		position: absolute;
+		left: -16px;
+		top: 20px;
+		right: 16px;
+		bottom: -16px;
+		border-radius: var(--wp--custom--radius--small, 3px);
+		background: var(--wp--preset--color--apricot) var(--bwfd-tex-apricot) center / cover no-repeat;
+	}
+
+	img {
+		position: relative;
+		display: block;
+		width: 100%;
+		height: auto;
+		border-radius: var(--wp--custom--radius--small, 3px);
+	}
+
+	&--shadow-cover img {
+		box-shadow: var(--wp--preset--shadow--cover, 0 18px 44px rgba(0, 56, 91, 0.28));
+	}
+
+	&--shadow-cover-dark img {
+		box-shadow: var(--wp--preset--shadow--cover-dark, 0 26px 60px rgba(0, 0, 0, 0.45));
+	}
+
+	&--shadow-book img {
+		box-shadow: var(--wp--preset--shadow--book, 0 16px 40px rgba(0, 56, 91, 0.22));
+	}
+}
