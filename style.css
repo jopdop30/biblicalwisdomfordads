@@ -366,7 +366,8 @@ img {
 }
 
 .wp-block-table.is-style-bwfd-key-info tr > :first-child {
-	width: 1%;
+	width: 10em;
+	min-width: 10em;
 	white-space: nowrap;
 	font-size: 12px;
 	letter-spacing: 0.12em;
