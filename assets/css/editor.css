@@ -29,3 +29,14 @@ body.editor-styles-wrapper {
 .editor-styles-wrapper .editor-post-title {
 	margin-top: var(--wp--preset--spacing--70);
 }
+
+/*
+ * Plain wrapping in the canvas. Chromium adds a phantom line to a
+ * `text-wrap: balance` or `pretty` element when the editor's hover outline
+ * (an absolutely positioned ::after) appears, so headings and paragraphs
+ * jumped by one line-height on hover. Balanced wrapping still applies on
+ * the front end.
+ */
+body.editor-styles-wrapper :is(h1, h2, h3, h4, h5, h6, p) {
+	text-wrap: wrap;
+}
