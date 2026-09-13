@@ -150,7 +150,7 @@
 			"text": "var(--wp--preset--color--ink)"
 		},
 		"background": {
-			"backgroundImage": { "url": "file:./assets/images/tex-blue.jpg" },
+			"backgroundImage": { "url": "file:./assets/images/tex-blue.webp" },
 			"backgroundSize": "cover",
 			"backgroundPosition": "center center",
 			"backgroundAttachment": "fixed"

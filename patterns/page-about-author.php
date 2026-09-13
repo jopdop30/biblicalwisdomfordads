@@ -13,7 +13,7 @@
 
 declare( strict_types=1 );
 
-$bwfd_headshot = bwfd_image( 'stephen-headshot.jpg' );
+$bwfd_headshot = bwfd_image( 'stephen-headshot.webp' );
 ?>
 <!-- wp:group {"className":"bwfd-section bwfd-section--first bwfd-section--last","layout":{"type":"constrained"}} -->
 <div class="wp-block-group bwfd-section bwfd-section--first bwfd-section--last">
@@ -21,8 +21,8 @@ $bwfd_headshot = bwfd_image( 'stephen-headshot.jpg' );
 	<div class="wp-block-columns">
 		<!-- wp:column {"width":"36%"} -->
 		<div class="wp-block-column" style="flex-basis:36%">
-			<!-- wp:bwfd/framed-image {"maxWidth":"100%","aspectRatio":"4 / 5"} -->
-			<figure class="wp-block-bwfd-framed-image bwfd-framed-image bwfd-framed-image--shadow-cover" style="max-width:100%"><img src="<?php echo $bwfd_headshot; ?>" alt="Stephen Parker" style="aspect-ratio:4 / 5;object-fit:cover"/></figure>
+			<!-- wp:bwfd/framed-image {"maxWidth":"100%","aspectRatio":"4 / 5","width":900,"height":1350} -->
+			<figure class="wp-block-bwfd-framed-image bwfd-framed-image bwfd-framed-image--shadow-cover" style="max-width:100%"><img src="<?php echo $bwfd_headshot; ?>" alt="Stephen Parker" style="aspect-ratio:4 / 5;object-fit:cover" width="900" height="1350"/></figure>
 			<!-- /wp:bwfd/framed-image -->
 		</div>
 		<!-- /wp:column -->

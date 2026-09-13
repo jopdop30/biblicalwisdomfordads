@@ -13,7 +13,7 @@
 
 declare( strict_types=1 );
 
-$bwfd_cover  = bwfd_image( 'bwfd-cover.jpg' );
+$bwfd_cover  = bwfd_image( 'bwfd-cover.webp' );
 $bwfd_amazon = bwfd_image( 'amazon-wordmark.webp' );
 ?>
 <!-- wp:group {"className":"bwfd-section bwfd-section--first bwfd-section--last","layout":{"type":"constrained"}} -->
@@ -102,8 +102,8 @@ $bwfd_amazon = bwfd_image( 'amazon-wordmark.webp' );
 		<div class="wp-block-column" style="flex-basis:35%">
 			<!-- wp:group {"style":{"spacing":{"blockGap":"24px"}},"layout":{"type":"default"}} -->
 			<div class="wp-block-group">
-				<!-- wp:bwfd/framed-image {"maxWidth":"100%"} -->
-				<figure class="wp-block-bwfd-framed-image bwfd-framed-image bwfd-framed-image--shadow-cover" style="max-width:100%"><img src="<?php echo $bwfd_cover; ?>" alt="Biblical Wisdom for Dads"/></figure>
+				<!-- wp:bwfd/framed-image {"maxWidth":"100%","width":800,"height":1215} -->
+				<figure class="wp-block-bwfd-framed-image bwfd-framed-image bwfd-framed-image--shadow-cover" style="max-width:100%"><img src="<?php echo $bwfd_cover; ?>" alt="Biblical Wisdom for Dads" width="800" height="1215"/></figure>
 				<!-- /wp:bwfd/framed-image -->
 
 				<!-- wp:buttons {"style":{"spacing":{"blockGap":"12px"}}} -->

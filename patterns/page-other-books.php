@@ -30,8 +30,8 @@ $bwfd_elder     = bwfd_image( 'heart-elder-front.webp' );
 	<div class="wp-block-columns">
 		<!-- wp:column {"width":"30%"} -->
 		<div class="wp-block-column" style="flex-basis:30%">
-			<!-- wp:bwfd/framed-image {"shadow":"book","maxWidth":"100%"} -->
-			<figure class="wp-block-bwfd-framed-image bwfd-framed-image bwfd-framed-image--shadow-book" style="max-width:100%"><img src="<?php echo $bwfd_no_finish; ?>" alt="There is No Finish: The Backyard Ultra Story"/></figure>
+			<!-- wp:bwfd/framed-image {"shadow":"book","maxWidth":"100%","width":700,"height":1054} -->
+			<figure class="wp-block-bwfd-framed-image bwfd-framed-image bwfd-framed-image--shadow-book" style="max-width:100%"><img src="<?php echo $bwfd_no_finish; ?>" alt="There is No Finish: The Backyard Ultra Story" width="700" height="1054"/></figure>
 			<!-- /wp:bwfd/framed-image -->
 		</div>
 		<!-- /wp:column -->
@@ -81,8 +81,8 @@ $bwfd_elder     = bwfd_image( 'heart-elder-front.webp' );
 	<div class="wp-block-columns">
 		<!-- wp:column {"width":"30%"} -->
 		<div class="wp-block-column" style="flex-basis:30%">
-			<!-- wp:bwfd/framed-image {"shadow":"book","maxWidth":"100%"} -->
-			<figure class="wp-block-bwfd-framed-image bwfd-framed-image bwfd-framed-image--shadow-book" style="max-width:100%"><img src="<?php echo $bwfd_elder; ?>" alt="The Heart of an Elder"/></figure>
+			<!-- wp:bwfd/framed-image {"shadow":"book","maxWidth":"100%","width":700,"height":1067} -->
+			<figure class="wp-block-bwfd-framed-image bwfd-framed-image bwfd-framed-image--shadow-book" style="max-width:100%"><img src="<?php echo $bwfd_elder; ?>" alt="The Heart of an Elder" width="700" height="1067"/></figure>
 			<!-- /wp:bwfd/framed-image -->
 		</div>
 		<!-- /wp:column -->

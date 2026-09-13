@@ -10,7 +10,7 @@
 body.editor-styles-wrapper {
 	background-image:
 		linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)),
-		url(../images/tex-blue.jpg);
+		url(../images/tex-blue.webp);
 	background-size: cover;
 	background-position: center center;
 	background-attachment: scroll;

@@ -14,7 +14,7 @@ Block theme (full site editing) for [biblicalwisdomfordads.au](https://www.bibli
 | `src/blocks/` | Custom block sources (see below). Built to `build/` with `@wordpress/scripts`. |
 | `inc/` | Block registration, block style variations, pattern categories, SVG icon library. |
 | `bin/import-pages.php` | WP-CLI script that creates/updates the eight pages from the patterns, imports the images into the Media Library, sets the front page and writes the primary navigation. |
-| `assets/` | Optimised imagery from the design and the two variable fonts (latin subsets). |
+| `assets/` | Imagery from the design as right-sized WebP (covers 800–900px wide, textures 1000–1600px), favicon set, and the two variable fonts (latin subsets). |
 
 ## Custom blocks
 
@@ -67,6 +67,19 @@ Pass page slugs to update only those pages (`... import-pages.php home`). The sc
 * Header and footer are template parts; the menu is a normal Navigation block menu ("Primary navigation"). The "Buy the book" item is styled as a button through the `bwfd-nav-button` CSS class on that link.
 * The Facebook feed card on the home page embeds the page timeline; change the page URL or tabs in the block sidebar.
 * Purchase and media-kit links marked "URL TBA" / `#` are placeholders awaiting final URLs.
+
+## SEO and performance
+
+`inc/seo.php` adds what core leaves out, without touching content:
+
+* `<meta name="description">` from the page **Excerpt** (pages gain an Excerpt panel), falling back to the first substantial paragraphs of the page, then the tagline.
+* Open Graph and Twitter card tags; the share image is the featured image, else the first image in the content, else the book cover.
+* JSON-LD: Organization, WebSite and WebPage on every page, the Book (with ISBNs and formats) on Home and About the book, and the author Person on About the author. Facts live in `bwfd_book_data()` and can be changed with the `bwfd_book_data` filter.
+* Emoji script, generator tag, shortlink and RSD/WLW links removed; Facebook preconnect only on pages with the feed; the hero cover is preloaded on the front page.
+* Uploaded JPEG/PNG images get WebP sub-sizes (`image_editor_output_format`).
+* Core provides the rest: title tag, canonical, robots, XML sitemap at `/wp-sitemap.xml`.
+
+Framed image blocks output `width`/`height` so the browser reserves space and can lazy-load below-the-fold images.
 
 ## Fonts
 

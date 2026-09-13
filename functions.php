@@ -17,6 +17,7 @@ require_once BWFD_DIR . '/inc/icons.php';
 require_once BWFD_DIR . '/inc/blocks.php';
 require_once BWFD_DIR . '/inc/block-styles.php';
 require_once BWFD_DIR . '/inc/patterns.php';
+require_once BWFD_DIR . '/inc/seo.php';
 
 /**
  * Theme supports and editor assets.
@@ -79,10 +80,10 @@ function bwfd_url( string $path = '/' ): string {
  */
 function bwfd_texture_tokens(): void {
 	$textures = array(
-		'navy'    => 'tex-navy.jpg',
-		'apricot' => 'tex-apricot.jpg',
-		'marble'  => 'tex-white.jpg',
-		'blue'    => 'tex-blue.jpg',
+		'navy'    => 'tex-navy.webp',
+		'apricot' => 'tex-apricot.webp',
+		'marble'  => 'tex-white.webp',
+		'blue'    => 'tex-blue.webp',
 	);
 	$css = ':root{';
 	foreach ( $textures as $token => $file ) {

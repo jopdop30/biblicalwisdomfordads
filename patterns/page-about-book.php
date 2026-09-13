@@ -13,7 +13,7 @@
 
 declare( strict_types=1 );
 
-$bwfd_cover = bwfd_image( 'bwfd-cover.jpg' );
+$bwfd_cover = bwfd_image( 'bwfd-cover.webp' );
 ?>
 <!-- wp:group {"className":"bwfd-section bwfd-section--first","layout":{"type":"constrained"}} -->
 <div class="wp-block-group bwfd-section bwfd-section--first">
@@ -55,8 +55,8 @@ $bwfd_cover = bwfd_image( 'bwfd-cover.jpg' );
 
 		<!-- wp:column {"width":"35%"} -->
 		<div class="wp-block-column" style="flex-basis:35%">
-			<!-- wp:bwfd/framed-image {"maxWidth":"320px"} -->
-			<figure class="wp-block-bwfd-framed-image bwfd-framed-image bwfd-framed-image--shadow-cover" style="max-width:320px"><img src="<?php echo $bwfd_cover; ?>" alt="Biblical Wisdom for Dads"/></figure>
+			<!-- wp:bwfd/framed-image {"maxWidth":"320px","width":800,"height":1215} -->
+			<figure class="wp-block-bwfd-framed-image bwfd-framed-image bwfd-framed-image--shadow-cover" style="max-width:320px"><img src="<?php echo $bwfd_cover; ?>" alt="Biblical Wisdom for Dads" width="800" height="1215"/></figure>
 			<!-- /wp:bwfd/framed-image -->
 		</div>
 		<!-- /wp:column -->

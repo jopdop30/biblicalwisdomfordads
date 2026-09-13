@@ -13,6 +13,8 @@
 		"id": { "type": "number" },
 		"url": { "type": "string", "source": "attribute", "selector": "img", "attribute": "src" },
 		"alt": { "type": "string", "source": "attribute", "selector": "img", "attribute": "alt", "default": "" },
+		"width": { "type": "number" },
+		"height": { "type": "number" },
 		"panel": { "type": "boolean", "default": false },
 		"shadow": { "type": "string", "default": "cover" },
 		"maxWidth": { "type": "string", "default": "360px" },

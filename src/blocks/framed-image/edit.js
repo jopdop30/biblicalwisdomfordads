@@ -31,7 +31,7 @@ const RATIOS = [
 ];
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { id, url, alt, panel, shadow, maxWidth, aspectRatio } = attributes;
+	const { id, url, alt, panel, shadow, maxWidth, aspectRatio, width, height } = attributes;
 	const blockProps = useBlockProps( {
 		className: frameClassName( attributes ),
 		style: maxWidth ? { maxWidth } : undefined,
@@ -41,11 +41,14 @@ export default function Edit( { attributes, setAttributes } ) {
 		if ( ! media?.url ) {
 			return;
 		}
-		const large = media.sizes?.large?.url || media.media_details?.sizes?.large?.source_url;
+		const large = media.sizes?.large || media.media_details?.sizes?.large;
+		const largeUrl = large?.url || large?.source_url;
 		setAttributes( {
 			id: media.id,
-			url: large || media.url,
+			url: largeUrl || media.url,
 			alt: media.alt || alt || '',
+			width: ( largeUrl ? large.width : media.width ) || undefined,
+			height: ( largeUrl ? large.height : media.height ) || undefined,
 		} );
 	};
 
@@ -106,7 +109,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			<figure { ...blockProps }>
 				{ panel && url && <span className="bwfd-framed-image__panel" aria-hidden="true" /> }
 				{ url ? (
-					<img src={ url } alt={ alt } style={ imageStyle( aspectRatio ) } />
+					<img src={ url } alt={ alt } width={ width } height={ height } style={ imageStyle( aspectRatio ) } />
 				) : (
 					<MediaPlaceholder
 						icon="format-image"

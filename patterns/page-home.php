@@ -13,13 +13,13 @@
 
 declare( strict_types=1 );
 
-$bwfd_cover = bwfd_image( 'bwfd-cover.jpg' );
-$bwfd_art   = bwfd_image( 'art-silhouette.jpg' );
+$bwfd_cover = bwfd_image( 'bwfd-cover.webp' );
+$bwfd_art   = bwfd_image( 'art-silhouette.webp' );
 ?>
 <!-- wp:bwfd/hero {"backgroundUrl":"<?php echo $bwfd_art; ?>"} -->
 <section class="wp-block-bwfd-hero alignfull bwfd-hero bwfd-hero--radial" style="background-image:url(<?php echo $bwfd_art; ?>)"><div class="bwfd-hero__overlay" aria-hidden="true"></div><div class="bwfd-hero__inner">
-	<!-- wp:bwfd/framed-image {"shadow":"cover-dark"} -->
-	<figure class="wp-block-bwfd-framed-image bwfd-framed-image bwfd-framed-image--shadow-cover-dark" style="max-width:360px"><img src="<?php echo $bwfd_cover; ?>" alt="Biblical Wisdom for Dads, by Stephen Parker"/></figure>
+	<!-- wp:bwfd/framed-image {"shadow":"cover-dark","width":800,"height":1215} -->
+	<figure class="wp-block-bwfd-framed-image bwfd-framed-image bwfd-framed-image--shadow-cover-dark" style="max-width:360px"><img src="<?php echo $bwfd_cover; ?>" alt="Biblical Wisdom for Dads, by Stephen Parker" width="800" height="1215"/></figure>
 	<!-- /wp:bwfd/framed-image -->
 
 	<!-- wp:group {"style":{"spacing":{"blockGap":"22px"}},"layout":{"type":"flex","orientation":"vertical"}} -->
