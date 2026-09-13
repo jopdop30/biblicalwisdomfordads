@@ -3,6 +3,12 @@
 	gap: var(--bwfd-grid-gap, 22px);
 	grid-template-columns: repeat(auto-fit, minmax(min(var(--bwfd-grid-min, 268px), 100%), 1fr));
 
+	/* Cards fill their grid cell so rows stay equal height. Outside a grid a
+	   card is only as tall as its content. */
+	> .bwfd-card {
+		height: 100%;
+	}
+
 	> * {
 		min-width: 0;
 	}
