@@ -18,8 +18,8 @@ $bwfd_elder     = bwfd_image( 'heart-elder-front.webp' );
 ?>
 <!-- wp:group {"className":"bwfd-section bwfd-section--first","layout":{"type":"constrained"}} -->
 <div class="wp-block-group bwfd-section bwfd-section--first">
-	<!-- wp:bwfd/section-heading {"content":"Other books","level":1,"size":"4xl"} -->
-	<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left"><h1 class="bwfd-section-heading__title has-4xl-font-size">Other books</h1><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
+	<!-- wp:bwfd/section-heading {"content":"Other books","level":1,"size":"display"} -->
+	<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left"><h1 class="bwfd-section-heading__title has-display-font-size">Other books</h1><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
 	<!-- /wp:bwfd/section-heading -->
 </div>
 <!-- /wp:group -->
@@ -38,8 +38,8 @@ $bwfd_elder     = bwfd_image( 'heart-elder-front.webp' );
 
 		<!-- wp:column {"width":"70%"} -->
 		<div class="wp-block-column" style="flex-basis:70%">
-			<!-- wp:heading {"level":2,"fontSize":"3xl","style":{"spacing":{"margin":{"bottom":"18px"}}}} -->
-			<h2 class="wp-block-heading has-3xl-font-size" style="margin-bottom:18px">There is No Finish: The Backyard Ultra Story</h2>
+			<!-- wp:heading {"level":2,"fontSize":"xxxl","style":{"spacing":{"margin":{"bottom":"18px"}}}} -->
+			<h2 class="wp-block-heading has-xxxl-font-size" style="margin-bottom:18px">There is No Finish: The Backyard Ultra Story</h2>
 			<!-- /wp:heading -->
 
 			<!-- wp:paragraph {"style":{"typography":{"fontSize":"18px"}}} -->
@@ -89,8 +89,8 @@ $bwfd_elder     = bwfd_image( 'heart-elder-front.webp' );
 
 		<!-- wp:column {"width":"70%"} -->
 		<div class="wp-block-column" style="flex-basis:70%">
-			<!-- wp:heading {"level":2,"fontSize":"3xl","style":{"spacing":{"margin":{"bottom":"18px"}}}} -->
-			<h2 class="wp-block-heading has-3xl-font-size" style="margin-bottom:18px">The Heart of an Elder</h2>
+			<!-- wp:heading {"level":2,"fontSize":"xxxl","style":{"spacing":{"margin":{"bottom":"18px"}}}} -->
+			<h2 class="wp-block-heading has-xxxl-font-size" style="margin-bottom:18px">The Heart of an Elder</h2>
 			<!-- /wp:heading -->
 
 			<!-- wp:paragraph {"style":{"typography":{"fontSize":"18px"}}} -->

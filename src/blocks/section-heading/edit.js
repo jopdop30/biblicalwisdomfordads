@@ -19,9 +19,9 @@ const LEVEL_ICONS = { 1: headingLevel1, 2: headingLevel2, 3: headingLevel3, 4: h
 
 const SIZE_OPTIONS = [
 	{ label: __( 'Hero', 'bwfd' ), value: 'hero' },
-	{ label: __( 'Page heading', 'bwfd' ), value: '4xl' },
-	{ label: __( 'Feature heading', 'bwfd' ), value: '3xl' },
-	{ label: __( 'Section heading', 'bwfd' ), value: '2xl' },
+	{ label: __( 'Page heading', 'bwfd' ), value: 'display' },
+	{ label: __( 'Feature heading', 'bwfd' ), value: 'xxxl' },
+	{ label: __( 'Section heading', 'bwfd' ), value: 'xxl' },
 	{ label: __( 'Card title', 'bwfd' ), value: 'xl' },
 ];
 

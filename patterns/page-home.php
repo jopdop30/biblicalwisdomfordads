@@ -127,8 +127,8 @@ $bwfd_art   = bwfd_image( 'art-silhouette.jpg' );
 	<div class="wp-block-columns are-vertically-aligned-center">
 		<!-- wp:column {"verticalAlignment":"center"} -->
 		<div class="wp-block-column is-vertically-aligned-center">
-			<!-- wp:bwfd/section-heading {"content":"Social Media","level":2,"size":"2xl"} -->
-			<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left"><h2 class="bwfd-section-heading__title has-2xl-font-size">Social Media</h2><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
+			<!-- wp:bwfd/section-heading {"content":"Social Media","level":2,"size":"xxl"} -->
+			<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left"><h2 class="bwfd-section-heading__title has-xxl-font-size">Social Media</h2><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
 			<!-- /wp:bwfd/section-heading -->
 
 			<!-- wp:buttons {"style":{"spacing":{"blockGap":"12px"}}} -->

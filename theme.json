@@ -111,9 +111,9 @@
 				{ "slug": "md", "size": "17px", "name": "Body", "fluid": false },
 				{ "slug": "lg", "size": "20px", "name": "Lead", "fluid": { "min": "18px", "max": "20px" } },
 				{ "slug": "xl", "size": "22px", "name": "Card title", "fluid": { "min": "20px", "max": "22px" } },
-				{ "slug": "2xl", "size": "30px", "name": "Section heading", "fluid": { "min": "23px", "max": "30px" } },
-				{ "slug": "3xl", "size": "34px", "name": "Feature heading", "fluid": { "min": "24px", "max": "34px" } },
-				{ "slug": "4xl", "size": "50px", "name": "Page heading", "fluid": { "min": "30px", "max": "50px" } },
+				{ "slug": "xxl", "size": "30px", "name": "Section heading", "fluid": { "min": "23px", "max": "30px" } },
+				{ "slug": "xxxl", "size": "34px", "name": "Feature heading", "fluid": { "min": "24px", "max": "34px" } },
+				{ "slug": "display", "size": "50px", "name": "Page heading", "fluid": { "min": "30px", "max": "50px" } },
 				{ "slug": "hero", "size": "54px", "name": "Hero heading", "fluid": { "min": "31px", "max": "54px" } }
 			]
 		},
@@ -185,13 +185,13 @@
 			},
 			"h1": {
 				"typography": {
-					"fontSize": "var(--wp--preset--font-size--4xl)",
+					"fontSize": "var(--wp--preset--font-size--display)",
 					"lineHeight": "1.1",
 					"letterSpacing": "-0.015em"
 				}
 			},
 			"h2": {
-				"typography": { "fontSize": "var(--wp--preset--font-size--2xl)" }
+				"typography": { "fontSize": "var(--wp--preset--font-size--xxl)" }
 			},
 			"h3": {
 				"typography": { "fontSize": "var(--wp--preset--font-size--xl)", "lineHeight": "1.2" }
@@ -253,7 +253,7 @@
 				"border": { "left": { "color": "var(--wp--preset--color--apricot)", "width": "4px", "style": "solid" } }
 			},
 			"core/post-title": {
-				"typography": { "fontSize": "var(--wp--preset--font-size--4xl)" }
+				"typography": { "fontSize": "var(--wp--preset--font-size--display)" }
 			},
 			"core/separator": {
 				"color": { "text": "var(--wp--preset--color--line)" }

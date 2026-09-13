@@ -17,8 +17,8 @@ declare( strict_types=1 );
 <div class="wp-block-group alignfull is-style-bwfd-navy" style="padding-top:58px;padding-bottom:64px">
 	<!-- wp:group {"className":"bwfd-measure-narrow","style":{"spacing":{"blockGap":"22px"}},"layout":{"type":"default"}} -->
 	<div class="wp-block-group bwfd-measure-narrow">
-		<!-- wp:bwfd/section-heading {"content":"Bulk orders","level":1,"size":"4xl","textColor":"white"} -->
-		<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left has-white-color has-text-color"><h1 class="bwfd-section-heading__title has-4xl-font-size">Bulk orders</h1><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
+		<!-- wp:bwfd/section-heading {"content":"Bulk orders","level":1,"size":"display","textColor":"white"} -->
+		<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left has-white-color has-text-color"><h1 class="bwfd-section-heading__title has-display-font-size">Bulk orders</h1><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
 		<!-- /wp:bwfd/section-heading -->
 
 		<!-- wp:paragraph {"fontSize":"lg"} -->
@@ -38,7 +38,7 @@ declare( strict_types=1 );
 <!-- wp:group {"className":"bwfd-section","style":{"spacing":{"padding":{"top":"70px"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group bwfd-section" style="padding-top:70px">
 	<!-- wp:bwfd/section-heading {"content":"Media Kit","style":{"spacing":{"margin":{"bottom":"24px"}}}} -->
-	<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left" style="margin-bottom:24px"><h2 class="bwfd-section-heading__title has-2xl-font-size">Media Kit</h2><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
+	<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left" style="margin-bottom:24px"><h2 class="bwfd-section-heading__title has-xxl-font-size">Media Kit</h2><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
 	<!-- /wp:bwfd/section-heading -->
 
 	<!-- wp:paragraph {"className":"bwfd-measure-narrow","fontSize":"lg","style":{"spacing":{"margin":{"bottom":"28px"}}}} -->
@@ -48,7 +48,7 @@ declare( strict_types=1 );
 	<!-- wp:bwfd/card-grid -->
 	<div class="wp-block-bwfd-card-grid bwfd-card-grid bwfd-card-grid--auto" style="--bwfd-grid-min:268px;--bwfd-grid-gap:22px">
 		<!-- wp:bwfd/card {"padding":"compact","style":{"spacing":{"blockGap":"10px"}}} -->
-		<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-compact">
+		<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-compact" style="gap:10px">
 			<!-- wp:heading {"level":3,"fontSize":"lg"} -->
 			<h3 class="wp-block-heading has-lg-font-size">Media Kit</h3>
 			<!-- /wp:heading -->
@@ -66,7 +66,7 @@ declare( strict_types=1 );
 		<!-- /wp:bwfd/card -->
 
 		<!-- wp:bwfd/card {"padding":"compact","style":{"spacing":{"blockGap":"10px"}}} -->
-		<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-compact">
+		<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-compact" style="gap:10px">
 			<!-- wp:heading {"level":3,"fontSize":"lg"} -->
 			<h3 class="wp-block-heading has-lg-font-size">High-res Promo Photos</h3>
 			<!-- /wp:heading -->
@@ -84,7 +84,7 @@ declare( strict_types=1 );
 		<!-- /wp:bwfd/card -->
 
 		<!-- wp:bwfd/card {"padding":"compact","style":{"spacing":{"blockGap":"10px"}}} -->
-		<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-compact">
+		<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-compact" style="gap:10px">
 			<!-- wp:heading {"level":3,"fontSize":"lg"} -->
 			<h3 class="wp-block-heading has-lg-font-size">Covers</h3>
 			<!-- /wp:heading -->

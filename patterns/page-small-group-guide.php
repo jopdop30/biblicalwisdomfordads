@@ -19,8 +19,8 @@ declare( strict_types=1 );
 	<div class="wp-block-columns">
 		<!-- wp:column {"width":"65%"} -->
 		<div class="wp-block-column" style="flex-basis:65%">
-			<!-- wp:bwfd/section-heading {"content":"Small Group Guide","level":1,"size":"4xl","style":{"spacing":{"margin":{"bottom":"26px"}}}} -->
-			<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left" style="margin-bottom:26px"><h1 class="bwfd-section-heading__title has-4xl-font-size">Small Group Guide</h1><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
+			<!-- wp:bwfd/section-heading {"content":"Small Group Guide","level":1,"size":"display","style":{"spacing":{"margin":{"bottom":"26px"}}}} -->
+			<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left" style="margin-bottom:26px"><h1 class="bwfd-section-heading__title has-display-font-size">Small Group Guide</h1><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
 			<!-- /wp:bwfd/section-heading -->
 
 			<!-- wp:paragraph {"fontSize":"lg"} -->

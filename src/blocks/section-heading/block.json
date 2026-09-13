@@ -16,7 +16,7 @@
 			"selector": ".bwfd-section-heading__title"
 		},
 		"level": { "type": "number", "default": 2 },
-		"size": { "type": "string", "default": "2xl" },
+		"size": { "type": "string", "default": "xxl" },
 		"showRule": { "type": "boolean", "default": true },
 		"textAlign": { "type": "string", "default": "left" }
 	},
@@ -26,7 +26,7 @@
 		"color": { "text": true, "background": false, "link": false },
 		"spacing": { "margin": true }
 	},
-	"example": { "attributes": { "content": "About the book", "level": 1, "size": "4xl" } },
+	"example": { "attributes": { "content": "About the book", "level": 1, "size": "display" } },
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css"

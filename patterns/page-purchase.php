@@ -18,8 +18,8 @@ $bwfd_amazon = bwfd_image( 'amazon-wordmark.webp' );
 ?>
 <!-- wp:group {"className":"bwfd-section bwfd-section--first bwfd-section--last","layout":{"type":"constrained"}} -->
 <div class="wp-block-group bwfd-section bwfd-section--first bwfd-section--last">
-	<!-- wp:bwfd/section-heading {"content":"Purchase","level":1,"size":"4xl","style":{"spacing":{"margin":{"bottom":"30px"}}}} -->
-	<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left" style="margin-bottom:30px"><h1 class="bwfd-section-heading__title has-4xl-font-size">Purchase</h1><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
+	<!-- wp:bwfd/section-heading {"content":"Purchase","level":1,"size":"display","style":{"spacing":{"margin":{"bottom":"30px"}}}} -->
+	<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left" style="margin-bottom:30px"><h1 class="bwfd-section-heading__title has-display-font-size">Purchase</h1><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
 	<!-- /wp:bwfd/section-heading -->
 
 	<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"40px"}}}} -->
@@ -29,7 +29,7 @@ $bwfd_amazon = bwfd_image( 'amazon-wordmark.webp' );
 			<!-- wp:bwfd/card-grid {"columns":2,"minWidth":240,"gap":20} -->
 			<div class="wp-block-bwfd-card-grid bwfd-card-grid bwfd-card-grid--fixed" style="--bwfd-grid-min:240px;--bwfd-grid-gap:20px;--bwfd-grid-cols:2">
 				<!-- wp:bwfd/card {"minHeight":"196px","style":{"spacing":{"blockGap":"14px"}}} -->
-				<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-regular" style="min-height:196px">
+				<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-regular" style="min-height:196px;gap:14px">
 					<!-- wp:heading {"level":2,"fontSize":"xl"} -->
 					<h2 class="wp-block-heading has-xl-font-size">Amazon Print or eBook</h2>
 					<!-- /wp:heading -->
@@ -43,7 +43,7 @@ $bwfd_amazon = bwfd_image( 'amazon-wordmark.webp' );
 				<!-- /wp:bwfd/card -->
 
 				<!-- wp:bwfd/card {"minHeight":"196px","style":{"spacing":{"blockGap":"14px"}}} -->
-				<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-regular" style="min-height:196px">
+				<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-regular" style="min-height:196px;gap:14px">
 					<!-- wp:heading {"level":2,"fontSize":"xl"} -->
 					<h2 class="wp-block-heading has-xl-font-size">Direct Purchase $24.99 + $9.99 postage</h2>
 					<!-- /wp:heading -->
@@ -58,7 +58,7 @@ $bwfd_amazon = bwfd_image( 'amazon-wordmark.webp' );
 				<!-- /wp:bwfd/card -->
 
 				<!-- wp:bwfd/card {"minHeight":"196px","style":{"spacing":{"blockGap":"14px"}}} -->
-				<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-regular" style="min-height:196px">
+				<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-regular" style="min-height:196px;gap:14px">
 					<!-- wp:heading {"level":2,"fontSize":"xl"} -->
 					<h2 class="wp-block-heading has-xl-font-size">Audio Book (coming soon)</h2>
 					<!-- /wp:heading -->
@@ -69,7 +69,7 @@ $bwfd_amazon = bwfd_image( 'amazon-wordmark.webp' );
 				<!-- /wp:bwfd/card -->
 
 				<!-- wp:bwfd/card {"accent":"apricot","surface":"apricot","minHeight":"196px","style":{"spacing":{"blockGap":"14px"}}} -->
-				<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-apricot bwfd-card--apricot bwfd-card--pad-regular" style="min-height:196px">
+				<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-apricot bwfd-card--apricot bwfd-card--pad-regular" style="min-height:196px;gap:14px">
 					<!-- wp:heading {"level":2,"fontSize":"xl"} -->
 					<h2 class="wp-block-heading has-xl-font-size">Bulk Orders (20+) $15.99&nbsp;free&nbsp;postage</h2>
 					<!-- /wp:heading -->

@@ -29,8 +29,8 @@ $bwfd_headshot = bwfd_image( 'stephen-headshot.jpg' );
 
 		<!-- wp:column {"width":"64%"} -->
 		<div class="wp-block-column" style="flex-basis:64%">
-			<!-- wp:bwfd/section-heading {"content":"About the author","level":1,"size":"4xl","style":{"spacing":{"margin":{"bottom":"26px"}}}} -->
-			<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left" style="margin-bottom:26px"><h1 class="bwfd-section-heading__title has-4xl-font-size">About the author</h1><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
+			<!-- wp:bwfd/section-heading {"content":"About the author","level":1,"size":"display","style":{"spacing":{"margin":{"bottom":"26px"}}}} -->
+			<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left" style="margin-bottom:26px"><h1 class="bwfd-section-heading__title has-display-font-size">About the author</h1><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
 			<!-- /wp:bwfd/section-heading -->
 
 			<!-- wp:paragraph {"fontSize":"lg"} -->
@@ -46,7 +46,7 @@ $bwfd_headshot = bwfd_image( 'stephen-headshot.jpg' );
 			<!-- /wp:paragraph -->
 
 			<!-- wp:bwfd/card {"lift":true,"style":{"spacing":{"blockGap":"20px","margin":{"top":"32px"}}}} -->
-			<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-regular bwfd-card--lift">
+			<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-regular bwfd-card--lift" style="gap:20px;margin-top:32px">
 				<!-- wp:paragraph {"fontSize":"base"} -->
 				<p class="has-base-font-size">For podcast, speaking requests, media and other inquiries, contact <a href="mailto:stephen@biblicalwisdomfordads.au">stephen@biblicalwisdomfordads.au</a>.</p>
 				<!-- /wp:paragraph -->

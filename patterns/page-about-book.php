@@ -21,8 +21,8 @@ $bwfd_cover = bwfd_image( 'bwfd-cover.jpg' );
 	<div class="wp-block-columns">
 		<!-- wp:column {"width":"65%"} -->
 		<div class="wp-block-column" style="flex-basis:65%">
-			<!-- wp:bwfd/section-heading {"content":"About the book","level":1,"size":"4xl","style":{"spacing":{"margin":{"bottom":"26px"}}}} -->
-			<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left" style="margin-bottom:26px"><h1 class="bwfd-section-heading__title has-4xl-font-size">About the book</h1><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
+			<!-- wp:bwfd/section-heading {"content":"About the book","level":1,"size":"display","style":{"spacing":{"margin":{"bottom":"26px"}}}} -->
+			<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left" style="margin-bottom:26px"><h1 class="bwfd-section-heading__title has-display-font-size">About the book</h1><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
 			<!-- /wp:bwfd/section-heading -->
 
 			<!-- wp:paragraph {"fontSize":"lg"} -->
@@ -68,7 +68,7 @@ $bwfd_cover = bwfd_image( 'bwfd-cover.jpg' );
 <!-- wp:group {"className":"bwfd-section","layout":{"type":"constrained"}} -->
 <div class="wp-block-group bwfd-section">
 	<!-- wp:bwfd/section-heading {"content":"Why this book makes a difference","style":{"spacing":{"margin":{"bottom":"30px"}}}} -->
-	<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left" style="margin-bottom:30px"><h2 class="bwfd-section-heading__title has-2xl-font-size">Why this book makes a difference</h2><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
+	<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left" style="margin-bottom:30px"><h2 class="bwfd-section-heading__title has-xxl-font-size">Why this book makes a difference</h2><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
 	<!-- /wp:bwfd/section-heading -->
 
 	<!-- wp:bwfd/card-grid {"minWidth":280} -->
@@ -85,7 +85,7 @@ $bwfd_cover = bwfd_image( 'bwfd-cover.jpg' );
 		foreach ( $bwfd_reasons as list( $bwfd_icon, $bwfd_title, $bwfd_text ) ) :
 			?>
 		<!-- wp:bwfd/card {"style":{"spacing":{"blockGap":"16px"}}} -->
-		<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-regular">
+		<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-regular" style="gap:16px">
 			<!-- wp:bwfd/icon {"icon":"<?php echo esc_attr( $bwfd_icon ); ?>"} /-->
 			<!-- wp:heading {"level":3,"fontSize":"xl"} -->
 			<h3 class="wp-block-heading has-xl-font-size"><?php echo $bwfd_title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static pattern copy. ?></h3>
@@ -104,7 +104,7 @@ $bwfd_cover = bwfd_image( 'bwfd-cover.jpg' );
 <!-- wp:group {"className":"bwfd-section bwfd-section--last","layout":{"type":"constrained"}} -->
 <div class="wp-block-group bwfd-section bwfd-section--last">
 	<!-- wp:bwfd/section-heading {"content":"Endorsements","style":{"spacing":{"margin":{"bottom":"28px"}}}} -->
-	<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left" style="margin-bottom:28px"><h2 class="bwfd-section-heading__title has-2xl-font-size">Endorsements</h2><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
+	<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left" style="margin-bottom:28px"><h2 class="bwfd-section-heading__title has-xxl-font-size">Endorsements</h2><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
 	<!-- /wp:bwfd/section-heading -->
 
 	<!-- wp:pattern {"slug":"bwfd/endorsements-full"} /-->

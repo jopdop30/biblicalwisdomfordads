@@ -82,6 +82,28 @@ function bwfd_import_theme_image( string $file ): string {
 }
 
 $bwfd_registry = WP_Block_Patterns_Registry::get_instance();
+
+/**
+ * Replace <!-- wp:pattern {"slug":"…"} /--> references with the pattern's
+ * own blocks so the saved page holds literal, editable content.
+ */
+function bwfd_inline_patterns( string $content, WP_Block_Patterns_Registry $registry, int $depth = 0 ): string {
+	if ( $depth > 5 ) {
+		return $content;
+	}
+	return (string) preg_replace_callback(
+		'/<!--\s+wp:pattern\s+(\{.*?\})\s+\/-->/s',
+		static function ( array $m ) use ( $registry, $depth ): string {
+			$attrs   = json_decode( $m[1], true );
+			$pattern = is_array( $attrs ) && ! empty( $attrs['slug'] ) ? $registry->get_registered( $attrs['slug'] ) : null;
+			if ( ! $pattern ) {
+				return $m[0];
+			}
+			return bwfd_inline_patterns( $pattern['content'], $registry, $depth + 1 );
+		},
+		$content
+	);
+}
 $bwfd_images   = array();
 $bwfd_ids      = array();
 
@@ -91,7 +113,7 @@ foreach ( $bwfd_pages as $bwfd_slug => list( $bwfd_title, $bwfd_pattern, $bwfd_t
 		WP_CLI::warning( "Pattern $bwfd_pattern not registered – is the bwfd theme active?" );
 		continue;
 	}
-	$bwfd_content = $bwfd_registered['content'];
+	$bwfd_content = bwfd_inline_patterns( $bwfd_registered['content'], $bwfd_registry );
 
 	// Swap theme asset URLs for Media Library copies so editors can manage them.
 	$bwfd_base = BWFD_URI . '/assets/images/';
@@ -129,6 +151,13 @@ foreach ( $bwfd_pages as $bwfd_slug => list( $bwfd_title, $bwfd_pattern, $bwfd_t
 	}
 	$bwfd_ids[ $bwfd_slug ] = (int) $bwfd_id;
 	WP_CLI::log( sprintf( '%s page "%s" (#%d)', $bwfd_existing ? 'Updated' : 'Created', $bwfd_title, $bwfd_id ) );
+}
+
+// Site title, unless it has already been customised.
+if ( in_array( get_option( 'blogname' ), array( 'biblicalwisdomfordads', 'My WordPress' ), true ) ) {
+	update_option( 'blogname', 'Biblical Wisdom for Dads' );
+	update_option( 'blogdescription', 'By Stephen Parker. Foreword by Richard Blackaby.' );
+	WP_CLI::log( 'Set the site title and tagline.' );
 }
 
 // Front page.
