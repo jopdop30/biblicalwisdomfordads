@@ -12,7 +12,7 @@ Block theme (full site editing) for [biblicalwisdomfordads.au](https://www.bibli
 | `parts/` | `header` and `footer`, each rendering a PHP pattern so links can use `home_url()`. |
 | `patterns/` | Nine complete page patterns (category **BWFD pages**) and reusable sections (category **BWFD sections**): navy call-to-action band, endorsement sets, key information reveals, bulk order cards. |
 | `src/blocks/` | Custom block sources (see below). Built to `build/` with `@wordpress/scripts`. |
-| `src/admin/` | The Settings → Structured data app (`@wordpress/components` + `@wordpress/core-data`). Built to `build/admin/`. |
+| `src/admin/` | The Settings → Structured data app and the editor’s “Search appearance” panel (`@wordpress/components` + `@wordpress/core-data`). Built to `build/admin/`. |
 | `inc/` | Block registration, block style variations, pattern categories, SVG icon library, SEO output, performance trims, and the Structured data settings page. |
 | `bin/import-pages.php` | WP-CLI script that creates/updates the nine pages from the patterns, imports the images into the Media Library, sets the front page, the privacy policy page and writes the primary navigation. |
 | `assets/` | Imagery from the design as right-sized WebP (covers 800–900px wide, textures 1000–1600px), favicon set, and the two variable fonts (latin subsets). |
@@ -149,3 +149,14 @@ Framed image blocks output `width`/`height` so the browser reserves space and ca
 ## Fonts
 
 Bitter and Source Sans 3 are bundled as variable woff2 files (SIL Open Font License) and declared in `theme.json`, so no requests go to Google Fonts. The files are subset with `pyftsubset` to ASCII, Latin-1, Œ/œ, typographic punctuation (dashes, curly quotes, ellipsis, bullets), the euro, trade mark, minus and the fi/fl ligatures, which is about 15% smaller than Google's latin subset. Rename the files when replacing them: they are cached for a year.
+
+## Search engines
+
+`inc/seo.php` handles everything an SEO plugin would, without one:
+
+- **Title and description.** The `<title>` is WordPress’s default (page title – site name) unless the page has a *Search title* in the editor’s **Search appearance** panel, which then replaces the whole tag. The meta description is the page **Excerpt**; without one, the first substantial paragraphs are used and cut at a sentence end where possible.
+- **Open Graph, Twitter cards, JSON-LD.** Facts come from Settings → Structured data. The book cover defaults to the media-library copy (slug `bwfd-cover`) when one exists.
+- **Crawl controls.** Sitemap requests always answer 200 (core returns 404 while there are no posts). The users sitemap is off and author archives redirect to the homepage. Search results, date archives, attachment pages, not-found pages and empty term archives are `noindex, follow`.
+- **Headers.** Front-end responses carry `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` and `X-Frame-Options`. Anonymous, cookie-less page requests also send `Cache-Control: public, s-maxage=600`, which Cloudflare honours once a cache rule makes HTML eligible (see `inc/performance.php`).
+- **Facebook feed.** The Facebook page block renders a placeholder and loads the Page Plugin iframe only when the visitor clicks, so the page itself sends nothing to Facebook and does not carry the embed’s weight.
+

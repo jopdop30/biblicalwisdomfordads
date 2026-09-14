@@ -41,6 +41,29 @@ function bwfd_schema_theme_image( string $file, int $width, int $height ): array
 }
 
 /**
+ * The book cover: the media-library copy (slug `bwfd-cover`) when the site
+ * has one, so the JSON-LD names the same file the pages and social tags
+ * use; the theme's bundled copy otherwise.
+ *
+ * @return array{id:int,url:string,width:int,height:int}
+ */
+function bwfd_schema_cover_image(): array {
+	$attachment = get_page_by_path( 'bwfd-cover', OBJECT, 'attachment' );
+	if ( $attachment instanceof WP_Post ) {
+		$src = wp_get_attachment_image_src( (int) $attachment->ID, 'full' );
+		if ( $src && (int) $src[1] > 0 && (int) $src[2] > 0 ) {
+			return array(
+				'id'     => (int) $attachment->ID,
+				'url'    => (string) $src[0],
+				'width'  => (int) $src[1],
+				'height' => (int) $src[2],
+			);
+		}
+	}
+	return bwfd_schema_theme_image( 'bwfd-cover.webp', 800, 1215 );
+}
+
+/**
  * Default facts. Filter `bwfd_schema_defaults` to change them in code.
  *
  * @return array<string, mixed>
@@ -63,7 +86,7 @@ function bwfd_schema_defaults(): array {
 				'language'       => 'en',
 				'pages'          => 142,
 				'release_date'   => '2026-10-27',
-				'image'          => bwfd_schema_theme_image( 'bwfd-cover.webp', 800, 1215 ),
+				'image'          => bwfd_schema_cover_image(),
 				'editions'       => array(
 					'paperback' => array(
 						'isbn' => '978-1-7635863-3-8',

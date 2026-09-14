@@ -403,3 +403,35 @@ function bwfd_perf_preload_textures(): void {
 	}
 }
 add_action( 'wp_head', 'bwfd_perf_preload_textures', 1 );
+
+/**
+ * Let the CDN cache anonymous HTML. Cloudflare only caches HTML once a cache
+ * rule marks it eligible; when it does, these headers give a 10 minute edge
+ * lifetime (served stale for up to an hour while revalidating) and keep the
+ * browser itself from holding a copy. Nothing is sent for logged-in visitors,
+ * requests carrying WordPress cookies, query strings, previews, search,
+ * not-found pages or feeds.
+ */
+function bwfd_perf_cache_headers(): void {
+	if ( is_admin() || is_user_logged_in() || is_preview() || is_customize_preview() || is_feed() || is_robots() || is_search() || is_404() ) {
+		return;
+	}
+	if ( 'GET' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) || ! empty( $_GET ) || '' !== (string) get_query_var( 'sitemap' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return;
+	}
+	if ( is_singular() && post_password_required() ) {
+		return;
+	}
+	foreach ( array_keys( $_COOKIE ) as $cookie ) {
+		$cookie = (string) $cookie;
+		if ( str_starts_with( $cookie, 'wordpress_' ) || str_starts_with( $cookie, 'wp-' ) || str_starts_with( $cookie, 'comment_author' ) ) {
+			return;
+		}
+	}
+	if ( headers_sent() ) {
+		return;
+	}
+	header( 'Cache-Control: public, max-age=0, s-maxage=600, stale-while-revalidate=3600' );
+}
+add_action( 'template_redirect', 'bwfd_perf_cache_headers', 0 );
+

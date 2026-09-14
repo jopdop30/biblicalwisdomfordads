@@ -63,10 +63,21 @@ function bwfd_seo_description(): string {
 	$text = preg_replace( '/\s+/u', ' ', trim( $text ) );
 
 	if ( mb_strlen( $text ) > 158 ) {
-		$cut  = mb_substr( $text, 0, 158 );
-		$text = rtrim( mb_substr( $cut, 0, (int) mb_strrpos( $cut, ' ' ) ), " ,;:–-" );
-		if ( ! preg_match( '/[.!?]$/u', $text ) ) {
-			$text .= '…';
+		$cut = mb_substr( $text, 0, 158 );
+		// End on a full sentence when one fills most of the space; otherwise
+		// break on a word and mark the cut.
+		$sentence = '';
+		if ( preg_match_all( '/[.!?]["”’)]?(?=\s|$)/u', $cut, $ends, PREG_OFFSET_CAPTURE ) ) {
+			$last     = end( $ends[0] );
+			$sentence = substr( $cut, 0, $last[1] + strlen( $last[0] ) );
+		}
+		if ( mb_strlen( $sentence ) >= 90 ) {
+			$text = $sentence;
+		} else {
+			$text = rtrim( mb_substr( $cut, 0, (int) mb_strrpos( $cut, ' ' ) ), " ,;:–-" );
+			if ( ! preg_match( '/[.!?]$/u', $text ) ) {
+				$text .= '…';
+			}
 		}
 	}
 
@@ -589,7 +600,7 @@ add_action( 'wp_head', 'bwfd_seo_json_ld', 3 );
 
 /**
  * Trim what the site sends: no emoji script/styles, no generator tag, no
- * shortlink, no RSD/WLW manifests. The Facebook embed keeps its own origin.
+ * shortlink, no RSD/WLW manifests, no comment feed links.
  */
 function bwfd_seo_trim_head(): void {
 	remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
@@ -605,19 +616,12 @@ function bwfd_seo_trim_head(): void {
 	remove_action( 'wp_head', 'wp_shortlink_wp_head' );
 	remove_action( 'wp_head', 'rsd_link' );
 	remove_action( 'wp_head', 'wlwmanifest_link' );
+	// Comment feeds: the site has no comments. The posts feed link stays.
+	remove_action( 'wp_head', 'feed_links_extra', 3 );
+	add_filter( 'feed_links_show_comments_feed', '__return_false' );
 }
 add_action( 'init', 'bwfd_seo_trim_head' );
 
-/**
- * Preconnect to Facebook for the page-plugin embed, only where it is used.
- */
-function bwfd_seo_resource_hints( array $urls, string $relation ): array {
-	if ( 'preconnect' === $relation && is_singular() && has_block( 'bwfd/facebook-page' ) ) {
-		$urls[] = array( 'href' => 'https://www.facebook.com', 'crossorigin' => false );
-	}
-	return $urls;
-}
-add_filter( 'wp_resource_hints', 'bwfd_seo_resource_hints', 10, 2 );
 
 /**
  * Generate WebP sub-sizes for uploaded JPEG and PNG images.
@@ -631,3 +635,186 @@ function bwfd_seo_webp_uploads( array $formats ): array {
 	return $formats;
 }
 add_filter( 'image_editor_output_format', 'bwfd_seo_webp_uploads' );
+
+/* -------------------------------------------------------------------------
+ * Crawl controls
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Core sitemaps answer with a 404 status while the site has no published
+ * posts: the main query behind a sitemap request finds nothing, WordPress
+ * marks the request not found, and the XML is then sent under that status.
+ * Sitemap requests never need the not-found check, so skip it for them.
+ *
+ * @param bool|mixed $preempt Non-false short-circuits handle_404().
+ * @return bool|mixed
+ */
+function bwfd_seo_sitemap_status( $preempt ) {
+	global $wp_query;
+
+	$sitemap    = (string) get_query_var( 'sitemap' );
+	$stylesheet = (string) get_query_var( 'sitemap-stylesheet' );
+	if ( '' === $sitemap && '' === $stylesheet ) {
+		return $preempt;
+	}
+
+	$server = wp_sitemaps_get_server();
+	$known  = '' !== $stylesheet || 'index' === $sitemap || $server->registry->get_provider( $sitemap );
+	if ( $known && $server->sitemaps_enabled() ) {
+		return true;
+	}
+
+	// An unknown sitemap name would otherwise render the homepage at that URL.
+	$wp_query->set_404();
+	status_header( 404 );
+	nocache_headers();
+	return true;
+}
+add_filter( 'pre_handle_404', 'bwfd_seo_sitemap_status' );
+
+/**
+ * No users sitemap: author archives redirect home (below), so listing them
+ * would only advertise usernames.
+ *
+ * @param WP_Sitemaps_Provider|false $provider Provider.
+ * @param string                     $name     Provider name.
+ * @return WP_Sitemaps_Provider|false
+ */
+function bwfd_seo_sitemap_providers( $provider, string $name ) {
+	return 'users' === $name ? false : $provider;
+}
+add_filter( 'wp_sitemaps_add_provider', 'bwfd_seo_sitemap_providers', 10, 2 );
+
+/**
+ * Author archives carry nothing but the admin username in their URL and
+ * title. Send them (and ?author=N lookups) to the homepage.
+ */
+function bwfd_seo_redirect_author_archives(): void {
+	if ( is_author() ) {
+		wp_safe_redirect( home_url( '/' ), 301 );
+		exit;
+	}
+}
+add_action( 'template_redirect', 'bwfd_seo_redirect_author_archives', 0 );
+
+/**
+ * Keep thin or duplicate views out of the index: search results, date
+ * archives, attachment pages, not-found pages, and term archives that have
+ * nothing in them yet. Links on those pages are still followed.
+ *
+ * @param array<string, bool|string> $robots Robots directives.
+ * @return array<string, bool|string>
+ */
+function bwfd_seo_robots( array $robots ): array {
+	global $wp_query;
+
+	$empty_archive = ( is_category() || is_tag() || is_tax() ) && 0 === (int) $wp_query->post_count;
+
+	if ( is_search() || is_date() || is_author() || is_attachment() || is_404() || $empty_archive ) {
+		$robots['noindex'] = true;
+		$robots['follow']  = true;
+		unset( $robots['index'], $robots['nofollow'] );
+	}
+	return $robots;
+}
+add_filter( 'wp_robots', 'bwfd_seo_robots' );
+
+/* -------------------------------------------------------------------------
+ * Search titles
+ * ---------------------------------------------------------------------- */
+
+/**
+ * `bwfd_seo_title` post meta: a hand-written <title> for search results.
+ * Edited in the "Search appearance" panel (src/admin/seo-panel.js). The
+ * meta description comes from the Excerpt panel, see bwfd_seo_description().
+ */
+function bwfd_seo_register_title_meta(): void {
+	foreach ( array( 'page', 'post' ) as $post_type ) {
+		register_post_meta(
+			$post_type,
+			'bwfd_seo_title',
+			array(
+				'type'              => 'string',
+				'single'            => true,
+				'default'           => '',
+				'description'       => __( 'Title shown in search results. Replaces the whole title tag.', 'bwfd' ),
+				'sanitize_callback' => 'sanitize_text_field',
+				'auth_callback'     => static fn(): bool => current_user_can( 'edit_posts' ),
+				'show_in_rest'      => true,
+			)
+		);
+	}
+}
+add_action( 'init', 'bwfd_seo_register_title_meta' );
+
+/**
+ * Use the search title, when one is set, as the whole document title.
+ *
+ * @param array<string, string> $parts Title parts.
+ * @return array<string, string>
+ */
+function bwfd_seo_document_title( array $parts ): array {
+	if ( is_singular() ) {
+		$custom = trim( (string) get_post_meta( get_queried_object_id(), 'bwfd_seo_title', true ) );
+		if ( '' !== $custom ) {
+			return array( 'title' => $custom );
+		}
+	}
+	return $parts;
+}
+add_filter( 'document_title_parts', 'bwfd_seo_document_title' );
+
+/**
+ * The "Search appearance" document panel in the post editor.
+ */
+function bwfd_seo_editor_assets(): void {
+	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+	if ( ! $screen || ! in_array( (string) $screen->post_type, array( 'page', 'post' ), true ) ) {
+		return;
+	}
+	$asset_file = BWFD_DIR . '/build/admin/seo-panel.asset.php';
+	if ( ! file_exists( $asset_file ) ) {
+		return;
+	}
+	$asset = require $asset_file;
+
+	wp_enqueue_script(
+		'bwfd-seo-panel',
+		BWFD_URI . '/build/admin/seo-panel.js',
+		$asset['dependencies'],
+		$asset['version'],
+		true
+	);
+	wp_add_inline_script(
+		'bwfd-seo-panel',
+		'window.bwfdSeoPanel = ' . wp_json_encode(
+			array(
+				'siteName'  => get_bloginfo( 'name' ),
+				'separator' => apply_filters( 'document_title_separator', '-' ),
+			)
+		) . ';',
+		'before'
+	);
+}
+add_action( 'enqueue_block_editor_assets', 'bwfd_seo_editor_assets' );
+
+/* -------------------------------------------------------------------------
+ * Response headers
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Baseline security headers on front-end responses. HSTS is left to
+ * Cloudflare, where it can be enabled and rolled back without a deploy.
+ */
+function bwfd_seo_security_headers(): void {
+	if ( headers_sent() ) {
+		return;
+	}
+	header( 'X-Content-Type-Options: nosniff' );
+	header( 'Referrer-Policy: strict-origin-when-cross-origin' );
+	header( 'Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()' );
+	if ( ! is_embed() ) {
+		header( 'X-Frame-Options: SAMEORIGIN' );
+	}
+}
+add_action( 'send_headers', 'bwfd_seo_security_headers' );

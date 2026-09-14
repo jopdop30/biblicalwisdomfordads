@@ -6,9 +6,9 @@
   "scripts": {
     "build": "npm run build:blocks && npm run build:admin",
     "build:blocks": "wp-scripts build --experimental-modules --blocks-manifest",
-    "build:admin": "wp-scripts build schema-settings.js --webpack-src-dir=src/admin --output-path=build/admin",
+    "build:admin": "wp-scripts build schema-settings.js seo-panel.js --webpack-src-dir=src/admin --output-path=build/admin",
     "start": "wp-scripts start --experimental-modules --blocks-manifest",
-    "start:admin": "wp-scripts start schema-settings.js --webpack-src-dir=src/admin --output-path=build/admin",
+    "start:admin": "wp-scripts start schema-settings.js seo-panel.js --webpack-src-dir=src/admin --output-path=build/admin",
     "lint:js": "wp-scripts lint-js",
     "lint:css": "wp-scripts lint-style",
     "format": "wp-scripts format"

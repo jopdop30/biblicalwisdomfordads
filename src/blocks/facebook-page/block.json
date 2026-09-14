@@ -2,29 +2,59 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "bwfd/facebook-page",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"title": "Facebook page feed",
 	"category": "bwfd",
 	"icon": "facebook",
-	"description": "Embeds a Facebook Page timeline using Facebook’s Page Plugin. Sized to its container (Facebook caps the width at 500px).",
-	"keywords": [ "facebook", "feed", "social", "embed" ],
+	"description": "Embeds a Facebook Page timeline using Facebook’s Page Plugin. Visitors load it with a click, so the page itself sends nothing to Facebook. Sized to its container (Facebook caps the width at 500px).",
+	"keywords": [
+		"facebook",
+		"feed",
+		"social",
+		"embed"
+	],
 	"textdomain": "bwfd",
 	"attributes": {
-		"url": { "type": "string", "default": "https://www.facebook.com/biblicalwisdomfordads" },
-		"height": { "type": "number", "default": 600 },
-		"tabs": { "type": "string", "default": "timeline" },
-		"smallHeader": { "type": "boolean", "default": false },
-		"hideCover": { "type": "boolean", "default": false },
-		"showFacepile": { "type": "boolean", "default": true },
-		"title": { "type": "string", "default": "Biblical Wisdom for Dads on Facebook" }
+		"url": {
+			"type": "string",
+			"default": "https://www.facebook.com/biblicalwisdomfordads"
+		},
+		"height": {
+			"type": "number",
+			"default": 600
+		},
+		"tabs": {
+			"type": "string",
+			"default": "timeline"
+		},
+		"smallHeader": {
+			"type": "boolean",
+			"default": false
+		},
+		"hideCover": {
+			"type": "boolean",
+			"default": false
+		},
+		"showFacepile": {
+			"type": "boolean",
+			"default": true
+		},
+		"title": {
+			"type": "string",
+			"default": "Biblical Wisdom for Dads on Facebook"
+		}
 	},
 	"supports": {
 		"anchor": true,
 		"html": false,
-		"align": [ "center", "wide" ]
+		"align": [
+			"center",
+			"wide"
+		]
 	},
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css",
-	"render": "file:./render.php"
+	"render": "file:./render.php",
+	"viewScriptModule": "file:./view.js"
 }

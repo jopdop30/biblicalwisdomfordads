@@ -16,6 +16,43 @@
 		border-radius: var(--wp--custom--radius--small, 3px);
 	}
 
+	&__placeholder {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 12px;
+		padding: 36px 24px;
+		text-align: center;
+		border: 1px solid var(--wp--preset--color--line, #d9dde3);
+		border-radius: var(--wp--custom--radius--small, 3px);
+		background: var(--wp--preset--color--surface, #f6f4ef);
+		color: var(--wp--preset--color--ink, #1f2a37);
+	}
+
+	&__icon {
+		width: 36px;
+		height: 36px;
+		color: var(--wp--preset--color--blue, #4a7fb5);
+	}
+
+	&__title {
+		margin: 0;
+		font-weight: 600;
+	}
+
+	&__note {
+		margin: 0;
+		max-width: 34ch;
+		font-size: var(--wp--preset--font-size--sm, 13.5px);
+		color: var(--wp--preset--color--grey, #5b6570);
+	}
+
+	&__load {
+		margin-top: 4px;
+		cursor: pointer;
+	}
+
 	&__fallback {
 		margin: 8px 0 0;
 		font-size: var(--wp--preset--font-size--sm, 13.5px);
