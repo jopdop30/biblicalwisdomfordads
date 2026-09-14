@@ -158,5 +158,4 @@ Bitter and Source Sans 3 are bundled as variable woff2 files (SIL Open Font Lice
 - **Open Graph, Twitter cards, JSON-LD.** Facts come from Settings → Structured data. The book cover defaults to the media-library copy (slug `bwfd-cover`) when one exists.
 - **Crawl controls.** Sitemap requests always answer 200 (core returns 404 while there are no posts). The users sitemap is off and author archives redirect to the homepage. Search results, date archives, attachment pages, not-found pages and empty term archives are `noindex, follow`.
 - **Headers.** Front-end responses carry `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` and `X-Frame-Options`. Anonymous, cookie-less page requests also send `Cache-Control: public, s-maxage=600`, which Cloudflare honours once a cache rule makes HTML eligible (see `inc/performance.php`).
-- **Facebook feed.** The Facebook page block renders a placeholder and loads the Page Plugin iframe only when the visitor clicks, so the page itself sends nothing to Facebook and does not carry the embed’s weight.
 

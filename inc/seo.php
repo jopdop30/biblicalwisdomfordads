@@ -624,6 +624,17 @@ add_action( 'init', 'bwfd_seo_trim_head' );
 
 
 /**
+ * Preconnect to Facebook for the page-plugin embed, only where it is used.
+ */
+function bwfd_seo_resource_hints( array $urls, string $relation ): array {
+	if ( 'preconnect' === $relation && is_singular() && has_block( 'bwfd/facebook-page' ) ) {
+		$urls[] = array( 'href' => 'https://www.facebook.com', 'crossorigin' => false );
+	}
+	return $urls;
+}
+add_filter( 'wp_resource_hints', 'bwfd_seo_resource_hints', 10, 2 );
+
+/**
  * Generate WebP sub-sizes for uploaded JPEG and PNG images.
  *
  * @param array $formats Output format map.

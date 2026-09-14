@@ -1,10 +1,6 @@
 <?php
 /**
- * Facebook Page Plugin embed, loaded on request.
- *
- * The plugin iframe weighs over half a megabyte and sets cookies, so the
- * page renders a small placeholder and view.js swaps in the iframe when the
- * visitor asks for it. Without JavaScript the link to the page remains.
+ * Facebook Page Plugin embed.
  *
  * @var array    $attributes Block attributes.
  * @var string   $content    Inner content (unused).
@@ -38,21 +34,18 @@ $bwfd_src = add_query_arg(
 	'https://www.facebook.com/plugins/page.php'
 );
 
-$bwfd_wrapper = get_block_wrapper_attributes(
-	array(
-		'class'       => 'bwfd-facebook-page',
-		'data-src'    => $bwfd_src,
-		'data-title'  => $bwfd_title,
-		'data-height' => (string) $bwfd_height,
-	)
-);
+$bwfd_wrapper = get_block_wrapper_attributes( array( 'class' => 'bwfd-facebook-page' ) );
 ?>
 <div <?php echo $bwfd_wrapper; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?>>
-	<div class="bwfd-facebook-page__placeholder">
-		<?php echo bwfd_icon_svg( 'facebook', 36, array( 'class' => 'bwfd-facebook-page__icon', 'aria-hidden' => 'true' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG built from the theme's own icon paths. ?>
-		<p class="bwfd-facebook-page__title"><?php echo esc_html( $bwfd_title ); ?></p>
-		<p class="bwfd-facebook-page__note"><?php esc_html_e( 'The latest posts load from Facebook when you ask for them.', 'bwfd' ); ?></p>
-		<button type="button" class="bwfd-facebook-page__load wp-element-button"><?php esc_html_e( 'Show Facebook posts', 'bwfd' ); ?></button>
-	</div>
+	<iframe
+		src="<?php echo esc_url( $bwfd_src ); ?>"
+		title="<?php echo esc_attr( $bwfd_title ); ?>"
+		height="<?php echo (int) $bwfd_height; ?>"
+		style="border:none;overflow:hidden"
+		scrolling="no"
+		loading="lazy"
+		allowfullscreen="true"
+		allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+	></iframe>
 	<p class="bwfd-facebook-page__fallback"><a href="<?php echo esc_url( $bwfd_url ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Visit the page on Facebook', 'bwfd' ); ?></a></p>
 </div>
