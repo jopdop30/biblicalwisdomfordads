@@ -16,6 +16,13 @@
 		border-radius: var(--wp--custom--radius--small, 3px);
 	}
 
+	// Space held for the iframe until view.js inserts it.
+	&__frame {
+		width: 100%;
+		border-radius: var(--wp--custom--radius--small, 3px);
+		background: rgba(255, 255, 255, 0.5);
+	}
+
 	&__fallback {
 		margin: 8px 0 0;
 		font-size: var(--wp--preset--font-size--sm, 13.5px);

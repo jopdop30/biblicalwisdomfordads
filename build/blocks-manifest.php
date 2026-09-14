@@ -258,11 +258,11 @@ return array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
 		'name' => 'bwfd/facebook-page',
-		'version' => '1.0.0',
+		'version' => '1.1.0',
 		'title' => 'Facebook page feed',
 		'category' => 'bwfd',
 		'icon' => 'facebook',
-		'description' => 'Embeds a Facebook Page timeline using Facebook’s Page Plugin. Sized to its container (Facebook caps the width at 500px).',
+		'description' => 'Embeds a Facebook Page timeline using Facebook’s Page Plugin, loaded as the block scrolls into reach. Sized to its container (Facebook caps the width at 500px).',
 		'keywords' => array(
 			'facebook',
 			'feed',
@@ -311,7 +311,8 @@ return array(
 		'editorScript' => 'file:./index.js',
 		'editorStyle' => 'file:./index.css',
 		'style' => 'file:./style-index.css',
-		'render' => 'file:./render.php'
+		'render' => 'file:./render.php',
+		'viewScriptModule' => 'file:./view.js'
 	),
 	'framed-image' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
