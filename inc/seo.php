@@ -260,6 +260,48 @@ function bwfd_book_availability( array $book ): array {
 }
 
 /**
+ * Endorsements on a page, read from its bwfd/endorsement blocks so the
+ * structured data follows whatever editors write.
+ *
+ * @return array<int, array{text:string,name:string,role:string}>
+ */
+function bwfd_page_endorsements( WP_Post $post ): array {
+	$found = array();
+
+	$walk = static function ( array $blocks ) use ( &$walk, &$found ): void {
+		foreach ( $blocks as $block ) {
+			if ( 'bwfd/endorsement' === ( $block['blockName'] ?? '' ) ) {
+				$html  = (string) $block['innerHTML'];
+				$quote = preg_match( '#class="bwfd-endorsement__quote"[^>]*>(.*?)</p>#s', $html, $q ) ? $q[1] : '';
+				$who   = preg_match( '#class="bwfd-endorsement__who"[^>]*>(.*?)</figcaption>#s', $html, $w ) ? $w[1] : '';
+
+				$clean = static fn( string $text ): string => trim( preg_replace( '/\s+/u', ' ', html_entity_decode( wp_strip_all_tags( $text ), ENT_QUOTES, 'UTF-8' ) ) );
+				$quote = $clean( $quote );
+				$who   = rtrim( $clean( $who ), '.' );
+
+				if ( '' === $quote || '' === $who ) {
+					continue;
+				}
+
+				// "Name, role and organisation" → name plus role.
+				$parts   = explode( ',', $who, 2 );
+				$found[] = array(
+					'text' => $quote,
+					'name' => trim( $parts[0] ),
+					'role' => isset( $parts[1] ) ? trim( $parts[1] ) : '',
+				);
+			}
+			if ( ! empty( $block['innerBlocks'] ) ) {
+				$walk( $block['innerBlocks'] );
+			}
+		}
+	};
+	$walk( parse_blocks( $post->post_content ) );
+
+	return $found;
+}
+
+/**
  * JSON-LD graph for the current request.
  *
  * Every page: Organization (publisher), WebSite and WebPage.
@@ -267,6 +309,9 @@ function bwfd_book_availability( array $book ): array {
  * as a work with its three editions, the paperback edition doubling as a
  * Product (Google's "co-type Product with Book" guidance) carrying the
  * direct-purchase Offer, plus the author Person.
+ * Endorsements on a book page are emitted as Quotation nodes about the
+ * Book (not as reviews: Google requires a star rating on reviews, and
+ * these have none).
  * About the author: WebPage becomes a ProfilePage whose mainEntity is the
  * author Person.
  * Other books: Book entries for the author's earlier titles.
@@ -493,6 +538,24 @@ function bwfd_seo_json_ld(): void {
 			'exampleOfWork' => $ref( 'book' ),
 			'offers'        => $offer,
 		);
+	}
+
+	if ( $is_book_page && $post instanceof WP_Post ) {
+		foreach ( bwfd_page_endorsements( $post ) as $endorsement ) {
+			$creator = array(
+				'@type' => 'Person',
+				'name'  => $endorsement['name'],
+			);
+			if ( '' !== $endorsement['role'] ) {
+				$creator['jobTitle'] = $endorsement['role'];
+			}
+			$graph[] = array(
+				'@type'   => 'Quotation',
+				'text'    => $endorsement['text'],
+				'creator' => $creator,
+				'about'   => $ref( 'book' ),
+			);
+		}
 	}
 
 	if ( $is_other_books ) {
