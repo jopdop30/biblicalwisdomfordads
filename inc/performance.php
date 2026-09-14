@@ -416,7 +416,7 @@ function bwfd_perf_cache_headers(): void {
 	if ( is_admin() || is_user_logged_in() || is_preview() || is_customize_preview() || is_feed() || is_robots() || is_search() || is_404() ) {
 		return;
 	}
-	if ( 'GET' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) || ! empty( $_GET ) || '' !== (string) get_query_var( 'sitemap' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	if ( ! in_array( $_SERVER['REQUEST_METHOD'] ?? '', array( 'GET', 'HEAD' ), true ) || ! empty( $_GET ) || '' !== (string) get_query_var( 'sitemap' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		return;
 	}
 	if ( is_singular() && post_password_required() ) {
