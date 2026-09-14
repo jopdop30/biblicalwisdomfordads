@@ -1,11 +1,14 @@
 {
   "name": "bwfd",
   "version": "1.0.0",
-  "description": "Biblical Wisdom for Dads – WordPress block theme",
+  "description": "Biblical Wisdom for Dads \u2013 WordPress block theme",
   "private": true,
   "scripts": {
-    "build": "wp-scripts build --experimental-modules --blocks-manifest",
+    "build": "npm run build:blocks && npm run build:admin",
+    "build:blocks": "wp-scripts build --experimental-modules --blocks-manifest",
+    "build:admin": "wp-scripts build schema-settings.js --webpack-src-dir=src/admin --output-path=build/admin",
     "start": "wp-scripts start --experimental-modules --blocks-manifest",
+    "start:admin": "wp-scripts start schema-settings.js --webpack-src-dir=src/admin --output-path=build/admin",
     "lint:js": "wp-scripts lint-js",
     "lint:css": "wp-scripts lint-style",
     "format": "wp-scripts format"

@@ -12,7 +12,8 @@ Block theme (full site editing) for [biblicalwisdomfordads.au](https://www.bibli
 | `parts/` | `header` and `footer`, each rendering a PHP pattern so links can use `home_url()`. |
 | `patterns/` | Nine complete page patterns (category **BWFD pages**) and reusable sections (category **BWFD sections**): navy call-to-action band, endorsement sets, key information reveals, bulk order cards. |
 | `src/blocks/` | Custom block sources (see below). Built to `build/` with `@wordpress/scripts`. |
-| `inc/` | Block registration, block style variations, pattern categories, SVG icon library. |
+| `src/admin/` | The Settings → Structured data app (`@wordpress/components` + `@wordpress/core-data`). Built to `build/admin/`. |
+| `inc/` | Block registration, block style variations, pattern categories, SVG icon library, SEO output, performance trims, and the Structured data settings page. |
 | `bin/import-pages.php` | WP-CLI script that creates/updates the nine pages from the patterns, imports the images into the Media Library, sets the front page, the privacy policy page and writes the primary navigation. |
 | `assets/` | Imagery from the design as right-sized WebP (covers 800–900px wide, textures 1000–1600px), favicon set, and the two variable fonts (latin subsets). |
 
@@ -41,9 +42,12 @@ Block styles registered for core blocks: Group (Navy texture, Apricot texture, M
 cd wp-content/themes/bwfd
 nvm use 22
 npm install
-npm run build      # production build to build/ (includes blocks-manifest.php)
-npm run start      # watch mode
+npm run build      # blocks and the settings app (build/ and build/admin/)
+npm run start      # watch mode for blocks
+npm run start:admin  # watch mode for the settings app
 ```
+
+`build:blocks` empties `build/` first, which removes `build/admin/`; `npm run build` runs both steps in the right order. After a `start` session, run `npm run build:admin` again.
 
 The build uses `wp-scripts` with `--experimental-modules` so the Interactivity API `view.js` files ship as script modules, and `--blocks-manifest` so blocks register through `wp_register_block_types_from_metadata_collection()`.
 
@@ -98,7 +102,7 @@ Any WordPress migration (Local's export, a migration plugin, or a database plus 
 
 **Server requirements**: PHP 8.0+, WordPress 6.8+ (built on 7.1), and an image library with WebP support (GD or Imagick) for WebP upload sub-sizes.
 
-**Not in the theme**: page Excerpts written for meta descriptions, template or style changes made in the Site Editor (stored in the database), and the placeholder purchase/download URLs once you fill them in. All of these travel with a full migration, or need re-entering after a fresh install.
+**Not in the theme**: page Excerpts written for meta descriptions, template or style changes made in the Site Editor (stored in the database), values saved under Settings → Structured data, and the placeholder purchase/download URLs once you fill them in. All of these travel with a full migration, or need re-entering after a fresh install.
 
 ## Editing
 
@@ -116,10 +120,16 @@ Any WordPress migration (Local's export, a migration plugin, or a database plus 
 
 * `<meta name="description">` from the page **Excerpt** (pages gain an Excerpt panel), falling back to the first substantial paragraphs of the page, then the tagline.
 * Open Graph and Twitter card tags; the share image is the featured image, else the first image in the content, else the book cover.
-* JSON-LD: Organization, WebSite and WebPage on every page. On Home, About the book, Purchase and Churches & retail: the Book as a work with its paperback, eBook and audiobook editions (ISBN-13 each), the paperback doubling as a Google `Product` (co-typed `Product` + `Book`, `gtin13`, brand, and the direct-purchase Offer with AUD price, postage to Australia and availability that switches from PreOrder to InStock on the launch date), and the author Person. About the author is a `ProfilePage` whose `mainEntity` is the Person (portrait, bio, role, email, profile links). Other books carries Book entries for the earlier titles. Facts live in `bwfd_book_data()` and `bwfd_author_data()` and can be changed with the `bwfd_book_data` and `bwfd_author_data` filters. Endorsements on a book page are read from its Endorsement blocks and emitted as `Quotation` nodes (quote, speaker with role, `about` the Book) rather than reviews, because Google requires a star rating on each review and the endorsements have none.
+* JSON-LD: Organization, WebSite and WebPage on every page. On the book pages (About the book, Purchase and any others chosen in the settings, by default Home and Churches & retail): the Book as a work with its paperback, eBook and audiobook editions (ISBN-13 each), the paperback doubling as a Google `Product` (co-typed `Product` + `Book`, `gtin13`, brand, and the direct-purchase Offer with price, postage and availability that switches from PreOrder to InStock on the release date), the author Person, and a `Quotation` per Endorsement block on the page (quote, speaker with role, `about` the Book; not reviews, because Google requires a star rating on each review and the endorsements have none). About the author is a `ProfilePage` whose `mainEntity` is the Person. Other books carries Book entries for the earlier titles. Empty fields are dropped from the output.
 * Emoji script, generator tag, shortlink and RSD/WLW links removed; Facebook preconnect only on pages with the feed.
 * Uploaded JPEG/PNG images get WebP sub-sizes (`image_editor_output_format`).
 * Core provides the rest: title tag, canonical, robots, XML sitemap at `/wp-sitemap.xml`.
+
+### Structured data settings
+
+Every fact in the JSON-LD (book, editions with their store links, offer, shipping and returns, publisher, author, other books, and which pages carry what) is edited under **Settings → Structured data**. Fields for facts not yet known (store links such as Amazon, eBook and audiobook release dates, narrator and running time, price validity, handling and transit times, return policy) sit blank and are left out of the output until filled. The page is a small React app built with `@wordpress/components`, so it looks and saves like the rest of the admin: fields are grouped into cards that mirror the graph, images can be chosen from the Media Library, and a preview panel shows the JSON-LD any page currently sends, with a link to Google's Rich Results Test. Endorsements are read from the Endorsement blocks on each page and need no entry.
+
+The data is one option, `bwfd_schema`, exposed on the REST settings endpoint with a full JSON schema (`inc/schema-settings.php`). Defaults live in `bwfd_schema_defaults()` (filter `bwfd_schema_defaults`) and are merged under the saved values, so a field added in a later release starts with a sensible value and **Reset to defaults** in the page recovers the shipped facts. `bwfd_schema_data()` returns the merged data (filter `bwfd_schema_data` for request-time changes). Page choices default to the pages the provisioning script creates, matched by slug. The option travels with a database migration; on a fresh install the defaults apply until someone saves the page.
 
 `inc/performance.php` targets what PageSpeed measures on the designed pages:
 
