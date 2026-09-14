@@ -6,7 +6,7 @@
  * Block Types: core/post-content
  * Post Types: page
  * Viewport Width: 1280
- * Description: Privacy policy for the site, written against what the site actually collects: email enquiries, Square checkout orders, server and Cloudflare logs, the Facebook page embed and Google Analytics. Use with the “Page with title” template.
+ * Description: Privacy policy for the site, written against what the site actually collects: email enquiries, Square checkout orders, server and Cloudflare logs, the Facebook page embed and Cloudflare Web Analytics. Use with the “Page with title” template.
  *
  * @package bwfd
  */
@@ -70,7 +70,11 @@ declare( strict_types=1 );
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p>We use Google Analytics, through the Site Kit by Google plugin, to understand how many people visit the site and which pages they read. Google Analytics uses cookies and collects your IP address, device and browser details and the pages you visit. Google processes this information on our behalf and may store it on servers outside Australia. You can read how Google uses data from sites that use its services at <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">policies.google.com/technologies/partner-sites</a>, and opt out with the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer">Google Analytics opt-out browser add-on</a>.</p>
+<p>Visitor statistics come from Cloudflare Web Analytics. Cloudflare adds a small script to each page that reports the page viewed, the referring site, the browser and operating system, the country the visit came from and page loading times. It does not use cookies, does not store your IP address and does not track you across other websites, and the figures we see are aggregated. Cloudflare's privacy policy is at <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">cloudflare.com/privacypolicy</a>.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>The site is connected to Google Search Console through the Site Kit by Google plugin so we can see how it appears in Google search results. That connection draws on Google's own search data. It does not load any Google scripts on the site and does not collect information about your visit.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading -->
@@ -118,14 +122,13 @@ declare( strict_types=1 );
 <ul class="wp-block-list">
 	<!-- wp:list-item --><li><strong>Square</strong>, which hosts our checkout and processes payments.</li><!-- /wp:list-item -->
 	<!-- wp:list-item --><li><strong>Australia Post or a courier</strong>, which receives your name and delivery address to deliver your order.</li><!-- /wp:list-item -->
-	<!-- wp:list-item --><li><strong>Cloudflare</strong>, which delivers and protects the site.</li><!-- /wp:list-item -->
-	<!-- wp:list-item --><li><strong>Google</strong>, which provides analytics and search reporting.</li><!-- /wp:list-item -->
+	<!-- wp:list-item --><li><strong>Cloudflare</strong>, which delivers and protects the site and produces its visitor statistics.</li><!-- /wp:list-item -->
 	<!-- wp:list-item --><li><strong>Our web hosting and email providers</strong>, which store the website and our email.</li><!-- /wp:list-item -->
 </ul>
 <!-- /wp:list -->
 
 <!-- wp:paragraph -->
-<p>We may also disclose information where the law requires it. Square, Google, Meta and Cloudflare are based in the United States and store information on servers outside Australia. By using their services through this site, your information may be transferred to and held in those countries.</p>
+<p>We may also disclose information where the law requires it. Square, Meta and Cloudflare are based in the United States and store information on servers outside Australia. By using their services through this site, your information may be transferred to and held in those countries.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading -->
@@ -133,7 +136,7 @@ declare( strict_types=1 );
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p>Order records are kept for as long as Australian tax law requires, which is generally five years. Emails are kept for as long as they are needed to deal with your enquiry and any follow-up. Server logs are kept for a short period and then deleted or rotated. Google Analytics data is retained according to the settings in our Analytics account.</p>
+<p>Order records are kept for as long as Australian tax law requires, which is generally five years. Emails are kept for as long as they are needed to deal with your enquiry and any follow-up. Server logs are kept for a short period and then deleted or rotated. Cloudflare keeps its aggregated visitor statistics for the period set by Cloudflare, currently six months.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading -->

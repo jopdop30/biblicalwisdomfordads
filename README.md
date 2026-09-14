@@ -108,7 +108,7 @@ Any WordPress migration (Local's export, a migration plugin, or a database plus 
 * Header and footer are template parts; the menu is a normal Navigation block menu ("Primary navigation"). The "Buy the book" item is styled as a button through the `bwfd-nav-button` CSS class on that link.
 * The Facebook feed card on the home page embeds the page timeline; change the page URL or tabs in the block sidebar.
 * Purchase and media-kit links marked "URL TBA" / `#` are placeholders awaiting final URLs.
-* The Privacy policy page (`patterns/page-privacy-policy.php`, template *Page with title*, linked from the footer) describes what the site does today: email contact, Square checkout, server and Cloudflare logs, the Facebook page embed and Google Analytics via Site Kit. Update it and its "Last updated" date when a form, newsletter, comments or another third-party service is added.
+* The Privacy policy page (`patterns/page-privacy-policy.php`, template *Page with title*, linked from the footer) describes what the site does today: email contact, Square checkout, server and Cloudflare logs, the Facebook page embed, Cloudflare Web Analytics (the beacon is injected by Cloudflare at the edge for browser user agents, so plain `curl` does not show it) and the Search Console connection through Site Kit. Update it and its "Last updated" date when a form, newsletter, comments or another third-party service is added.
 
 ## SEO and performance
 
