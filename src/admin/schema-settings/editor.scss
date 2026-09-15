@@ -216,9 +216,16 @@
 	}
 }
 
-.bwfd-schema-pair {
+.bwfd-schema-range {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 8px;
-	align-items: start;
+	margin-top: 8px;
+
+	// The pair's own "From" / "To" labels stay small and never wrap.
+	.components-base-control__label {
+		text-transform: none;
+		font-weight: 400;
+		white-space: nowrap;
+	}
 }

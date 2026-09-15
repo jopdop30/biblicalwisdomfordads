@@ -11,6 +11,7 @@ import {
 	Number,
 	Select,
 	Toggle,
+	DayRange,
 	LongText,
 	Image,
 	UrlList,
@@ -212,14 +213,22 @@ export default function App() {
 				description={ __( 'Delivery times and the return policy Google shows with merchant listings. The return policy is also attached to the publisher as the standard policy for the site. Leave a field blank to leave it out.', 'bwfd' ) }
 			>
 				<Grid>
-					<div className="bwfd-schema-pair">
-						<Number label={ __( 'Handling time, from (days)', 'bwfd' ) } value={ get( [ 'offer', 'handling_min' ], 0 ) } onChange={ set( [ 'offer', 'handling_min' ] ) } />
-						<Number optional label={ __( 'to (days)', 'bwfd' ) } value={ get( [ 'offer', 'handling_max' ], 0 ) } onChange={ set( [ 'offer', 'handling_max' ] ) } help={ __( 'Time from order to dispatch.', 'bwfd' ) } />
-					</div>
-					<div className="bwfd-schema-pair">
-						<Number label={ __( 'Transit time, from (days)', 'bwfd' ) } value={ get( [ 'offer', 'transit_min' ], 0 ) } onChange={ set( [ 'offer', 'transit_min' ] ) } />
-						<Number optional label={ __( 'to (days)', 'bwfd' ) } value={ get( [ 'offer', 'transit_max' ], 0 ) } onChange={ set( [ 'offer', 'transit_max' ] ) } help={ __( 'Time in the post.', 'bwfd' ) } />
-					</div>
+					<DayRange
+						label={ __( 'Handling time (days)', 'bwfd' ) }
+						from={ get( [ 'offer', 'handling_min' ], 0 ) }
+						to={ get( [ 'offer', 'handling_max' ], 0 ) }
+						onChangeFrom={ set( [ 'offer', 'handling_min' ] ) }
+						onChangeTo={ set( [ 'offer', 'handling_max' ] ) }
+						help={ __( 'From order to dispatch. Leave “To” blank to leave it out.', 'bwfd' ) }
+					/>
+					<DayRange
+						label={ __( 'Transit time (days)', 'bwfd' ) }
+						from={ get( [ 'offer', 'transit_min' ], 0 ) }
+						to={ get( [ 'offer', 'transit_max' ], 0 ) }
+						onChangeFrom={ set( [ 'offer', 'transit_min' ] ) }
+						onChangeTo={ set( [ 'offer', 'transit_max' ] ) }
+						help={ __( 'Time in the post.', 'bwfd' ) }
+					/>
 					<Full>
 						<Text type="url" label={ __( 'Return policy page', 'bwfd' ) } value={ get( [ 'offer', 'return_url' ] ) } onChange={ set( [ 'offer', 'return_url' ] ) } help={ __( 'Linked from the structured data so Google can show the policy.', 'bwfd' ) } />
 					</Full>

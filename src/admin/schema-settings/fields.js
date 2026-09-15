@@ -4,6 +4,7 @@ import { store as coreStore } from '@wordpress/core-data';
 import { decodeEntities } from '@wordpress/html-entities';
 import { MediaUpload } from '@wordpress/media-utils';
 import {
+	BaseControl,
 	Button,
 	Card,
 	CardBody,
@@ -66,6 +67,22 @@ export function Number( { label, value, onChange, help, optional = false } ) {
 			value={ shown }
 			onChange={ ( next ) => onChange( parseInt( next, 10 ) || 0 ) }
 		/>
+	);
+}
+
+/**
+ * A "from … to" pair of day counts under one label, aligned regardless of
+ * label length. The lower bound may be 0; a blank upper bound means unset.
+ */
+export function DayRange( { label, from, to, onChangeFrom, onChangeTo, help } ) {
+	const id = `bwfd-range-${ label.replace( /\W+/g, '-' ).toLowerCase() }`;
+	return (
+		<BaseControl __nextHasNoMarginBottom id={ id } label={ label } help={ help }>
+			<div className="bwfd-schema-range">
+				<Number label={ __( 'From', 'bwfd' ) } value={ from } onChange={ onChangeFrom } />
+				<Number optional label={ __( 'To', 'bwfd' ) } value={ to } onChange={ onChangeTo } />
+			</div>
+		</BaseControl>
 	);
 }
 
