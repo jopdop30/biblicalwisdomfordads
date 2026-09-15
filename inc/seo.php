@@ -258,6 +258,60 @@ function bwfd_page_endorsements( WP_Post $post ): array {
 }
 
 /**
+ * MerchantReturnPolicy from the offer settings, or null when no return
+ * window or policy page is set. Used on the Organization (Google's
+ * placement for a standard policy) and repeated on the Offer.
+ *
+ * @param array<string, mixed> $offer Offer settings.
+ * @return array<string, mixed>|null
+ */
+function bwfd_return_policy( array $offer ): ?array {
+	$days = (int) $offer['return_days'];
+	$link = (string) $offer['return_url'];
+	if ( $days <= 0 && '' === $link ) {
+		return null;
+	}
+
+	$fees = array(
+		'free'     => 'https://schema.org/FreeReturn',
+		'customer' => 'https://schema.org/ReturnFeesCustomerResponsibility',
+		'fixed'    => 'https://schema.org/ReturnShippingFees',
+	);
+	$refunds = array(
+		'full'             => 'https://schema.org/FullRefund',
+		'full_or_exchange' => array( 'https://schema.org/FullRefund', 'https://schema.org/ExchangeRefund' ),
+		'exchange'         => 'https://schema.org/ExchangeRefund',
+		'credit'           => 'https://schema.org/StoreCreditRefund',
+	);
+	$fee_key   = (string) $offer['return_fees'];
+	$fee       = $fees[ $fee_key ] ?? null;
+	$is_fixed  = 'fixed' === $fee_key && '' !== $offer['return_postage'];
+	$customer  = in_array( $fee_key, array( 'customer', 'fixed' ), true );
+
+	return array(
+		'@type'                    => 'MerchantReturnPolicy',
+		'merchantReturnLink'       => $link,
+		'applicableCountry'        => $offer['ships_to'],
+		'returnPolicyCountry'      => $offer['ships_to'],
+		'returnPolicyCategory'     => $days > 0 ? 'https://schema.org/MerchantReturnFiniteReturnWindow' : null,
+		'merchantReturnDays'       => $days > 0 ? $days : null,
+		'returnMethod'             => 'https://schema.org/ReturnByMail',
+		'itemCondition'            => 'https://schema.org/NewCondition',
+		'refundType'               => $refunds[ (string) $offer['refund_type'] ] ?? null,
+		'returnFees'               => $fee,
+		'returnShippingFeesAmount' => $is_fixed ? array(
+			'@type'    => 'MonetaryAmount',
+			'value'    => $offer['return_postage'],
+			'currency' => $offer['currency'],
+		) : null,
+		'returnLabelSource'        => $customer ? 'https://schema.org/ReturnLabelCustomerResponsibility' : null,
+		// Two cases from the policy: change of mind, and damaged or faulty.
+		'customerRemorseReturnFees' => $fee,
+		'itemDefectReturnFees'      => ! empty( $offer['return_defect_free'] ) ? 'https://schema.org/FreeReturn' : $fee,
+	);
+}
+
+/**
  * JSON-LD graph for the current request. Facts come from Settings →
  * Structured data (bwfd_schema_data()); endorsements from the page's blocks.
  *
@@ -326,15 +380,17 @@ function bwfd_seo_json_ld(): void {
 	$offer_url  = $page_url( $pages['purchase'], $book_url );
 	$author_url = $page_url( $pages['about_author'], $home );
 
-	$logo  = get_site_icon_url( 512 );
-	$graph = array(
+	$logo    = get_site_icon_url( 512 );
+	$returns = bwfd_return_policy( $offer );
+	$graph   = array(
 		array(
-			'@type'  => 'Organization',
-			'@id'    => $ids['org'],
-			'name'   => $publisher['name'],
-			'url'    => $home,
-			'logo'   => $logo ?: null,
-			'sameAs' => $publisher['same_as'],
+			'@type'                   => 'Organization',
+			'@id'                     => $ids['org'],
+			'name'                    => $publisher['name'],
+			'url'                     => $home,
+			'logo'                    => $logo ?: null,
+			'sameAs'                  => $publisher['same_as'],
+			'hasMerchantReturnPolicy' => $returns,
 		),
 		array(
 			'@type'       => 'WebSite',
@@ -474,24 +530,6 @@ function bwfd_seo_json_ld(): void {
 				'@type'        => 'ShippingDeliveryTime',
 				'handlingTime' => $window( $offer['handling_min'], $offer['handling_max'] ),
 				'transitTime'  => $window( $offer['transit_min'], $offer['transit_max'] ),
-			);
-		}
-
-		$returns = null;
-		if ( $positive( $offer['return_days'] ) ) {
-			$customer_pays = 'customer' === $offer['return_fees'];
-			$returns       = array(
-				'@type'                   => 'MerchantReturnPolicy',
-				'applicableCountry'       => $offer['ships_to'],
-				'returnPolicyCategory'    => 'https://schema.org/MerchantReturnFiniteReturnWindow',
-				'merchantReturnDays'      => (int) $offer['return_days'],
-				'returnMethod'            => 'https://schema.org/ReturnByMail',
-				'returnFees'              => $customer_pays ? 'https://schema.org/ReturnShippingFees' : 'https://schema.org/FreeReturn',
-				'returnShippingFeesAmount' => $customer_pays && '' !== $offer['return_postage'] ? array(
-					'@type'    => 'MonetaryAmount',
-					'value'    => $offer['return_postage'],
-					'currency' => $offer['currency'],
-				) : null,
 			);
 		}
 

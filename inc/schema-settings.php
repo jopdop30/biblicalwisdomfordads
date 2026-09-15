@@ -119,9 +119,13 @@ function bwfd_schema_defaults(): array {
 				'handling_max'      => 0,
 				'transit_min'       => 0,
 				'transit_max'       => 0,
-				'return_days'       => 0,
-				'return_fees'       => '',
-				'return_postage'    => '',
+				// Returns, from the policy at /return-policy/.
+				'return_url'         => home_url( '/return-policy/' ),
+				'return_days'        => 14,
+				'return_fees'        => 'customer',
+				'return_postage'     => '',
+				'return_defect_free' => true,
+				'refund_type'        => 'full_or_exchange',
 			),
 			'publisher' => array(
 				'name'    => 'Running Forever Press',
@@ -260,9 +264,12 @@ function bwfd_schema_spec(): array {
 					'handling_max'      => $int( 'Handling time, maximum days' ),
 					'transit_min'       => $int( 'Transit time, minimum days' ),
 					'transit_max'       => $int( 'Transit time, maximum days' ),
-					'return_days'       => $int( 'Return window in days' ),
-					'return_fees'       => array( 'type' => 'string', 'title' => 'Return postage', 'enum' => array( '', 'free', 'customer' ) ),
-					'return_postage'    => $text( 'Return postage cost' ),
+					'return_url'         => $text( 'Return policy page', 'url' ),
+					'return_days'        => $int( 'Return window in days' ),
+					'return_fees'        => array( 'type' => 'string', 'title' => 'Return postage', 'enum' => array( '', 'free', 'customer', 'fixed' ) ),
+					'return_postage'     => $text( 'Fixed return fee' ),
+					'return_defect_free' => array( 'type' => 'boolean', 'title' => 'Faulty items returned free' ),
+					'refund_type'        => array( 'type' => 'string', 'title' => 'Refund type', 'enum' => array( '', 'full', 'full_or_exchange', 'exchange', 'credit' ) ),
 				),
 			),
 			'publisher' => array(
@@ -358,6 +365,9 @@ function bwfd_schema_sanitize( $value, ?array $spec = null ) {
 
 		case 'integer':
 			return absint( $value );
+
+		case 'boolean':
+			return rest_sanitize_boolean( $value );
 
 		default:
 			$value = is_scalar( $value ) ? (string) $value : '';

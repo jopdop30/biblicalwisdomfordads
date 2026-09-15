@@ -10,6 +10,7 @@ import {
 	CardHeader,
 	CheckboxControl,
 	SelectControl,
+	ToggleControl,
 	TextControl,
 	TextareaControl,
 } from '@wordpress/components';
@@ -64,6 +65,18 @@ export function Number( { label, value, onChange, help, optional = false } ) {
 			placeholder={ optional ? __( 'Not set', 'bwfd' ) : undefined }
 			value={ shown }
 			onChange={ ( next ) => onChange( parseInt( next, 10 ) || 0 ) }
+		/>
+	);
+}
+
+export function Toggle( { label, checked, onChange, help } ) {
+	return (
+		<ToggleControl
+			__nextHasNoMarginBottom
+			label={ label }
+			help={ help }
+			checked={ !! checked }
+			onChange={ onChange }
 		/>
 	);
 }

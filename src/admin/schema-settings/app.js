@@ -10,6 +10,7 @@ import {
 	Text,
 	Number,
 	Select,
+	Toggle,
 	LongText,
 	Image,
 	UrlList,
@@ -208,7 +209,7 @@ export default function App() {
 
 			<Section
 				title={ __( 'Shipping and returns', 'bwfd' ) }
-				description={ __( 'Optional. Google recommends these for merchant listings; leave blank to leave them out. Days are business days.', 'bwfd' ) }
+				description={ __( 'Delivery times and the return policy Google shows with merchant listings. The return policy is also attached to the publisher as the standard policy for the site. Leave a field blank to leave it out.', 'bwfd' ) }
 			>
 				<Grid>
 					<div className="bwfd-schema-pair">
@@ -219,7 +220,10 @@ export default function App() {
 						<Number label={ __( 'Transit time, from (days)', 'bwfd' ) } value={ get( [ 'offer', 'transit_min' ], 0 ) } onChange={ set( [ 'offer', 'transit_min' ] ) } />
 						<Number optional label={ __( 'to (days)', 'bwfd' ) } value={ get( [ 'offer', 'transit_max' ], 0 ) } onChange={ set( [ 'offer', 'transit_max' ] ) } help={ __( 'Time in the post.', 'bwfd' ) } />
 					</div>
-					<Number optional label={ __( 'Return window (days)', 'bwfd' ) } value={ get( [ 'offer', 'return_days' ], 0 ) } onChange={ set( [ 'offer', 'return_days' ] ) } help={ __( 'Leave blank if returns are not offered.', 'bwfd' ) } />
+					<Full>
+						<Text type="url" label={ __( 'Return policy page', 'bwfd' ) } value={ get( [ 'offer', 'return_url' ] ) } onChange={ set( [ 'offer', 'return_url' ] ) } help={ __( 'Linked from the structured data so Google can show the policy.', 'bwfd' ) } />
+					</Full>
+					<Number optional label={ __( 'Return window (days)', 'bwfd' ) } value={ get( [ 'offer', 'return_days' ], 0 ) } onChange={ set( [ 'offer', 'return_days' ] ) } help={ __( 'For change-of-mind returns, counted from delivery. Blank means no return window is stated.', 'bwfd' ) } />
 					<Select
 						label={ __( 'Return postage', 'bwfd' ) }
 						value={ get( [ 'offer', 'return_fees' ] ) }
@@ -227,12 +231,33 @@ export default function App() {
 						options={ [
 							{ value: '', label: __( '— Not stated —', 'bwfd' ) },
 							{ value: 'free', label: __( 'Free returns', 'bwfd' ) },
-							{ value: 'customer', label: __( 'Customer pays', 'bwfd' ) },
+							{ value: 'customer', label: __( 'Customer pays the postage', 'bwfd' ) },
+							{ value: 'fixed', label: __( 'Fixed return fee', 'bwfd' ) },
 						] }
 					/>
-					{ get( [ 'offer', 'return_fees' ] ) === 'customer' && (
-						<Text label={ __( 'Return postage cost', 'bwfd' ) } value={ get( [ 'offer', 'return_postage' ] ) } onChange={ set( [ 'offer', 'return_postage' ] ) } help={ __( 'In the offer currency. Google asks for this when the customer pays.', 'bwfd' ) } />
+					{ get( [ 'offer', 'return_fees' ] ) === 'fixed' && (
+						<Text label={ __( 'Fixed return fee', 'bwfd' ) } value={ get( [ 'offer', 'return_postage' ] ) } onChange={ set( [ 'offer', 'return_postage' ] ) } help={ __( 'In the offer currency. Google requires this for a fixed fee.', 'bwfd' ) } />
 					) }
+					<Select
+						label={ __( 'Refund type', 'bwfd' ) }
+						value={ get( [ 'offer', 'refund_type' ] ) }
+						onChange={ set( [ 'offer', 'refund_type' ] ) }
+						options={ [
+							{ value: '', label: __( '— Not stated —', 'bwfd' ) },
+							{ value: 'full', label: __( 'Refund', 'bwfd' ) },
+							{ value: 'full_or_exchange', label: __( 'Refund or replacement', 'bwfd' ) },
+							{ value: 'exchange', label: __( 'Replacement only', 'bwfd' ) },
+							{ value: 'credit', label: __( 'Store credit', 'bwfd' ) },
+						] }
+					/>
+					<Full>
+						<Toggle
+							label={ __( 'Damaged or faulty items are replaced or refunded free of charge', 'bwfd' ) }
+							checked={ get( [ 'offer', 'return_defect_free' ], false ) }
+							onChange={ set( [ 'offer', 'return_defect_free' ] ) }
+							help={ __( 'Marks faulty-item returns as free while change-of-mind returns follow the postage setting above.', 'bwfd' ) }
+						/>
+					</Full>
 				</Grid>
 			</Section>
 
