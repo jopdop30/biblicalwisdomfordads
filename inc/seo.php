@@ -679,11 +679,60 @@ add_filter( 'wp_resource_hints', 'bwfd_seo_resource_hints', 10, 2 );
  * @return array
  */
 function bwfd_seo_webp_uploads( array $formats ): array {
+	if ( bwfd_seo_generating_site_icon() ) {
+		return $formats;
+	}
 	$formats['image/jpeg'] = 'image/webp';
 	$formats['image/png']  = 'image/webp';
 	return $formats;
 }
 add_filter( 'image_editor_output_format', 'bwfd_seo_webp_uploads' );
+
+/**
+ * Track whether the sub-sizes being generated belong to the site icon.
+ *
+ * @param bool|null $set New state, or null to read the current state.
+ * @return bool
+ */
+function bwfd_seo_generating_site_icon( ?bool $set = null ): bool {
+	static $generating = false;
+	if ( null !== $set ) {
+		$generating = $set;
+	}
+	return $generating;
+}
+
+/**
+ * Keep the site icon as PNG with its favicon sizes (32, 180, 192, 270) when
+ * its metadata is regenerated. Core only adds those sizes while the icon is
+ * first chosen, so a later `wp media regenerate` would otherwise drop them
+ * and convert the icon to WebP.
+ *
+ * @param array $sizes         Sub-sizes about to be generated.
+ * @param array $image_meta    Image metadata.
+ * @param int   $attachment_id Attachment being processed.
+ * @return array
+ */
+function bwfd_seo_site_icon_sizes( array $sizes, array $image_meta, int $attachment_id ): array {
+	if ( 'site-icon' === get_post_meta( $attachment_id, '_wp_attachment_context', true ) ) {
+		bwfd_seo_generating_site_icon( true );
+		$sizes = ( new WP_Site_Icon() )->additional_sizes( $sizes );
+	}
+	return $sizes;
+}
+add_filter( 'intermediate_image_sizes_advanced', 'bwfd_seo_site_icon_sizes', 10, 3 );
+
+/**
+ * Reset the site icon flag once an attachment's metadata is complete.
+ *
+ * @param array $metadata Attachment metadata.
+ * @return array
+ */
+function bwfd_seo_site_icon_done( array $metadata ): array {
+	bwfd_seo_generating_site_icon( false );
+	return $metadata;
+}
+add_filter( 'wp_generate_attachment_metadata', 'bwfd_seo_site_icon_done', 5 );
 
 /* -------------------------------------------------------------------------
  * Crawl controls

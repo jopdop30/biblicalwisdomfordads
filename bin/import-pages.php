@@ -239,8 +239,10 @@ if ( ! get_option( 'site_icon' ) ) {
 	if ( file_exists( $bwfd_icon_file ) ) {
 		$bwfd_tmp = wp_tempnam( 'bwfd-site-icon.png' );
 		copy( $bwfd_icon_file, $bwfd_tmp );
+		// Favicons stay PNG: skip the theme's WebP conversion for this upload.
 		$bwfd_site_icon = new WP_Site_Icon();
 		add_filter( 'intermediate_image_sizes_advanced', array( $bwfd_site_icon, 'additional_sizes' ) );
+		remove_filter( 'image_editor_output_format', 'bwfd_seo_webp_uploads' );
 		$bwfd_icon_id = media_handle_sideload(
 			array(
 				'name'     => 'bwfd-site-icon.png',
@@ -249,6 +251,7 @@ if ( ! get_option( 'site_icon' ) ) {
 			0,
 			'Biblical Wisdom for Dads site icon'
 		);
+		add_filter( 'image_editor_output_format', 'bwfd_seo_webp_uploads' );
 		remove_filter( 'intermediate_image_sizes_advanced', array( $bwfd_site_icon, 'additional_sizes' ) );
 		if ( ! is_wp_error( $bwfd_icon_id ) ) {
 			update_post_meta( $bwfd_icon_id, '_wp_attachment_context', 'site-icon' );
