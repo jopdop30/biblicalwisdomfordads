@@ -7,7 +7,7 @@ Description: Block theme for the Biblical Wisdom for Dads book site by Stephen P
 Requires at least: 6.7
 Tested up to: 7.1
 Requires PHP: 8.0
-Version: 1.4.0
+Version: 1.5.0
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: bwfd
@@ -571,6 +571,198 @@ img {
 .bwfd-note .wp-block-heading,
 .bwfd-note .has-serif-font-family {
 	color: var(--wp--preset--color--navy);
+}
+
+/* -------------------------------------------------------------------------
+ * Launch event page
+ * ---------------------------------------------------------------------- */
+
+/* Wordmark image in the navy invitation band: the inline width from the
+   image block is a cap, so it shrinks with the column on phones. */
+.bwfd-event-wordmark {
+	margin: 0;
+}
+
+.bwfd-event-wordmark img {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	aspect-ratio: 1100 / 156;
+}
+
+.bwfd-event-lead {
+	max-width: 32em;
+}
+
+/* Larger primary button (RSVP). */
+.wp-block-button.bwfd-button--large .wp-block-button__link {
+	padding: 16px 34px;
+	font-size: 18px;
+}
+
+/* Date card: translucent panel with an apricot top rule. */
+.bwfd-event-card {
+	border-radius: var(--wp--custom--radius--small);
+	border-top: 4px solid var(--wp--preset--color--apricot);
+	background: rgba(255, 255, 255, 0.08);
+	color: var(--wp--preset--color--white);
+}
+
+.bwfd-event-card > .bwfd-event-card__date {
+	font-family: var(--wp--preset--font-family--serif);
+	font-weight: 600;
+	font-size: clamp(34px, 4.4vw, 50px);
+	line-height: 1.05;
+	letter-spacing: -0.01em;
+	color: var(--wp--preset--color--white);
+}
+
+.bwfd-event-card > .bwfd-event-card__time {
+	font-family: var(--wp--preset--font-family--serif);
+	font-size: 23px;
+	line-height: 1.3;
+	color: var(--wp--preset--color--apricot);
+	padding-bottom: 14px;
+}
+
+.bwfd-event-card > .bwfd-event-card__where {
+	font-size: 17px;
+	line-height: 1.55;
+	color: rgba(255, 255, 255, 0.92);
+}
+
+/* RSVP band text keeps its measure so the button sits beside it. */
+.bwfd-rsvp-band p {
+	max-width: 36em;
+}
+
+/* Numbered reasons: apricot counter discs in a ruled list. */
+.bwfd-numbered-list {
+	list-style: none;
+	margin: 0;
+	padding: 0 !important;
+	max-width: 60em;
+	border-top: 1px solid var(--wp--preset--color--line);
+	counter-reset: bwfd-reason;
+}
+
+.bwfd-numbered-list > li {
+	counter-increment: bwfd-reason;
+	display: grid;
+	grid-template-columns: 44px minmax(0, 1fr);
+	gap: 20px;
+	align-items: center;
+	margin: 0;
+	padding: 20px 0;
+	border-bottom: 1px solid var(--wp--preset--color--line);
+	line-height: 1.55;
+}
+
+.bwfd-numbered-list > li::before {
+	content: counter(bwfd-reason);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	background: var(--wp--preset--color--apricot) var(--bwfd-tex-apricot) center / cover no-repeat;
+	font-family: var(--wp--preset--font-family--serif);
+	font-weight: 600;
+	font-size: 19px;
+	color: var(--wp--preset--color--navy);
+}
+
+/* “On the night” pills. */
+.bwfd-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	padding: 12px 22px;
+	border-radius: 999px;
+	border: 1px solid rgba(255, 255, 255, 0.32);
+	background: rgba(255, 255, 255, 0.08);
+	font-size: 17px;
+	font-weight: 600;
+	color: var(--wp--preset--color--white);
+}
+
+.bwfd-pill::before {
+	content: "";
+	flex: none;
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: var(--wp--preset--color--apricot);
+}
+
+/* Event details table: bold blue labels beside plain values. */
+.wp-block-table.is-style-bwfd-details table {
+	border-collapse: collapse;
+	max-width: 46em;
+}
+
+.wp-block-table.is-style-bwfd-details td,
+.wp-block-table.is-style-bwfd-details th {
+	border: 0;
+	padding: 9px 32px 9px 0;
+	vertical-align: top;
+	line-height: 1.55;
+}
+
+.wp-block-table.is-style-bwfd-details tr > :first-child {
+	width: 5.5em;
+	min-width: 5.5em;
+	white-space: nowrap;
+	font-weight: 600;
+	color: var(--wp--preset--color--blue);
+}
+
+.wp-block-table.is-style-bwfd-details tr > :last-child {
+	padding-right: 0;
+}
+
+@media (max-width: 600px) {
+	.bwfd-event-card {
+		padding: 26px !important;
+	}
+
+	.bwfd-numbered-list > li {
+		grid-template-columns: 38px minmax(0, 1fr);
+		gap: 16px;
+		padding: 16px 0;
+	}
+
+	.bwfd-numbered-list > li::before {
+		width: 38px;
+		height: 38px;
+		font-size: 17px;
+	}
+
+	.bwfd-pill {
+		padding: 10px 16px;
+		font-size: 16px;
+	}
+
+	.wp-block-table.is-style-bwfd-details td {
+		display: block;
+		width: auto;
+		min-width: 0;
+		padding: 0;
+	}
+
+	.wp-block-table.is-style-bwfd-details tr {
+		display: block;
+		padding: 12px 0;
+		border-bottom: 1px solid var(--wp--preset--color--line);
+	}
+
+	.wp-block-table.is-style-bwfd-details tr > :first-child {
+		font-size: var(--wp--preset--font-size--sm);
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		margin-bottom: 2px;
+	}
 }
 
 /* Cards stacked in a sidebar column. */

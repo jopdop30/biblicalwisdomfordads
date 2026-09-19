@@ -31,6 +31,7 @@ function bwfd_register_block_styles(): void {
 		'core/table'  => array(
 			'bwfd-key-info' => __( 'Key information', 'bwfd' ),
 			'bwfd-pricing'  => __( 'Pricing', 'bwfd' ),
+			'bwfd-details'  => __( 'Event details', 'bwfd' ),
 		),
 	);
 

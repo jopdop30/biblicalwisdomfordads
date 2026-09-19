@@ -51,6 +51,7 @@ declare( strict_types=1 );
 
 		<!-- wp:list {"className":"bwfd-footer-links","fontSize":"base"} -->
 		<ul class="wp-block-list bwfd-footer-links has-base-font-size">
+			<!-- wp:list-item --><li><a href="<?php echo esc_url( home_url( '/launch/' ) ); ?>"><?php esc_html_e( 'Launch event', 'bwfd' ); ?></a></li><!-- /wp:list-item -->
 			<!-- wp:list-item --><li><a href="<?php echo esc_url( home_url( '/churches-and-retail/' ) ); ?>"><?php esc_html_e( 'Churches &amp; retail', 'bwfd' ); ?></a></li><!-- /wp:list-item -->
 			<!-- wp:list-item --><li><a href="https://facebook.com/biblicalwisdomfordads" target="_blank" rel="noopener">Facebook</a></li><!-- /wp:list-item -->
 			<!-- wp:list-item --><li><a href="https://instagram.com/biblicalwisdomfordads" target="_blank" rel="noopener">Instagram</a></li><!-- /wp:list-item -->

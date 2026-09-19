@@ -88,7 +88,7 @@ function bwfd_url( string $path = '/' ): string {
 function bwfd_texture_tokens(): void {
 	$textures = array(
 		'navy'    => array( 'tex-navy.webp', '.is-style-bwfd-navy,.bwfd-card--navy,.bwfd-endorsements' ),
-		'apricot' => array( 'tex-apricot.webp', '.is-style-bwfd-apricot,.bwfd-card--apricot,.bwfd-framed-image__panel,.wp-block-bwfd-icon.bwfd-icon--circle' ),
+		'apricot' => array( 'tex-apricot.webp', '.is-style-bwfd-apricot,.bwfd-card--apricot,.bwfd-framed-image__panel,.wp-block-bwfd-icon.bwfd-icon--circle,.bwfd-numbered-list' ),
 		'marble'  => array( 'tex-white.webp', '.is-style-bwfd-marble,.bwfd-card--marble' ),
 		'blue'    => array( 'tex-blue.webp', '' ),
 	);

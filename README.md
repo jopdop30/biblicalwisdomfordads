@@ -10,11 +10,11 @@ Block theme (full site editing) for [biblicalwisdomfordads.au](https://www.bibli
 | `style.css` | Texture surfaces, button/table/group block styles, header and footer, layout helpers. Loaded on the front end and in the editor. |
 | `templates/` | `page` (default, no title – the designed pages carry their own heading), `page-with-title`, `page-plain` (white sheet), `single`, `index`, `search`, `404`. |
 | `parts/` | `header` and `footer`, each rendering a PHP pattern so links can use `home_url()`. |
-| `patterns/` | Nine complete page patterns (category **BWFD pages**) and reusable sections (category **BWFD sections**): navy call-to-action band, endorsement sets, key information reveals, bulk order cards. |
+| `patterns/` | Ten complete page patterns (category **BWFD pages**) and reusable sections (category **BWFD sections**): navy call-to-action band, endorsement sets, key information reveals, bulk order cards. |
 | `src/blocks/` | Custom block sources (see below). Built to `build/` with `@wordpress/scripts`. |
 | `src/admin/` | The Settings → Structured data app and the editor’s “Search appearance” panel (`@wordpress/components` + `@wordpress/core-data`). Built to `build/admin/`. |
 | `inc/` | Block registration, block style variations, pattern categories, SVG icon library, SEO output, performance trims, and the Structured data settings page. |
-| `bin/import-pages.php` | WP-CLI script that creates/updates the nine pages from the patterns, imports the images into the Media Library, sets the front page, the privacy policy page and writes the primary navigation. |
+| `bin/import-pages.php` | WP-CLI script that creates/updates the ten pages from the patterns, imports the images into the Media Library, sets the front page, the privacy policy page and writes the primary navigation. |
 | `assets/` | Imagery from the design as right-sized WebP (covers 800–900px wide, textures 1000–1600px), favicon set, and the two variable fonts (latin subsets). |
 
 ## Custom blocks
@@ -34,7 +34,7 @@ All blocks live under the **Biblical Wisdom for Dads** inserter category.
 | Endorsements carousel | Interactivity API carousel: autoplay with progress bar, pause, previous/next, dots or "n of N" counter, keyboard arrows, hover pause, reduced-motion aware. Child block: Endorsement. |
 | Reveal panel | Interactivity API disclosure ("Key information" / "Hide key information") wrapping any blocks. |
 
-Block styles registered for core blocks: Group (Navy texture, Apricot texture, Marble), Button (Apricot, Text link, Large call to action, Compact, Social), Table (Key information, Pricing).
+Block styles registered for core blocks: Group (Navy texture, Apricot texture, Marble), Button (Apricot, Text link, Large call to action, Compact, Social), Table (Key information, Pricing, Event details).
 
 ## Development
 
@@ -69,9 +69,9 @@ wp eval-file wp-content/themes/bwfd/bin/fix-heading-levels.php
 
 It walks each published page's blocks in order and promotes any heading that skips a level (h1 then h3 becomes h1 then h2), updating both the block attributes and the markup. Pass slugs to limit it to those pages. It is idempotent and prints every change.
 
-Pass page slugs to update only those pages (`... import-pages.php home`). The script is idempotent.
+Pass page slugs to update only those pages (`... import-pages.php home`). The script is idempotent. A partial run leaves the menu as editors have it but adds any missing item for the pages it imported, in the designed position: `... import-pages.php launch` creates the Launch event page and puts “Launch event” after “About the book” in the primary menu.
 
-WordPress caches the list of pattern files in a site transient unless `WP_DEBUG` is on, so after adding a file under `patterns/` on a site without debug mode run `wp eval 'wp_get_theme()->delete_pattern_cache();'` before importing, otherwise the import warns that the pattern is not registered. It creates or updates Home, About the book, About the author, Purchase, Small Group Guide, Other books, Enjoyed?, Churches & retail and Privacy policy from the page patterns (nested patterns inlined so every page is literal, editable content), imports the design imagery into the Media Library, sets Home as the static front page, writes the primary navigation menu and drafts the default Sample Page.
+WordPress caches the list of pattern files in a site transient unless `WP_DEBUG` is on, so after adding a file under `patterns/` on a site without debug mode run `wp eval 'wp_get_theme()->delete_pattern_cache();'` before importing, otherwise the import warns that the pattern is not registered. It creates or updates Home, About the book, About the author, Purchase, Small Group Guide, Other books, Enjoyed?, Churches & retail, Launch event and Privacy policy from the page patterns (nested patterns inlined so every page is literal, editable content), imports the design imagery into the Media Library, sets Home as the static front page, writes the primary navigation menu and drafts the default Sample Page.
 
 ## Deploying with cPanel Git Version Control
 
@@ -93,7 +93,7 @@ The theme folder holds the design, blocks, templates and patterns, but the site'
 **A. Fresh install (recommended for launch)**
 
 1. Copy `wp-content/themes/bwfd` to the new site, or clone the repository. If you clone, run `npm install && npm run build` (Node 22) so `build/` exists; it is git-ignored. Alternatively copy the folder with `build/` included and skip Node on the server.
-2. Activate the theme, then run `wp eval-file wp-content/themes/bwfd/bin/import-pages.php`. This creates the nine pages, imports the imagery into the Media Library, sets the front page, writes the primary menu, sets the site title, tagline, site icon and pretty permalinks. Without WP-CLI: create each page and insert its **BWFD pages** pattern, then set the front page under Settings → Reading and pick the menu in the header's Navigation block.
+2. Activate the theme, then run `wp eval-file wp-content/themes/bwfd/bin/import-pages.php`. This creates the ten pages, imports the imagery into the Media Library, sets the front page, writes the primary menu, sets the site title, tagline, site icon and pretty permalinks. Without WP-CLI: create each page and insert its **BWFD pages** pattern, then set the front page under Settings → Reading and pick the menu in the header's Navigation block.
 3. Check Settings → Reading → "Discourage search engines" is off, and Settings → General has the right site URL.
 
 **B. Full site migration**
@@ -112,6 +112,7 @@ Any WordPress migration (Local's export, a migration plugin, or a database plus 
 * Header and footer are template parts; the menu is a normal Navigation block menu ("Primary navigation"). The "Buy the book" item is styled as a button through the `bwfd-nav-button` CSS class on that link.
 * The Facebook feed card on the home page embeds the page timeline; change the page URL or tabs in the block sidebar.
 * Purchase and media-kit links marked "URL TBA" / `#` are placeholders awaiting final URLs.
+* The Launch event page (`patterns/page-launch.php`, `/launch/`) is built from core blocks with theme classes: the numbered reasons are an ordered List block with the `bwfd-numbered-list` class, the “on the night” pills are paragraphs with the `bwfd-pill` class inside a flex Group, the date card is a Group with the `bwfd-event-card` class, and the details use the Table block's *Event details* style. The TryBooking and Facebook links appear in the pattern as ordinary link URLs. The importer sets the book cover as the page's featured image so social shares show the cover rather than the wordmark.
 * The Privacy policy page (`patterns/page-privacy-policy.php`, template *Page with title*, linked from the footer) describes what the site does today: email contact, Square checkout, server and Cloudflare logs, the Facebook page embed, Cloudflare Web Analytics (the beacon is injected by Cloudflare at the edge for browser user agents, so plain `curl` does not show it) and the Search Console connection through Site Kit. Update it and its "Last updated" date when a form, newsletter, comments or another third-party service is added.
 
 ## SEO and performance
@@ -120,7 +121,7 @@ Any WordPress migration (Local's export, a migration plugin, or a database plus 
 
 * `<meta name="description">` from the page **Excerpt** (pages gain an Excerpt panel), falling back to the first substantial paragraphs of the page, then the tagline.
 * Open Graph and Twitter card tags; the share image is the featured image, else the first image in the content, else the book cover.
-* JSON-LD: Organization, WebSite and WebPage on every page. On the book pages (About the book, Purchase and any others chosen in the settings, by default Home and Churches & retail): the Book as a work with its paperback, eBook and audiobook editions (ISBN-13 each), the paperback doubling as a Google `Product` (co-typed `Product` + `Book`, `gtin13`, brand, and the direct-purchase Offer with price, postage and availability that switches from PreOrder to InStock on the release date), the author Person, and a `Quotation` per Endorsement block on the page (quote, speaker with role, `about` the Book; not reviews, because Google requires a star rating on each review and the endorsements have none). About the author is a `ProfilePage` whose `mainEntity` is the Person. Other books carries Book entries for the earlier titles. Empty fields are dropped from the output.
+* JSON-LD: Organization, WebSite and WebPage on every page. On the book pages (About the book, Purchase and any others chosen in the settings, by default Home and Churches & retail): the Book as a work with its paperback, eBook and audiobook editions (ISBN-13 each), the paperback doubling as a Google `Product` (co-typed `Product` + `Book`, `gtin13`, brand, and the direct-purchase Offer with price, postage and availability that switches from PreOrder to InStock on the release date), the author Person, and a `Quotation` per Endorsement block on the page (quote, speaker with role, `about` the Book; not reviews, because Google requires a star rating on each review and the endorsements have none). About the author is a `ProfilePage` whose `mainEntity` is the Person. Other books carries Book entries for the earlier titles. The Launch event page (matched by the slug `launch`; filter `bwfd_launch_event` to change the facts or switch it off) carries an `Event` with the venue, times, free-ticket Offer and the author as organiser and performer. Empty fields are dropped from the output.
 * Emoji script, generator tag, shortlink and RSD/WLW links removed; Facebook preconnect only on pages with the feed.
 * Uploaded JPEG/PNG images get WebP sub-sizes (`image_editor_output_format`).
 * Core provides the rest: title tag, canonical, robots, XML sitemap at `/wp-sitemap.xml`.

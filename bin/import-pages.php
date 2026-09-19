@@ -25,7 +25,7 @@ require_once ABSPATH . 'wp-admin/includes/media.php';
 require_once ABSPATH . 'wp-admin/includes/image.php';
 
 $bwfd_pages = array(
-	// slug => [ title, pattern slug, template ].
+	// slug => [ title, pattern slug, template, featured image (theme file, optional) ].
 	'home'                => array( 'Home', 'bwfd/page-home', '' ),
 	'about-the-book'      => array( 'About the book', 'bwfd/page-about-book', '' ),
 	'about-the-author'    => array( 'About the author', 'bwfd/page-about-author', '' ),
@@ -34,11 +34,13 @@ $bwfd_pages = array(
 	'other-books'         => array( 'Other books', 'bwfd/page-other-books', '' ),
 	'enjoyed'             => array( 'Enjoyed?', 'bwfd/page-enjoyed', '' ),
 	'churches-and-retail' => array( 'Churches & retail', 'bwfd/page-churches-retail', '' ),
+	'launch'              => array( 'Launch event', 'bwfd/page-launch', '', 'bwfd-cover.webp' ),
 	'privacy-policy'      => array( 'Privacy policy', 'bwfd/page-privacy-policy', 'page-with-title' ),
 );
 
 $bwfd_nav = array(
 	array( 'About the book', 'about-the-book', '' ),
+	array( 'Launch event', 'launch', '' ),
 	array( 'About the author', 'about-the-author', '' ),
 	array( 'Small Group Guide', 'small-group-guide', '' ),
 	array( 'Other books', 'other-books', '' ),
@@ -161,6 +163,17 @@ foreach ( $bwfd_pages as $bwfd_slug => list( $bwfd_title, $bwfd_pattern, $bwfd_t
 	if ( $bwfd_template ) {
 		update_post_meta( $bwfd_id, '_wp_page_template', $bwfd_template );
 	}
+	// Featured image (the social share image), only when the page has none yet.
+	$bwfd_thumb = $bwfd_pages[ $bwfd_slug ][3] ?? '';
+	if ( '' !== $bwfd_thumb && ! has_post_thumbnail( (int) $bwfd_id ) ) {
+		if ( ! isset( $bwfd_images[ $bwfd_thumb ] ) ) {
+			$bwfd_images[ $bwfd_thumb ] = bwfd_import_theme_image( $bwfd_thumb );
+		}
+		$bwfd_thumb_id = $bwfd_images[ $bwfd_thumb ] ? bwfd_perf_attachment_id( $bwfd_images[ $bwfd_thumb ] ) : 0;
+		if ( $bwfd_thumb_id ) {
+			set_post_thumbnail( (int) $bwfd_id, $bwfd_thumb_id );
+		}
+	}
 	$bwfd_ids[ $bwfd_slug ] = (int) $bwfd_id;
 	WP_CLI::log( sprintf( '%s page "%s" (#%d)', $bwfd_existing ? 'Updated' : 'Created', $bwfd_title, $bwfd_id ) );
 }
@@ -186,26 +199,22 @@ if ( isset( $bwfd_ids['home'] ) && 'page' !== get_option( 'show_on_front' ) ) {
 }
 
 // Primary navigation (wp_navigation post used by the header's Navigation block).
-if ( $bwfd_only ) {
-	WP_CLI::success( 'Updated: ' . implode( ', ', array_keys( $bwfd_ids ) ) . '. Navigation left unchanged for a partial run.' );
-	return;
-}
-$bwfd_links = '';
-foreach ( $bwfd_nav as list( $bwfd_label, $bwfd_slug, $bwfd_class ) ) {
-	if ( ! isset( $bwfd_ids[ $bwfd_slug ] ) ) {
-		continue;
-	}
-	$bwfd_attrs = array(
-		'label' => $bwfd_label,
+
+/**
+ * Navigation link block markup for a page.
+ */
+function bwfd_nav_link_block( string $label, int $page_id, string $class ): string {
+	$attrs = array(
+		'label' => $label,
 		'type'  => 'page',
-		'id'    => $bwfd_ids[ $bwfd_slug ],
-		'url'   => get_permalink( $bwfd_ids[ $bwfd_slug ] ),
+		'id'    => $page_id,
+		'url'   => get_permalink( $page_id ),
 		'kind'  => 'post-type',
 	);
-	if ( $bwfd_class ) {
-		$bwfd_attrs['className'] = $bwfd_class;
+	if ( $class ) {
+		$attrs['className'] = $class;
 	}
-	$bwfd_links .= '<!-- wp:navigation-link ' . wp_json_encode( $bwfd_attrs, JSON_UNESCAPED_SLASHES ) . ' /-->' . "\n";
+	return '<!-- wp:navigation-link ' . wp_json_encode( $attrs, JSON_UNESCAPED_SLASHES ) . ' /-->' . "\n";
 }
 
 $bwfd_menus = get_posts(
@@ -217,6 +226,62 @@ $bwfd_menus = get_posts(
 		'order'       => 'DESC',
 	)
 );
+
+if ( $bwfd_only ) {
+	// Partial run: leave the menu as the editors have it, but slot in any
+	// item for the pages just imported that is missing, after the nearest
+	// preceding item of the designed order that is present.
+	$bwfd_added = array();
+	if ( $bwfd_menus ) {
+		$bwfd_blocks  = parse_blocks( $bwfd_menus[0]->post_content );
+		$bwfd_menu_id = static function ( array $block ): int {
+			return 'core/navigation-link' === ( $block['blockName'] ?? '' ) ? (int) ( $block['attrs']['id'] ?? 0 ) : 0;
+		};
+		foreach ( $bwfd_nav as $bwfd_index => list( $bwfd_label, $bwfd_slug, $bwfd_class ) ) {
+			if ( ! isset( $bwfd_ids[ $bwfd_slug ] ) ) {
+				continue;
+			}
+			if ( in_array( $bwfd_ids[ $bwfd_slug ], array_map( $bwfd_menu_id, $bwfd_blocks ), true ) ) {
+				continue;
+			}
+			$bwfd_position = 0;
+			for ( $bwfd_prev = $bwfd_index - 1; $bwfd_prev >= 0; $bwfd_prev-- ) {
+				$bwfd_prev_page = get_page_by_path( $bwfd_nav[ $bwfd_prev ][1], OBJECT, 'page' );
+				if ( ! $bwfd_prev_page ) {
+					continue;
+				}
+				$bwfd_found = array_search( (int) $bwfd_prev_page->ID, array_map( $bwfd_menu_id, $bwfd_blocks ), true );
+				if ( false !== $bwfd_found ) {
+					$bwfd_position = (int) $bwfd_found + 1;
+					break;
+				}
+			}
+			$bwfd_new = parse_blocks( bwfd_nav_link_block( $bwfd_label, $bwfd_ids[ $bwfd_slug ], $bwfd_class ) );
+			array_splice( $bwfd_blocks, $bwfd_position, 0, array( $bwfd_new[0] ) );
+			$bwfd_added[] = $bwfd_label;
+		}
+		if ( $bwfd_added ) {
+			wp_update_post(
+				wp_slash(
+					array(
+						'ID'           => $bwfd_menus[0]->ID,
+						'post_content' => serialize_blocks( $bwfd_blocks ),
+					)
+				)
+			);
+			WP_CLI::log( 'Added to navigation menu #' . $bwfd_menus[0]->ID . ': ' . implode( ', ', $bwfd_added ) );
+		}
+	}
+	WP_CLI::success( 'Updated: ' . implode( ', ', array_keys( $bwfd_ids ) ) . ( $bwfd_added ? '.' : '. Navigation left unchanged for a partial run.' ) );
+	return;
+}
+
+$bwfd_links = '';
+foreach ( $bwfd_nav as list( $bwfd_label, $bwfd_slug, $bwfd_class ) ) {
+	if ( isset( $bwfd_ids[ $bwfd_slug ] ) ) {
+		$bwfd_links .= bwfd_nav_link_block( $bwfd_label, $bwfd_ids[ $bwfd_slug ], $bwfd_class );
+	}
+}
 $bwfd_menu_arr = array(
 	'post_type'    => 'wp_navigation',
 	'post_status'  => 'publish',

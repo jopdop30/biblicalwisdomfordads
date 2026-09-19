@@ -312,6 +312,36 @@ function bwfd_return_policy( array $offer ): ?array {
 }
 
 /**
+ * Facts for the book launch, used for the Event node on the launch page
+ * (matched by its slug). Filter `bwfd_launch_event` to change them, or
+ * return null to switch the node off.
+ *
+ * @return array<string, string>|null
+ */
+function bwfd_launch_event( WP_Post $post ): ?array {
+	$event = null;
+	if ( 'launch' === $post->post_name ) {
+		$event = array(
+			'name'        => 'Biblical Wisdom for Dads book launch',
+			'description' => 'The launch of Biblical Wisdom for Dads by Stephen Parker: interviews, games, stories from the book, hope for exhausted dads, help for small groups, and copies at the launch special of $19.99. Free to attend; RSVP by 20 October.',
+			'start'       => '2026-10-27T19:00:00+10:00',
+			'end'         => '2026-10-27T20:15:00+10:00',
+			'venue'       => 'Springwood Church of Christ',
+			'street'      => '178 Springwood Road',
+			'locality'    => 'Springwood',
+			'region'      => 'QLD',
+			'postcode'    => '4127',
+			'country'     => 'AU',
+			'rsvp_url'    => 'https://www.trybooking.com/DQBEO',
+			'rsvp_by'     => '2026-10-20T23:59:59+10:00',
+			'price'       => '0',
+			'currency'    => 'AUD',
+		);
+	}
+	return apply_filters( 'bwfd_launch_event', $event, $post );
+}
+
+/**
  * JSON-LD graph for the current request. Facts come from Settings →
  * Structured data (bwfd_schema_data()); endorsements from the page's blocks.
  *
@@ -325,6 +355,8 @@ function bwfd_return_policy( array $offer ): ?array {
  * About the author: WebPage becomes a ProfilePage whose mainEntity is the
  * author Person.
  * Other books: Book entries for the author's earlier titles.
+ * Launch event: an Event with venue, times, the free-ticket Offer and the
+ * author as organiser and performer.
  *
  * Note: Google's "Book actions" feature is fed by partner data feeds, not
  * on-page markup, so the Book nodes here are for general search engines
@@ -370,6 +402,7 @@ function bwfd_seo_json_ld(): void {
 
 	$post    = is_singular() ? get_queried_object() : null;
 	$post_id = $post instanceof WP_Post ? (int) $post->ID : 0;
+	$event   = $post instanceof WP_Post ? bwfd_launch_event( $post ) : null;
 
 	$book_page_ids  = array_map( 'intval', array_merge( array( $pages['about_book'], $pages['purchase'] ), (array) $pages['extra_book_pages'] ) );
 	$is_book_page   = $post_id && in_array( $post_id, $book_page_ids, true );
@@ -435,12 +468,14 @@ function bwfd_seo_json_ld(): void {
 			$page['mainEntity'] = $ref( 'paperback' );
 		} elseif ( $post_id === (int) $pages['about_book'] ) {
 			$page['mainEntity'] = $ref( 'book' );
+		} elseif ( $event ) {
+			$page['mainEntity'] = array( '@id' => get_permalink() . '#event' );
 		}
 
 		$graph[] = $page;
 	}
 
-	if ( $is_book_page || $is_author_page || $is_other_books ) {
+	if ( $is_book_page || $is_author_page || $is_other_books || $event ) {
 		$graph[] = array(
 			'@type'       => 'Person',
 			'@id'         => $ids['person'],
@@ -606,6 +641,51 @@ function bwfd_seo_json_ld(): void {
 				);
 			}
 		}
+	}
+
+	if ( $event ) {
+		$graph[] = array(
+			'@type'               => 'Event',
+			'@id'                 => get_permalink() . '#event',
+			'name'                => $event['name'],
+			'description'         => $event['description'],
+			'url'                 => get_permalink(),
+			'image'               => (string) $book['image']['url'],
+			'startDate'           => $event['start'],
+			'endDate'             => $event['end'],
+			'eventStatus'         => 'https://schema.org/EventScheduled',
+			'eventAttendanceMode' => 'https://schema.org/OfflineEventAttendanceMode',
+			'location'            => array(
+				'@type'   => 'Place',
+				'name'    => $event['venue'],
+				'address' => array(
+					'@type'           => 'PostalAddress',
+					'streetAddress'   => $event['street'],
+					'addressLocality' => $event['locality'],
+					'addressRegion'   => $event['region'],
+					'postalCode'      => $event['postcode'],
+					'addressCountry'  => $event['country'],
+				),
+			),
+			'organizer'           => $ref( 'person' ),
+			'performer'           => $ref( 'person' ),
+			'about'               => array(
+				'@type'  => 'Book',
+				'name'   => $book['name'],
+				'author' => $ref( 'person' ),
+				'url'    => $book_url,
+			),
+			'offers'              => array(
+				'@type'         => 'Offer',
+				'name'          => 'Free ticket',
+				'url'           => $event['rsvp_url'],
+				'price'         => $event['price'],
+				'priceCurrency' => $event['currency'],
+				'availability'  => 'https://schema.org/InStock',
+				'validFrom'     => $post instanceof WP_Post ? get_the_date( DATE_W3C, $post ) : null,
+				'validThrough'  => $event['rsvp_by'],
+			),
+		);
 	}
 
 	if ( $is_other_books ) {

@@ -394,7 +394,7 @@ function bwfd_perf_preload_textures(): void {
 	$textures = array(
 		'tex-white.webp'   => '/bwfd-card--marble|is-style-bwfd-marble/',
 		'tex-navy.webp'    => '/is-style-bwfd-navy|bwfd-card--navy|wp:bwfd\/endorsements/',
-		'tex-apricot.webp' => '/is-style-bwfd-apricot|bwfd-card--apricot|"panel":true|"variant":"circle"/',
+		'tex-apricot.webp' => '/is-style-bwfd-apricot|bwfd-card--apricot|bwfd-numbered-list|"panel":true|"variant":"circle"/',
 	);
 	foreach ( $textures as $file => $pattern ) {
 		if ( preg_match( $pattern, $content ) ) {
