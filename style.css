@@ -7,7 +7,7 @@ Description: Block theme for the Biblical Wisdom for Dads book site by Stephen P
 Requires at least: 6.7
 Tested up to: 7.1
 Requires PHP: 8.0
-Version: 1.5.2
+Version: 1.5.3
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: bwfd
@@ -562,6 +562,24 @@ img {
 
 .wp-block-button .wp-block-button__link:has(> .bwfd-button__hint)::before {
 	grid-row: 1 / span 2;
+}
+
+/* Buttons in a row share one height (a two-line button beside a one-line one). */
+.wp-block-buttons.bwfd-button-row {
+	align-items: stretch;
+}
+
+.wp-block-buttons.bwfd-button-row > .wp-block-button {
+	display: flex;
+}
+
+.wp-block-buttons.bwfd-button-row > .wp-block-button > .wp-block-button__link {
+	display: inline-flex;
+	align-items: center;
+}
+
+.wp-block-buttons.bwfd-button-row > .wp-block-button > .wp-block-button__link:has(> .bwfd-button__hint) {
+	display: inline-grid;
 }
 
 .bwfd-button__hint {

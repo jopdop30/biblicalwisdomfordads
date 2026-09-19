@@ -41,8 +41,8 @@ $bwfd_facebook = 'https://facebook.com/biblicalwisdomfordads';
 				<p class="bwfd-event-lead has-lg-font-size">You are invited to the launch of <em>Biblical Wisdom for Dads</em> on Tuesday, October 27 at Springwood Church of Christ. For grandfathers, future dads and everyone in between.</p>
 				<!-- /wp:paragraph -->
 
-				<!-- wp:buttons {"layout":{"type":"flex","verticalAlignment":"center"},"style":{"spacing":{"margin":{"top":"6px"}}}} -->
-				<div class="wp-block-buttons" style="margin-top:6px">
+				<!-- wp:buttons {"className":"bwfd-button-row","layout":{"type":"flex"},"style":{"spacing":{"margin":{"top":"6px"}}}} -->
+				<div class="wp-block-buttons bwfd-button-row" style="margin-top:6px">
 					<!-- wp:button {"className":"is-style-bwfd-apricot bwfd-button--large"} -->
 					<div class="wp-block-button is-style-bwfd-apricot bwfd-button--large"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( $bwfd_rsvp ); ?>" target="_blank" rel="noreferrer noopener">RSVP now</a></div>
 					<!-- /wp:button -->
