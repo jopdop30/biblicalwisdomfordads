@@ -47,7 +47,7 @@ $bwfd_facebook = 'https://facebook.com/biblicalwisdomfordads';
 					<div class="wp-block-button is-style-bwfd-apricot bwfd-button--large"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( $bwfd_rsvp ); ?>" target="_blank" rel="noreferrer noopener">RSVP now</a></div>
 					<!-- /wp:button -->
 					<!-- wp:button {"className":"is-style-outline bwfd-button--large bwfd-button--facebook"} -->
-					<div class="wp-block-button is-style-outline bwfd-button--large bwfd-button--facebook"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( $bwfd_facebook ); ?>" target="_blank" rel="noreferrer noopener">Facebook Event</a></div>
+					<div class="wp-block-button is-style-outline bwfd-button--large bwfd-button--facebook"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( $bwfd_facebook ); ?>" target="_blank" rel="noreferrer noopener">Facebook Event<small class="bwfd-button__hint">Click &ldquo;going&rdquo;</small></a></div>
 					<!-- /wp:button -->
 				</div>
 				<!-- /wp:buttons -->

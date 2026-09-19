@@ -7,7 +7,7 @@ Description: Block theme for the Biblical Wisdom for Dads book site by Stephen P
 Requires at least: 6.7
 Tested up to: 7.1
 Requires PHP: 8.0
-Version: 1.5.1
+Version: 1.5.2
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: bwfd
@@ -544,6 +544,42 @@ img {
 
 .wp-block-button.bwfd-button--facebook .wp-block-button__link {
 	gap: 11px;
+}
+
+/* A small second line inside a button ("Click going"): the icon spans
+   both lines, the label and hint stack beside it. */
+.wp-block-button .wp-block-button__link:has(> .bwfd-button__hint) {
+	display: inline-grid;
+	grid-template-columns: auto auto;
+	grid-template-rows: auto auto;
+	align-items: center;
+	column-gap: 12px;
+	row-gap: 1px;
+	text-align: left;
+	padding-top: 7px;
+	padding-bottom: 8px;
+}
+
+.wp-block-button .wp-block-button__link:has(> .bwfd-button__hint)::before {
+	grid-row: 1 / span 2;
+}
+
+.bwfd-button__hint {
+	display: block;
+	font-size: 12.5px;
+	font-weight: 400;
+	letter-spacing: 0.04em;
+	line-height: 1.2;
+	opacity: 0.85;
+}
+
+@media (max-width: 600px) {
+	/* Outranks the full-width stacked-button rule below, which sets flex. */
+	.wp-block-buttons.is-layout-flex:not(.is-content-justification-center) > .wp-block-button:not(.is-style-bwfd-text-link) > .wp-block-button__link:has(> .bwfd-button__hint) {
+		display: grid;
+		justify-content: center;
+		justify-items: start;
+	}
 }
 
 .wp-block-button.is-style-bwfd-social .wp-block-button__link[href*="facebook"]::before,
