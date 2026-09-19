@@ -6,17 +6,21 @@ import { Button, Notice, SelectControl, Spinner, ExternalLink } from '@wordpress
  * Fetches a page from the front end and shows the JSON-LD it carries.
  * Reflects saved settings, not unsaved edits.
  */
-export default function Preview( { pages, initialPageId, savedAt } ) {
-	const [ pageId, setPageId ] = useState( initialPageId || 0 );
+export default function Preview( { pages, extras = [], initialPageId, savedAt } ) {
+	// Targets are keyed by URL so the News and Insights archives and items
+	// (which have no page ID) can sit in the same list as the pages.
+	const targets = [ ...pages, ...extras ];
+	const initialLink = pages.find( ( p ) => p.id === initialPageId )?.link || '';
+	const [ link, setLink ] = useState( initialLink );
 	const [ state, setState ] = useState( { loading: false, json: '', error: '' } );
 
 	useEffect( () => {
-		if ( ! pageId && pages.length ) {
-			setPageId( initialPageId || pages[ 0 ].id );
+		if ( ! link && targets.length ) {
+			setLink( initialLink || targets[ 0 ].link );
 		}
-	}, [ pages, initialPageId, pageId ] );
+	}, [ targets, initialLink, link ] );
 
-	const page = pages.find( ( p ) => p.id === pageId );
+	const page = targets.find( ( p ) => p.link === link );
 
 	const load = async () => {
 		if ( ! page ) {
@@ -53,9 +57,9 @@ export default function Preview( { pages, initialPageId, savedAt } ) {
 					__nextHasNoMarginBottom
 					__next40pxDefaultSize
 					label={ __( 'Page', 'bwfd' ) }
-					value={ pageId }
-					options={ pages.map( ( p ) => ( { value: p.id, label: p.title } ) ) }
-					onChange={ ( next ) => setPageId( parseInt( next, 10 ) || 0 ) }
+					value={ link }
+					options={ targets.map( ( p ) => ( { value: p.link, label: p.title } ) ) }
+					onChange={ setLink }
 				/>
 				<Button variant="secondary" onClick={ load } disabled={ ! page || state.loading } __next40pxDefaultSize>
 					{ __( 'Show JSON-LD', 'bwfd' ) }

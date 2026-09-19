@@ -37,6 +37,8 @@ declare( strict_types=1 );
 		<ul class="wp-block-list bwfd-footer-links has-base-font-size">
 			<!-- wp:list-item --><li><a href="<?php echo esc_url( home_url( '/about-the-book/' ) ); ?>"><?php esc_html_e( 'About the book', 'bwfd' ); ?></a></li><!-- /wp:list-item -->
 			<!-- wp:list-item --><li><a href="<?php echo esc_url( home_url( '/about-the-author/' ) ); ?>"><?php esc_html_e( 'About the author', 'bwfd' ); ?></a></li><!-- /wp:list-item -->
+			<!-- wp:list-item --><li><a href="<?php echo esc_url( home_url( '/insights/' ) ); ?>"><?php esc_html_e( 'Insights', 'bwfd' ); ?></a></li><!-- /wp:list-item -->
+			<!-- wp:list-item --><li><a href="<?php echo esc_url( home_url( '/chapters/' ) ); ?>"><?php esc_html_e( 'Chapter by chapter', 'bwfd' ); ?></a></li><!-- /wp:list-item -->
 			<!-- wp:list-item --><li><a href="<?php echo esc_url( home_url( '/purchase/' ) ); ?>"><?php esc_html_e( 'Buy the book', 'bwfd' ); ?></a></li><!-- /wp:list-item -->
 		</ul>
 		<!-- /wp:list -->
@@ -46,6 +48,7 @@ declare( strict_types=1 );
 			<!-- wp:list-item --><li><a href="<?php echo esc_url( home_url( '/small-group-guide/' ) ); ?>"><?php esc_html_e( 'Small Group Guide', 'bwfd' ); ?></a></li><!-- /wp:list-item -->
 			<!-- wp:list-item --><li><a href="<?php echo esc_url( home_url( '/other-books/' ) ); ?>"><?php esc_html_e( 'Other books', 'bwfd' ); ?></a></li><!-- /wp:list-item -->
 			<!-- wp:list-item --><li><a href="<?php echo esc_url( home_url( '/enjoyed/' ) ); ?>"><?php esc_html_e( 'Enjoyed?', 'bwfd' ); ?></a></li><!-- /wp:list-item -->
+			<!-- wp:list-item --><li><a href="<?php echo esc_url( home_url( '/news/' ) ); ?>"><?php esc_html_e( 'News', 'bwfd' ); ?></a></li><!-- /wp:list-item -->
 		</ul>
 		<!-- /wp:list -->
 

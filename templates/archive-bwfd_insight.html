@@ -1,0 +1,74 @@
+<!-- wp:template-part {"slug":"header","tagName":"header","area":"header"} /-->
+
+<!-- wp:group {"tagName":"main","align":"full","className":"bwfd-sheet","style":{"spacing":{"padding":{"top":"0","bottom":"0"}}},"layout":{"type":"constrained"}} -->
+<main class="wp-block-group alignfull bwfd-sheet" style="padding-top:0;padding-bottom:0">
+	<!-- wp:group {"className":"bwfd-archive-body","style":{"spacing":{"padding":{"top":"50px","bottom":"90px"},"blockGap":"0"}},"layout":{"type":"constrained"}} -->
+	<div class="wp-block-group bwfd-archive-body" style="padding-top:50px;padding-bottom:90px">
+		<!-- wp:group {"className":"bwfd-archive-head","style":{"spacing":{"blockGap":"12px"}},"layout":{"type":"default"}} -->
+		<div class="wp-block-group bwfd-archive-head">
+			<!-- wp:paragraph {"className":"bwfd-kicker","textColor":"blue"} -->
+			<p class="bwfd-kicker has-blue-color has-text-color">Reflections</p>
+			<!-- /wp:paragraph -->
+			<!-- wp:query-title {"type":"archive","showPrefix":false,"level":1} /-->
+			<!-- wp:group {"className":"bwfd-rule","layout":{"type":"default"}} -->
+			<div class="wp-block-group bwfd-rule"></div>
+			<!-- /wp:group -->
+			<!-- wp:paragraph {"className":"bwfd-archive-head__intro","fontSize":"lg"} -->
+			<p class="bwfd-archive-head__intro has-lg-font-size">Short reflections from Stephen Parker on fatherhood and the wisdom found in Scripture.</p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:group {"className":"bwfd-topics","style":{"spacing":{"margin":{"top":"28px"}}},"layout":{"type":"default"}} -->
+		<div class="wp-block-group bwfd-topics" style="margin-top:28px">
+			<!-- wp:tag-cloud {"taxonomy":"bwfd_topic","showTagCounts":false,"smallestFontSize":"13.5px","largestFontSize":"13.5px","className":"bwfd-pills"} /-->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:bwfd/featured-insight {"style":{"spacing":{"margin":{"top":"44px"}}}} /-->
+
+		<!-- wp:query {"queryId":4,"query":{"perPage":12,"pages":0,"offset":0,"postType":"bwfd_insight","order":"desc","orderBy":"date","inherit":true},"className":"bwfd-post-cards bwfd-insight-grid","style":{"spacing":{"margin":{"top":"46px"}}}} -->
+		<div class="wp-block-query bwfd-post-cards bwfd-insight-grid" style="margin-top:46px">
+			<!-- wp:post-template {"style":{"spacing":{"blockGap":"22px"}},"layout":{"type":"grid","minimumColumnWidth":"18rem"}} -->
+				<!-- wp:bwfd/card {"style":{"spacing":{"blockGap":"12px"}}} -->
+				<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-regular" style="gap:12px">
+					<!-- wp:post-date {"className":"bwfd-card__date"} /-->
+					<!-- wp:post-title {"isLink":true,"level":2,"className":"bwfd-card__title"} /-->
+					<!-- wp:post-excerpt {"excerptLength":30,"className":"bwfd-card__excerpt"} /-->
+					<!-- wp:read-more {"content":"Read more","className":"bwfd-read-more"} /-->
+				</div>
+				<!-- /wp:bwfd/card -->
+			<!-- /wp:post-template -->
+
+			<!-- wp:query-pagination {"className":"bwfd-pagination","layout":{"type":"flex","flexWrap":"wrap"}} -->
+				<!-- wp:query-pagination-previous {"label":"Previous"} /-->
+				<!-- wp:query-pagination-numbers /-->
+				<!-- wp:query-pagination-next {"label":"Next"} /-->
+			<!-- /wp:query-pagination -->
+
+			<!-- wp:query-no-results -->
+				<!-- wp:group {"className":"bwfd-note-card","style":{"spacing":{"blockGap":"16px 28px"}},"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between","verticalAlignment":"center"}} -->
+				<div class="wp-block-group bwfd-note-card">
+					<!-- wp:paragraph {"fontSize":"md"} -->
+					<p class="has-md-font-size">More reflections are on the way. In the meantime, the book itself holds forty of them.</p>
+					<!-- /wp:paragraph -->
+					<!-- wp:paragraph {"className":"bwfd-link"} -->
+					<p class="bwfd-link"><a href="/about-the-book/">About the book</a></p>
+					<!-- /wp:paragraph -->
+				</div>
+				<!-- /wp:group -->
+			<!-- /wp:query-no-results -->
+		</div>
+		<!-- /wp:query -->
+
+		<!-- wp:paragraph {"className":"bwfd-archive-note","style":{"spacing":{"margin":{"top":"52px"}}},"fontSize":"md"} -->
+		<p class="bwfd-archive-note has-md-font-size" style="margin-top:52px">Written by <a href="/about-the-author/">Stephen Parker</a>, author of <em>Biblical Wisdom for Dads</em>.</p>
+		<!-- /wp:paragraph -->
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:bwfd/book-band {"primary":"buy","secondaryLabel":"About the book","coverWidth":144,"style":{"spacing":{"padding":{"top":"52px","bottom":"52px"}}}} /-->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer","area":"footer"} /-->

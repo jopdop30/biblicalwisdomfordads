@@ -26,6 +26,9 @@ $bwfd_height = max( 130, min( 1200, (int) ( $attributes['height'] ?? 600 ) ) );
 $bwfd_tabs   = preg_replace( '/[^a-z,]/', '', (string) ( $attributes['tabs'] ?? 'timeline' ) );
 $bwfd_title  = (string) ( $attributes['title'] ?? '' ) ?: __( 'Facebook page', 'bwfd' );
 
+// Facebook draws the plugin at this width (180–500) whatever size the
+// iframe is given, so view.js rewrites it to the block's measured width
+// before inserting the iframe. 500 remains for the <noscript> copy.
 $bwfd_src = add_query_arg(
 	array(
 		'href'                  => rawurlencode( $bwfd_url ),

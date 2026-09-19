@@ -121,6 +121,8 @@ $bwfd_art   = bwfd_image( 'art-silhouette.webp' );
 </div>
 <!-- /wp:group -->
 
+<!-- wp:pattern {"slug":"bwfd/insight-latest"} /-->
+
 <!-- wp:group {"className":"bwfd-section bwfd-section--last","layout":{"type":"constrained"}} -->
 <div class="wp-block-group bwfd-section bwfd-section--last">
 	<!-- wp:columns {"verticalAlignment":"center","style":{"spacing":{"blockGap":{"left":"44px"}}}} -->

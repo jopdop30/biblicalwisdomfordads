@@ -43,6 +43,161 @@ return array(
 		'editorScript' => 'file:./index.js',
 		'style' => 'file:./style-index.css'
 	),
+	'book-band' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'bwfd/book-band',
+		'version' => '1.0.0',
+		'title' => 'Book band',
+		'category' => 'bwfd',
+		'icon' => 'cover-image',
+		'description' => 'Full-width navy band with the cover, a heading, one line and the book\'s buttons. Closes news items, insights and chapter pages. Price, cover and chapter count stay current; the words are yours.',
+		'keywords' => array(
+			'book',
+			'band',
+			'call to action',
+			'buy',
+			'cover'
+		),
+		'textdomain' => 'bwfd',
+		'attributes' => array(
+			'align' => array(
+				'type' => 'string',
+				'default' => 'full'
+			),
+			'primary' => array(
+				'type' => 'string',
+				'default' => 'buy'
+			),
+			'heading' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'text' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'primaryLabel' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'primaryUrl' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'secondaryLabel' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'secondaryUrl' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'showCover' => array(
+				'type' => 'boolean',
+				'default' => true
+			),
+			'coverWidth' => array(
+				'type' => 'number',
+				'default' => 140
+			)
+		),
+		'supports' => array(
+			'anchor' => true,
+			'html' => false,
+			'align' => array(
+				'full'
+			),
+			'spacing' => array(
+				'padding' => array(
+					'top',
+					'bottom'
+				)
+			)
+		),
+		'example' => array(
+			'attributes' => array(
+				'primary' => 'buy',
+				'secondaryLabel' => 'About the book'
+			)
+		),
+		'editorScript' => 'file:./index.js',
+		'editorStyle' => 'file:./index.css',
+		'render' => 'file:./render.php'
+	),
+	'book-card' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'bwfd/book-card',
+		'version' => '1.0.0',
+		'title' => 'Book card',
+		'category' => 'bwfd',
+		'icon' => 'book',
+		'description' => 'A compact card for the book: cover, title, a line of text and a buy button, drawn from Settings → Structured data so the price stays current. Sticky beside an article.',
+		'keywords' => array(
+			'book',
+			'buy',
+			'sidebar',
+			'cover',
+			'card'
+		),
+		'textdomain' => 'bwfd',
+		'attributes' => array(
+			'accent' => array(
+				'type' => 'string',
+				'default' => 'blue'
+			),
+			'text' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'buttonLabel' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'buttonUrl' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'showPrice' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'linkLabel' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'linkUrl' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'sticky' => array(
+				'type' => 'boolean',
+				'default' => true
+			)
+		),
+		'supports' => array(
+			'anchor' => true,
+			'html' => false,
+			'align' => false,
+			'spacing' => array(
+				'margin' => array(
+					'top',
+					'bottom'
+				)
+			)
+		),
+		'example' => array(
+			'attributes' => array(
+				'accent' => 'apricot',
+				'showPrice' => true
+			)
+		),
+		'editorScript' => 'file:./index.js',
+		'editorStyle' => 'file:./index.css',
+		'style' => 'file:./style-index.css',
+		'render' => 'file:./render.php'
+	),
 	'card' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
@@ -169,6 +324,50 @@ return array(
 		'editorStyle' => 'file:./index.css',
 		'style' => 'file:./style-index.css'
 	),
+	'chapter-number' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'bwfd/chapter-number',
+		'version' => '1.0.0',
+		'title' => 'Chapter number',
+		'category' => 'bwfd',
+		'icon' => 'book-alt',
+		'description' => 'The chapter\'s number, from its Order field: “Chapter 22”, “22” or “Chapter 22 of 40”. For chapter templates and lists.',
+		'keywords' => array(
+			'chapter',
+			'number',
+			'book'
+		),
+		'textdomain' => 'bwfd',
+		'usesContext' => array(
+			'postId',
+			'postType'
+		),
+		'attributes' => array(
+			'format' => array(
+				'type' => 'string',
+				'default' => 'label'
+			)
+		),
+		'supports' => array(
+			'html' => false,
+			'color' => array(
+				'text' => true,
+				'background' => false,
+				'link' => false
+			),
+			'typography' => array(
+				'fontSize' => true,
+				'lineHeight' => false
+			),
+			'spacing' => array(
+				'margin' => true
+			)
+		),
+		'editorScript' => 'file:./index.js',
+		'style' => 'file:./style-index.css',
+		'render' => 'file:./render.php'
+	),
 	'endorsement' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
@@ -258,7 +457,7 @@ return array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
 		'name' => 'bwfd/facebook-page',
-		'version' => '1.1.0',
+		'version' => '1.2.0',
 		'title' => 'Facebook page feed',
 		'category' => 'bwfd',
 		'icon' => 'facebook',
@@ -313,6 +512,54 @@ return array(
 		'style' => 'file:./style-index.css',
 		'render' => 'file:./render.php',
 		'viewScriptModule' => 'file:./view.js'
+	),
+	'featured-insight' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'bwfd/featured-insight',
+		'version' => '1.0.0',
+		'title' => 'Featured insight',
+		'category' => 'bwfd',
+		'icon' => 'lightbulb',
+		'description' => 'The most recent Insight as a two-panel feature: its Scripture verse on apricot beside the title, excerpt and author on navy. Hidden on later archive pages.',
+		'keywords' => array(
+			'insight',
+			'featured',
+			'latest',
+			'reflection'
+		),
+		'textdomain' => 'bwfd',
+		'attributes' => array(
+			'postId' => array(
+				'type' => 'number',
+				'default' => 0
+			),
+			'kicker' => array(
+				'type' => 'string',
+				'default' => 'Latest reflection'
+			),
+			'moreLabel' => array(
+				'type' => 'string',
+				'default' => 'Read more'
+			)
+		),
+		'supports' => array(
+			'anchor' => true,
+			'html' => false,
+			'align' => array(
+				'wide'
+			),
+			'spacing' => array(
+				'margin' => array(
+					'top',
+					'bottom'
+				)
+			)
+		),
+		'editorScript' => 'file:./index.js',
+		'editorStyle' => 'file:./index.css',
+		'style' => 'file:./style-index.css',
+		'render' => 'file:./render.php'
 	),
 	'framed-image' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
@@ -523,6 +770,64 @@ return array(
 		'style' => 'file:./style-index.css',
 		'render' => 'file:./render.php',
 		'viewScriptModule' => 'file:./view.js'
+	),
+	'scripture' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'bwfd/scripture',
+		'version' => '1.0.0',
+		'title' => 'Scripture',
+		'category' => 'bwfd',
+		'icon' => 'book-alt',
+		'description' => 'A Bible verse with its reference: serif italic quotation, apricot rule and quote mark, reference linked to the passage online.',
+		'keywords' => array(
+			'bible',
+			'verse',
+			'scripture',
+			'quote',
+			'passage'
+		),
+		'textdomain' => 'bwfd',
+		'attributes' => array(
+			'text' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'reference' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'translation' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'linkReference' => array(
+				'type' => 'boolean',
+				'default' => true
+			)
+		),
+		'supports' => array(
+			'anchor' => true,
+			'html' => false,
+			'align' => false,
+			'spacing' => array(
+				'margin' => array(
+					'top',
+					'bottom'
+				)
+			)
+		),
+		'example' => array(
+			'attributes' => array(
+				'text' => 'As a father has compassion on his children, so the Lord has compassion on those who fear him.',
+				'reference' => 'Psalm 103:13',
+				'translation' => 'NIV'
+			)
+		),
+		'editorScript' => 'file:./index.js',
+		'editorStyle' => 'file:./index.css',
+		'style' => 'file:./style-index.css',
+		'render' => 'file:./render.php'
 	),
 	'section-heading' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',

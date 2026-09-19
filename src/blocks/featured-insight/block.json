@@ -1,0 +1,48 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "bwfd/featured-insight",
+	"version": "1.0.0",
+	"title": "Featured insight",
+	"category": "bwfd",
+	"icon": "lightbulb",
+	"description": "The most recent Insight as a two-panel feature: its Scripture verse on apricot beside the title, excerpt and author on navy. Hidden on later archive pages.",
+	"keywords": [
+		"insight",
+		"featured",
+		"latest",
+		"reflection"
+	],
+	"textdomain": "bwfd",
+	"attributes": {
+		"postId": {
+			"type": "number",
+			"default": 0
+		},
+		"kicker": {
+			"type": "string",
+			"default": "Latest reflection"
+		},
+		"moreLabel": {
+			"type": "string",
+			"default": "Read more"
+		}
+	},
+	"supports": {
+		"anchor": true,
+		"html": false,
+		"align": [
+			"wide"
+		],
+		"spacing": {
+			"margin": [
+				"top",
+				"bottom"
+			]
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}

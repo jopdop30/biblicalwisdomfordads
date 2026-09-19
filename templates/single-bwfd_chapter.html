@@ -1,0 +1,78 @@
+<!-- wp:template-part {"slug":"header","tagName":"header","area":"header"} /-->
+
+<!-- wp:group {"tagName":"main","align":"full","className":"bwfd-sheet","style":{"spacing":{"padding":{"top":"0","bottom":"0"}}},"layout":{"type":"constrained"}} -->
+<main class="wp-block-group alignfull bwfd-sheet" style="padding-top:0;padding-bottom:0">
+	<!-- wp:group {"tagName":"article","className":"bwfd-article bwfd-chapter","style":{"spacing":{"padding":{"top":"48px","bottom":"70px"},"blockGap":"0"}},"layout":{"type":"default"}} -->
+	<article class="wp-block-group bwfd-article bwfd-chapter" style="padding-top:48px;padding-bottom:70px">
+		<!-- wp:paragraph {"className":"bwfd-backlink"} -->
+		<p class="bwfd-backlink"><a href="/chapters/">&larr; All chapters</a></p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:group {"className":"bwfd-article__head","layout":{"type":"default"}} -->
+		<div class="wp-block-group bwfd-article__head">
+			<!-- wp:bwfd/chapter-number {"format":"label-of","className":"bwfd-article__kicker"} /-->
+			<!-- wp:post-title {"level":1,"className":"bwfd-article__title"} /-->
+			<!-- wp:group {"className":"bwfd-rule","layout":{"type":"default"}} -->
+			<div class="wp-block-group bwfd-rule"></div>
+			<!-- /wp:group -->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:post-featured-image {"aspectRatio":"16/9","className":"bwfd-article__image"} /-->
+
+		<!-- wp:group {"className":"bwfd-article__layout","style":{"spacing":{"blockGap":"34px 56px"}},"layout":{"type":"flex","flexWrap":"wrap","verticalAlignment":"top"}} -->
+		<div class="wp-block-group bwfd-article__layout">
+			<!-- wp:post-content {"className":"bwfd-prose bwfd-article__body","layout":{"type":"default"}} /-->
+			<!-- wp:bwfd/book-card {"accent":"apricot","text":"Read the whole chapter, and the other thirty-nine, in the book.","showPrice":true} /-->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:group {"className":"bwfd-article__footer","style":{"spacing":{"blockGap":"16px 28px"}},"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between"}} -->
+		<div class="wp-block-group bwfd-article__footer">
+			<!-- wp:paragraph {"className":"bwfd-link"} -->
+			<p class="bwfd-link"><a href="/chapters/">&larr; All chapters</a></p>
+			<!-- /wp:paragraph -->
+			<!-- wp:paragraph {"className":"bwfd-link"} -->
+			<p class="bwfd-link"><a href="/about-the-book/">About the book</a></p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
+	</article>
+	<!-- /wp:group -->
+
+	<!-- wp:group {"className":"bwfd-article__more bwfd-chapter__insights","style":{"spacing":{"padding":{"top":"0","bottom":"80px"}}},"layout":{"type":"constrained"}} -->
+	<div class="wp-block-group bwfd-article__more bwfd-chapter__insights" style="padding-top:0;padding-bottom:80px">
+		<!-- wp:bwfd/section-heading {"content":"Insights on this chapter","style":{"spacing":{"margin":{"bottom":"12px"}}}} -->
+		<div class="wp-block-bwfd-section-heading bwfd-section-heading has-text-align-left" style="margin-bottom:12px"><h2 class="bwfd-section-heading__title has-xxl-font-size">Insights on this chapter</h2><span class="bwfd-section-heading__rule" aria-hidden="true"></span></div>
+		<!-- /wp:bwfd/section-heading -->
+		<!-- wp:paragraph {"className":"bwfd-measure-narrow","fontSize":"lg","style":{"spacing":{"margin":{"bottom":"28px"}}}} -->
+		<p class="bwfd-measure-narrow has-lg-font-size" style="margin-bottom:28px">Short reflections from Stephen that draw on this chapter.</p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:query {"queryId":8,"query":{"perPage":12,"pages":0,"offset":0,"postType":"bwfd_insight","order":"desc","orderBy":"date","inherit":false},"className":"bwfd-post-cards"} -->
+		<div class="wp-block-query bwfd-post-cards">
+			<!-- wp:post-template {"className":"bwfd-chapter-insights","style":{"spacing":{"blockGap":"22px"}},"layout":{"type":"grid","minimumColumnWidth":"18rem"}} -->
+				<!-- wp:bwfd/card {"padding":"compact","style":{"spacing":{"blockGap":"12px"}}} -->
+				<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-compact" style="gap:12px">
+					<!-- wp:post-date {"className":"bwfd-card__date"} /-->
+					<!-- wp:post-title {"isLink":true,"level":3,"className":"bwfd-card__title"} /-->
+					<!-- wp:post-excerpt {"excerptLength":24,"className":"bwfd-card__excerpt"} /-->
+					<!-- wp:read-more {"content":"Read more","className":"bwfd-read-more"} /-->
+				</div>
+				<!-- /wp:bwfd/card -->
+			<!-- /wp:post-template -->
+			<!-- wp:query-no-results -->
+				<!-- wp:paragraph {"className":"bwfd-empty-note"} -->
+				<p class="bwfd-empty-note">No insights on this chapter yet. Browse <a href="/insights/">all insights</a>.</p>
+				<!-- /wp:paragraph -->
+			<!-- /wp:query-no-results -->
+		</div>
+		<!-- /wp:query -->
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:bwfd/book-band {"primary":"buy","heading":"Read the whole chapter","text":"One of {chapters} short chapters in {book}, each a few minutes to read, with questions for reflection.","secondaryLabel":"About the book","coverWidth":144,"style":{"spacing":{"padding":{"top":"52px","bottom":"52px"}}}} /-->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer","area":"footer"} /-->

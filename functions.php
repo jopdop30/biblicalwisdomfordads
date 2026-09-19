@@ -17,6 +17,10 @@ require_once BWFD_DIR . '/inc/icons.php';
 require_once BWFD_DIR . '/inc/blocks.php';
 require_once BWFD_DIR . '/inc/block-styles.php';
 require_once BWFD_DIR . '/inc/patterns.php';
+require_once BWFD_DIR . '/inc/content-types.php';
+require_once BWFD_DIR . '/inc/scripture.php';
+require_once BWFD_DIR . '/inc/topics.php';
+require_once BWFD_DIR . '/inc/chapters.php';
 require_once BWFD_DIR . '/inc/schema-settings.php';
 require_once BWFD_DIR . '/inc/seo.php';
 require_once BWFD_DIR . '/inc/performance.php';
@@ -87,9 +91,9 @@ function bwfd_url( string $path = '/' ): string {
  */
 function bwfd_texture_tokens(): void {
 	$textures = array(
-		'navy'    => array( 'tex-navy.webp', '.is-style-bwfd-navy,.bwfd-card--navy,.bwfd-endorsements' ),
-		'apricot' => array( 'tex-apricot.webp', '.is-style-bwfd-apricot,.bwfd-card--apricot,.bwfd-framed-image__panel,.wp-block-bwfd-icon.bwfd-icon--circle,.bwfd-numbered-list' ),
-		'marble'  => array( 'tex-white.webp', '.is-style-bwfd-marble,.bwfd-card--marble' ),
+		'navy'    => array( 'tex-navy.webp', '.is-style-bwfd-navy,.bwfd-card--navy,.bwfd-endorsements,.bwfd-featured-insight__body' ),
+		'apricot' => array( 'tex-apricot.webp', '.is-style-bwfd-apricot,.bwfd-card--apricot,.bwfd-framed-image__panel,.wp-block-bwfd-icon.bwfd-icon--circle,.bwfd-numbered-list,.is-style-bwfd-numbered-list,.bwfd-scripture__mark,.bwfd-featured-insight__verse,.bwfd-chapter-rows__number' ),
+		'marble'  => array( 'tex-white.webp', '.is-style-bwfd-marble,.bwfd-card--marble,.bwfd-book-card,.bwfd-article__chapters' ),
 		'blue'    => array( 'tex-blue.webp', '' ),
 	);
 	$css = '';

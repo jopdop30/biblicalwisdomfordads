@@ -1,0 +1,100 @@
+.bwfd-checklist-panel {
+	.bwfd-checklist__summary {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px 12px;
+		margin: 0 0 12px;
+		font-size: 13px;
+	}
+
+	.bwfd-checklist__summary-warn {
+		color: #b32d2e;
+	}
+
+	.bwfd-checklist {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.bwfd-checklist__item {
+		display: grid;
+		grid-template-columns: 22px minmax(0, 1fr);
+		gap: 6px 8px;
+		padding: 10px 0;
+		border-top: 1px solid #e0e0e0;
+		font-size: 13px;
+
+		&:first-child {
+			border-top: 0;
+			padding-top: 0;
+		}
+
+		.components-button {
+			grid-column: 2;
+			justify-self: start;
+		}
+	}
+
+	.bwfd-checklist__mark {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		border: 1.5px solid #949494;
+		font-size: 12px;
+		font-weight: 700;
+		line-height: 1;
+		color: #fff;
+	}
+
+	.is-done .bwfd-checklist__mark {
+		background: #00385b;
+		border-color: #00385b;
+	}
+
+	.is-todo.is-required .bwfd-checklist__mark {
+		border-color: #b32d2e;
+	}
+
+	.bwfd-checklist__text {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		min-width: 0;
+	}
+
+	.bwfd-checklist__label {
+		font-weight: 500;
+	}
+
+	.is-done .bwfd-checklist__label {
+		color: #757575;
+	}
+
+	.bwfd-checklist__badge {
+		margin-left: 6px;
+		padding: 1px 6px;
+		border-radius: 3px;
+		background: #fcf0f1;
+		color: #b32d2e;
+		font-style: normal;
+		font-size: 11px;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+	}
+
+	.bwfd-checklist__detail {
+		color: #757575;
+		font-size: 12px;
+		line-height: 1.4;
+	}
+
+	.bwfd-checklist__allset {
+		margin: 0;
+		color: #00385b;
+		font-weight: 500;
+	}
+}

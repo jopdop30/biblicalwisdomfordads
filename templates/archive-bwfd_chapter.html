@@ -1,0 +1,54 @@
+<!-- wp:template-part {"slug":"header","tagName":"header","area":"header"} /-->
+
+<!-- wp:group {"tagName":"main","align":"full","className":"bwfd-sheet","style":{"spacing":{"padding":{"top":"0","bottom":"0"}}},"layout":{"type":"constrained"}} -->
+<main class="wp-block-group alignfull bwfd-sheet" style="padding-top:0;padding-bottom:0">
+	<!-- wp:group {"className":"bwfd-archive-body","style":{"spacing":{"padding":{"top":"50px","bottom":"90px"},"blockGap":"0"}},"layout":{"type":"constrained"}} -->
+	<div class="wp-block-group bwfd-archive-body" style="padding-top:50px;padding-bottom:90px">
+		<!-- wp:group {"className":"bwfd-archive-head","style":{"spacing":{"blockGap":"12px"}},"layout":{"type":"default"}} -->
+		<div class="wp-block-group bwfd-archive-head">
+			<!-- wp:paragraph {"className":"bwfd-kicker","textColor":"blue"} -->
+			<p class="bwfd-kicker has-blue-color has-text-color">The book</p>
+			<!-- /wp:paragraph -->
+			<!-- wp:heading {"level":1} -->
+			<h1 class="wp-block-heading">Chapter by chapter</h1>
+			<!-- /wp:heading -->
+			<!-- wp:group {"className":"bwfd-rule","layout":{"type":"default"}} -->
+			<div class="wp-block-group bwfd-rule"></div>
+			<!-- /wp:group -->
+			<!-- wp:paragraph {"className":"bwfd-archive-head__intro","fontSize":"lg"} -->
+			<p class="bwfd-archive-head__intro has-lg-font-size">Forty short chapters on what Scripture shows us about the Father we are learning to imitate. Each takes a few minutes to read and ends with questions for reflection. Here is what each one covers, with the insights that draw on it.</p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:query {"queryId":9,"query":{"perPage":100,"pages":0,"offset":0,"postType":"bwfd_chapter","order":"asc","orderBy":"menu_order","inherit":true},"className":"bwfd-chapter-rows","style":{"spacing":{"margin":{"top":"44px"}}}} -->
+		<div class="wp-block-query bwfd-chapter-rows" style="margin-top:44px">
+			<!-- wp:post-template {"layout":{"type":"default"}} -->
+				<!-- wp:group {"tagName":"article","className":"bwfd-chapter-rows__item","style":{"spacing":{"blockGap":"6px 26px"}},"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"top"}} -->
+				<article class="wp-block-group bwfd-chapter-rows__item">
+					<!-- wp:bwfd/chapter-number {"format":"number","className":"bwfd-chapter-rows__number"} /-->
+					<!-- wp:group {"className":"bwfd-chapter-rows__text","style":{"spacing":{"blockGap":"6px"}},"layout":{"type":"default"}} -->
+					<div class="wp-block-group bwfd-chapter-rows__text">
+						<!-- wp:post-title {"isLink":true,"level":2,"className":"bwfd-chapter-rows__title"} /-->
+						<!-- wp:post-excerpt {"excerptLength":28,"className":"bwfd-chapter-rows__excerpt"} /-->
+					</div>
+					<!-- /wp:group -->
+				</article>
+				<!-- /wp:group -->
+			<!-- /wp:post-template -->
+
+			<!-- wp:query-no-results -->
+				<!-- wp:paragraph {"className":"bwfd-empty-note"} -->
+				<p class="bwfd-empty-note">The chapter guide is on its way. In the meantime, read <a href="/about-the-book/">about the book</a>.</p>
+				<!-- /wp:paragraph -->
+			<!-- /wp:query-no-results -->
+		</div>
+		<!-- /wp:query -->
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:bwfd/book-band {"primary":"buy","heading":"Read the whole chapter","text":"One of {chapters} short chapters in {book}, each a few minutes to read, with questions for reflection.","secondaryLabel":"About the book","coverWidth":144,"style":{"spacing":{"padding":{"top":"52px","bottom":"52px"}}}} /-->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer","area":"footer"} /-->

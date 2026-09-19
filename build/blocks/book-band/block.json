@@ -1,0 +1,82 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "bwfd/book-band",
+  "version": "1.0.0",
+  "title": "Book band",
+  "category": "bwfd",
+  "icon": "cover-image",
+  "description": "Full-width navy band with the cover, a heading, one line and the book's buttons. Closes news items, insights and chapter pages. Price, cover and chapter count stay current; the words are yours.",
+  "keywords": [
+    "book",
+    "band",
+    "call to action",
+    "buy",
+    "cover"
+  ],
+  "textdomain": "bwfd",
+  "attributes": {
+    "align": {
+      "type": "string",
+      "default": "full"
+    },
+    "primary": {
+      "type": "string",
+      "default": "buy"
+    },
+    "heading": {
+      "type": "string",
+      "default": ""
+    },
+    "text": {
+      "type": "string",
+      "default": ""
+    },
+    "primaryLabel": {
+      "type": "string",
+      "default": ""
+    },
+    "primaryUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "secondaryLabel": {
+      "type": "string",
+      "default": ""
+    },
+    "secondaryUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "showCover": {
+      "type": "boolean",
+      "default": true
+    },
+    "coverWidth": {
+      "type": "number",
+      "default": 140
+    }
+  },
+  "supports": {
+    "anchor": true,
+    "html": false,
+    "align": [
+      "full"
+    ],
+    "spacing": {
+      "padding": [
+        "top",
+        "bottom"
+      ]
+    }
+  },
+  "example": {
+    "attributes": {
+      "primary": "buy",
+      "secondaryLabel": "About the book"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "render": "file:./render.php"
+}

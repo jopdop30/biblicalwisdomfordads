@@ -40,3 +40,53 @@ body.editor-styles-wrapper {
 body.editor-styles-wrapper :is(h1, h2, h3, h4, h5, h6, p) {
 	text-wrap: wrap;
 }
+
+/* The apricot rule under headings is an empty Group block. The editor
+   shows a layout picker (Group / Row / Stack / Grid) inside any Group with
+   no inner blocks, and at 72×4px it spills over the text below. Hide it. */
+.wp-block-group.bwfd-rule > .components-placeholder,
+.wp-block-group.bwfd-rule .block-editor-block-variation-picker {
+	display: none;
+}
+
+/* News item / Insight templates: the article group has a zero block gap
+   and manages its own spacing in style.css. In the canvas the generated
+   layout rules load after the theme styles and win on order, so restate
+   the spacing with more specificity. */
+.editor-styles-wrapper .bwfd-article > .bwfd-article__image {
+	margin-block-start: 34px;
+}
+
+.editor-styles-wrapper .bwfd-article > .bwfd-article__layout {
+	margin-block-start: 40px;
+}
+
+.editor-styles-wrapper .bwfd-article > .bwfd-article__footer {
+	margin-block-start: 44px;
+}
+
+.editor-styles-wrapper .bwfd-article > .bwfd-backlink {
+	margin-block-end: 26px;
+}
+
+.editor-styles-wrapper .bwfd-article__column > .bwfd-article__chapters {
+	margin-block-start: 34px;
+}
+
+.editor-styles-wrapper .bwfd-article > .bwfd-article__head > * {
+	margin: 0;
+}
+
+.editor-styles-wrapper .bwfd-article > .bwfd-article__head > .bwfd-article__title {
+	margin-block-start: 12px;
+}
+
+/* The canvas wraps an empty Group (the rule) in an extra element, so the
+   rule is not a direct child here. */
+.editor-styles-wrapper .bwfd-article > .bwfd-article__head .bwfd-rule {
+	margin-block-start: 14px;
+}
+
+.editor-styles-wrapper .bwfd-article > .bwfd-article__head > .bwfd-byline {
+	margin-block-start: 22px;
+}

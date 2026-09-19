@@ -51,8 +51,14 @@ function bwfd_seo_description(): string {
 		}
 	} elseif ( is_search() ) {
 		$text = sprintf( 'Search results for "%s".', get_search_query() );
+	} elseif ( is_tax( BWFD_TOPIC_TAX ) && get_queried_object() instanceof WP_Term ) {
+		$text = bwfd_topic_archive_description( get_queried_object() );
 	} elseif ( is_archive() ) {
-		$text = wp_strip_all_tags( get_the_archive_description() );
+		$key  = is_post_type_archive() ? bwfd_archive_settings_key( (string) get_query_var( 'post_type' ) ) : '';
+		$text = '' !== $key ? (string) ( bwfd_schema_data()['archives'][ $key ]['description'] ?? '' ) : '';
+		if ( '' === trim( $text ) ) {
+			$text = wp_strip_all_tags( get_the_archive_description() );
+		}
 	}
 
 	if ( '' === trim( $text ) ) {
@@ -85,19 +91,57 @@ function bwfd_seo_description(): string {
 }
 
 /**
- * Social share image: featured image, else the first image in the content,
- * else the book cover.
+ * The default share image: the cover on the navy texture at 1200×630,
+ * rendered by bin/make-social-images.php. Landscape, because Facebook,
+ * LinkedIn and X crop a portrait cover badly. Filter `bwfd_seo_default_image`.
  *
- * @return array{url:string,width:int,height:int}
+ * @return array{url:string,width:int,height:int,alt:string}
+ */
+function bwfd_seo_default_image(): array {
+	return (array) apply_filters(
+		'bwfd_seo_default_image',
+		array(
+			'url'    => BWFD_URI . '/assets/images/social-default.jpg',
+			'width'  => 1200,
+			'height' => 630,
+			'alt'    => (string) bwfd_schema_data()['book']['name'],
+		)
+	);
+}
+
+/**
+ * The default article images in the three aspect ratios Google's Article
+ * guidance recommends, for items without a featured image.
+ *
+ * @return string[]
+ */
+function bwfd_seo_default_article_images(): array {
+	return (array) apply_filters(
+		'bwfd_seo_default_article_images',
+		array(
+			BWFD_URI . '/assets/images/article-16x9.jpg',
+			BWFD_URI . '/assets/images/article-4x3.jpg',
+			BWFD_URI . '/assets/images/article-1x1.jpg',
+		)
+	);
+}
+
+/**
+ * Social share image: featured image, else the first image in the content,
+ * else the landscape default.
+ *
+ * @return array{url:string,width:int,height:int,alt:string}
  */
 function bwfd_seo_image(): array {
 	if ( is_singular() && has_post_thumbnail() ) {
-		$src = wp_get_attachment_image_src( get_post_thumbnail_id(), 'large' );
+		$id  = get_post_thumbnail_id();
+		$src = wp_get_attachment_image_src( $id, 'large' );
 		if ( $src ) {
 			return array(
 				'url'    => $src[0],
 				'width'  => (int) $src[1],
 				'height' => (int) $src[2],
+				'alt'    => trim( (string) get_post_meta( $id, '_wp_attachment_image_alt', true ) ) ?: get_the_title(),
 			);
 		}
 	}
@@ -112,21 +156,53 @@ function bwfd_seo_image(): array {
 			$m = null;
 		}
 		if ( $m ) {
-			$attrs = array( 'url' => $m[1], 'width' => 0, 'height' => 0 );
+			$attrs = array( 'url' => $m[1], 'width' => 0, 'height' => 0, 'alt' => '' );
 			if ( preg_match( '#width="(\d+)"#', $m[0], $w ) && preg_match( '#height="(\d+)"#', $m[0], $h ) ) {
 				$attrs['width']  = (int) $w[1];
 				$attrs['height'] = (int) $h[1];
+			}
+			if ( preg_match( '#alt="([^"]*)"#', $m[0], $a ) ) {
+				$attrs['alt'] = html_entity_decode( $a[1], ENT_QUOTES, 'UTF-8' );
 			}
 			return $attrs;
 		}
 	}
 
-	$cover = bwfd_schema_data()['book']['image'];
-	return array(
-		'url'    => (string) $cover['url'],
-		'width'  => (int) $cover['width'],
-		'height' => (int) $cover['height'],
-	);
+	return bwfd_seo_default_image();
+}
+
+/**
+ * Canonical-style URL of the current request: the permalink for singular
+ * views, the archive link for a post type archive, otherwise the request
+ * path with the site's trailing-slash convention.
+ */
+function bwfd_seo_current_url(): string {
+	if ( is_singular() ) {
+		return (string) get_permalink();
+	}
+	if ( is_post_type_archive() && ! is_paged() ) {
+		$link = get_post_type_archive_link( (string) get_query_var( 'post_type' ) );
+		if ( is_string( $link ) ) {
+			return $link;
+		}
+	}
+	if ( is_tax() && ! is_paged() && get_queried_object() instanceof WP_Term ) {
+		$link = get_term_link( get_queried_object() );
+		if ( is_string( $link ) ) {
+			return $link;
+		}
+	}
+	$request = (string) $GLOBALS['wp']->request;
+	return '' === $request ? home_url( '/' ) : home_url( user_trailingslashit( $request ) );
+}
+
+/**
+ * The article subtype of the queried post (NewsArticle, BlogPosting,
+ * Article), or null when the request is not a single article.
+ */
+function bwfd_seo_article_type(): ?string {
+	$post = is_singular() ? get_queried_object() : null;
+	return $post instanceof WP_Post ? bwfd_article_type( $post ) : null;
 }
 
 /**
@@ -139,10 +215,16 @@ function bwfd_seo_meta(): void {
 
 	$description = bwfd_seo_description();
 	$title       = wp_get_document_title();
-	$url         = is_singular() ? get_permalink() : home_url( add_query_arg( array(), $GLOBALS['wp']->request ) );
+	$url         = bwfd_seo_current_url();
 	$image       = bwfd_seo_image();
-	$type        = is_front_page() ? 'website' : ( is_singular( 'post' ) ? 'article' : 'website' );
+	$is_article  = null !== bwfd_seo_article_type();
+	$type        = $is_article && ! is_front_page() ? 'article' : 'website';
 	$locale      = str_replace( '-', '_', get_bloginfo( 'language' ) );
+
+	if ( is_post_type_archive( array_merge( array_keys( bwfd_content_types() ), array( BWFD_CHAPTER_TYPE ) ) ) || is_tax( BWFD_TOPIC_TAX ) ) {
+		// Core prints a canonical link on single items only.
+		printf( '<link rel="canonical" href="%s">' . "\n", esc_url( $url ) );
+	}
 
 	$tags = array(
 		array( 'name', 'description', $description ),
@@ -157,14 +239,20 @@ function bwfd_seo_meta(): void {
 		array( 'name', 'twitter:title', $title ),
 		array( 'name', 'twitter:description', $description ),
 		array( 'name', 'twitter:image', $image['url'] ),
+		array( 'property', 'og:image:alt', (string) ( $image['alt'] ?? '' ) ),
+		array( 'name', 'twitter:image:alt', (string) ( $image['alt'] ?? '' ) ),
 	);
 	if ( $image['width'] && $image['height'] ) {
 		$tags[] = array( 'property', 'og:image:width', (string) $image['width'] );
 		$tags[] = array( 'property', 'og:image:height', (string) $image['height'] );
 	}
-	if ( is_singular( 'post' ) ) {
+	if ( $is_article ) {
+		$author_page = (int) bwfd_schema_data()['pages']['about_author'];
+		$author_link = $author_page ? get_permalink( $author_page ) : false;
 		$tags[] = array( 'property', 'article:published_time', get_the_date( DATE_W3C ) );
 		$tags[] = array( 'property', 'article:modified_time', get_the_modified_date( DATE_W3C ) );
+		// Open Graph wants a profile URL here, not a name.
+		$tags[] = array( 'property', 'article:author', is_string( $author_link ) ? $author_link : home_url( '/' ) );
 	}
 
 	echo "\n<!-- Biblical Wisdom for Dads: SEO -->\n";
@@ -357,6 +445,10 @@ function bwfd_launch_event( WP_Post $post ): ?array {
  * Other books: Book entries for the author's earlier titles.
  * Launch event: an Event with venue, times, the free-ticket Offer and the
  * author as organiser and performer.
+ * News items and Insights (inc/content-types.php): a NewsArticle or
+ * BlogPosting with the author Person, the publisher and the Book as its
+ * subject; core posts get a plain Article. Their archives are a
+ * CollectionPage listing the items on that page.
  *
  * Note: Google's "Book actions" feature is fed by partner data feeds, not
  * on-page markup, so the Book nodes here are for general search engines
@@ -403,6 +495,12 @@ function bwfd_seo_json_ld(): void {
 	$post    = is_singular() ? get_queried_object() : null;
 	$post_id = $post instanceof WP_Post ? (int) $post->ID : 0;
 	$event   = $post instanceof WP_Post ? bwfd_launch_event( $post ) : null;
+	$article = $post instanceof WP_Post ? bwfd_article_type( $post ) : null;
+	$types   = bwfd_content_types();
+	$listing = is_post_type_archive( array_keys( $types ) ) ? (string) get_query_var( 'post_type' ) : '';
+	$topic   = is_tax( BWFD_TOPIC_TAX ) && get_queried_object() instanceof WP_Term ? get_queried_object() : null;
+	$is_chapter        = $post instanceof WP_Post && BWFD_CHAPTER_TYPE === $post->post_type;
+	$is_chapter_index  = is_post_type_archive( BWFD_CHAPTER_TYPE );
 
 	$book_page_ids  = array_map( 'intval', array_merge( array( $pages['about_book'], $pages['purchase'] ), (array) $pages['extra_book_pages'] ) );
 	$is_book_page   = $post_id && in_array( $post_id, $book_page_ids, true );
@@ -437,15 +535,8 @@ function bwfd_seo_json_ld(): void {
 	);
 
 	if ( $post instanceof WP_Post ) {
-		$type = 'WebPage';
-		if ( is_singular( 'post' ) ) {
-			$type = 'Article';
-		} elseif ( $is_author_page ) {
-			$type = 'ProfilePage';
-		}
-
 		$page = array(
-			'@type'              => $type,
+			'@type'              => $is_author_page ? 'ProfilePage' : 'WebPage',
 			'@id'                => get_permalink() . '#webpage',
 			'url'                => get_permalink(),
 			'name'               => html_entity_decode( wp_get_document_title(), ENT_QUOTES, 'UTF-8' ),
@@ -470,12 +561,142 @@ function bwfd_seo_json_ld(): void {
 			$page['mainEntity'] = $ref( 'book' );
 		} elseif ( $event ) {
 			$page['mainEntity'] = array( '@id' => get_permalink() . '#event' );
+		} elseif ( $article ) {
+			$page['mainEntity'] = array( '@id' => get_permalink() . '#article' );
+		}
+
+		if ( $is_chapter ) {
+			$page['mainEntity']  = array( '@id' => get_permalink() . '#chapter' );
+			$page['breadcrumb']  = array( '@id' => get_permalink() . '#breadcrumb' );
+			$graph[]             = bwfd_breadcrumb_list(
+				get_permalink() . '#breadcrumb',
+				array(
+					array( __( 'Home', 'bwfd' ), $home ),
+					array( __( 'Chapter by chapter', 'bwfd' ), (string) get_post_type_archive_link( BWFD_CHAPTER_TYPE ) ),
+					array( trim( bwfd_chapter_label( $post ) . ': ' . html_entity_decode( get_the_title( $post ), ENT_QUOTES, 'UTF-8' ), ': ' ), '' ),
+				)
+			);
+		}
+
+		if ( $article && isset( $types[ $post->post_type ] ) ) {
+			$page['breadcrumb'] = array( '@id' => get_permalink() . '#breadcrumb' );
+			$graph[]            = bwfd_breadcrumb_list(
+				get_permalink() . '#breadcrumb',
+				array(
+					array( __( 'Home', 'bwfd' ), $home ),
+					array( $types[ $post->post_type ]['plural'], (string) get_post_type_archive_link( $post->post_type ) ),
+					array( html_entity_decode( get_the_title( $post ), ENT_QUOTES, 'UTF-8' ), '' ),
+				)
+			);
 		}
 
 		$graph[] = $page;
 	}
 
-	if ( $is_book_page || $is_author_page || $is_other_books || $event ) {
+	if ( $topic || $is_chapter_index ) {
+		// Topic archive or the chapter index: a collection with its own breadcrumb trail.
+		$items    = array();
+		$position = 0;
+		foreach ( (array) $GLOBALS['wp_query']->posts as $listed ) {
+			if ( ! $listed instanceof WP_Post ) {
+				continue;
+			}
+			$items[] = array(
+				'@type'    => 'ListItem',
+				'position' => ++$position,
+				'url'      => get_permalink( $listed ),
+				'name'     => ( $is_chapter_index ? bwfd_chapter_label( $listed ) . ': ' : '' ) . html_entity_decode( get_the_title( $listed ), ENT_QUOTES, 'UTF-8' ),
+			);
+		}
+		$url    = bwfd_seo_current_url();
+		$crumbs = $topic
+			? array(
+				array( __( 'Home', 'bwfd' ), $home ),
+				array( $types['bwfd_insight']['plural'], (string) get_post_type_archive_link( 'bwfd_insight' ) ),
+				array( html_entity_decode( $topic->name, ENT_QUOTES, 'UTF-8' ), is_paged() ? (string) get_term_link( $topic ) : '' ),
+			)
+			: array(
+				array( __( 'Home', 'bwfd' ), $home ),
+				array( __( 'Chapter by chapter', 'bwfd' ), '' ),
+			);
+		$graph[] = bwfd_breadcrumb_list( $url . '#breadcrumb', $crumbs );
+		$graph[] = array(
+			'@type'       => 'CollectionPage',
+			'@id'         => $url . '#webpage',
+			'url'         => $url,
+			'name'        => html_entity_decode( wp_get_document_title(), ENT_QUOTES, 'UTF-8' ),
+			'description' => bwfd_seo_description(),
+			'isPartOf'    => $ref( 'site' ),
+			'breadcrumb'  => array( '@id' => $url . '#breadcrumb' ),
+			'inLanguage'  => get_bloginfo( 'language' ),
+			'about'       => array(
+				'@type' => 'Book',
+				'@id'   => $ids['book'],
+				'name'  => $book['name'],
+				'url'   => $book_url,
+			),
+			'mainEntity'  => $items ? array(
+				'@type'           => 'ItemList',
+				'itemListOrder'   => $is_chapter_index ? 'https://schema.org/ItemListOrderAscending' : 'https://schema.org/ItemListOrderDescending',
+				'numberOfItems'   => count( $items ),
+				'itemListElement' => $items,
+			) : null,
+		);
+	}
+
+	if ( '' !== $listing ) {
+		// News or Insights archive: the page as a collection of the items shown.
+		$items    = array();
+		$position = 0;
+		$listed_posts = (array) $GLOBALS['wp_query']->posts;
+		// The Insights archive shows the latest item in its featured block, outside the query.
+		if ( 'bwfd_insight' === $listing && ! is_paged() && bwfd_featured_insight() instanceof WP_Post ) {
+			array_unshift( $listed_posts, bwfd_featured_insight() );
+		}
+		foreach ( $listed_posts as $listed ) {
+			if ( ! $listed instanceof WP_Post ) {
+				continue;
+			}
+			$items[] = array(
+				'@type'    => 'ListItem',
+				'position' => ++$position,
+				'url'      => get_permalink( $listed ),
+				'name'     => html_entity_decode( get_the_title( $listed ), ENT_QUOTES, 'UTF-8' ),
+			);
+		}
+		$url     = bwfd_seo_current_url();
+		$graph[] = bwfd_breadcrumb_list(
+			$url . '#breadcrumb',
+			array(
+				array( __( 'Home', 'bwfd' ), $home ),
+				array( $types[ $listing ]['plural'], is_paged() ? (string) get_post_type_archive_link( $listing ) : '' ),
+			)
+		);
+		$graph[] = array(
+			'@type'       => 'CollectionPage',
+			'@id'         => $url . '#webpage',
+			'url'         => $url,
+			'name'        => html_entity_decode( wp_get_document_title(), ENT_QUOTES, 'UTF-8' ),
+			'description' => bwfd_seo_description(),
+			'isPartOf'    => $ref( 'site' ),
+			'breadcrumb'  => array( '@id' => $url . '#breadcrumb' ),
+			'inLanguage'  => get_bloginfo( 'language' ),
+			'about'       => array(
+				'@type'  => 'Book',
+				'@id'    => $ids['book'],
+				'name'   => $book['name'],
+				'url'    => $book_url,
+			),
+			'mainEntity'  => $items ? array(
+				'@type'           => 'ItemList',
+				'itemListOrder'   => 'https://schema.org/ItemListOrderDescending',
+				'numberOfItems'   => count( $items ),
+				'itemListElement' => $items,
+			) : null,
+		);
+	}
+
+	if ( $is_book_page || $is_author_page || $is_other_books || $event || $article || $is_chapter ) {
 		$graph[] = array(
 			'@type'       => 'Person',
 			'@id'         => $ids['person'],
@@ -553,8 +774,10 @@ function bwfd_seo_json_ld(): void {
 		// The paperback edition, also a Product so Google can show price and availability.
 		list( $availability, $available_from ) = bwfd_book_availability( (string) $book['release_date'] );
 
+		// Google reports a partial deliveryTime as a missing field, so emit it
+		// only when both handling and transit are known.
 		$delivery = null;
-		if ( $positive( $offer['handling_max'] ) || $positive( $offer['transit_max'] ) ) {
+		if ( $positive( $offer['handling_max'] ) && $positive( $offer['transit_max'] ) ) {
 			$window   = static fn( $min, $max ): ?array => $positive( $max ) ? array(
 				'@type'    => 'QuantitativeValue',
 				'minValue' => (int) $min,
@@ -643,6 +866,91 @@ function bwfd_seo_json_ld(): void {
 		}
 	}
 
+	if ( $is_chapter && $post instanceof WP_Post ) {
+		$verse = bwfd_post_scripture( $post );
+		$graph[] = array(
+			'@type'            => 'Chapter',
+			'@id'              => get_permalink() . '#chapter',
+			'name'             => html_entity_decode( get_the_title( $post ), ENT_QUOTES, 'UTF-8' ),
+			'alternativeHeadline' => bwfd_chapter_label( $post ) ?: null,
+			'position'         => bwfd_chapter_number( $post ) ?: null,
+			'url'              => get_permalink(),
+			'description'      => bwfd_seo_description(),
+			'mainEntityOfPage' => array( '@id' => get_permalink() . '#webpage' ),
+			'inLanguage'       => $book['language'],
+			'author'           => $ref( 'person' ),
+			'publisher'        => $ref( 'org' ),
+			'image'            => has_post_thumbnail( $post ) ? array( bwfd_seo_image()['url'] ) : array( (string) $book['image']['url'] ),
+			'isPartOf'         => array(
+				'@type'         => 'Book',
+				'@id'           => $ids['book'],
+				'name'          => $book['name'],
+				'author'        => $ref( 'person' ),
+				'url'           => $book_url,
+				'isbn'          => $editions['paperback']['isbn'],
+				'numberOfPages' => $positive( $book['pages'] ),
+			),
+			'citation'         => $verse ? array(
+				'@type' => 'CreativeWork',
+				'name'  => $verse['reference'] ?: null,
+				'text'  => $verse['text'],
+			) : null,
+		);
+	}
+
+	if ( $article && $post instanceof WP_Post ) {
+		$plain = trim( wp_strip_all_tags( strip_shortcodes( (string) $post->post_content ) ) );
+		$image = bwfd_seo_image();
+		// Google asks for the image in several aspect ratios; the defaults
+		// come in three, a featured image is offered as uploaded.
+		$article_images = has_post_thumbnail( $post ) ? array( $image['url'] ) : bwfd_seo_default_article_images();
+
+		$graph[] = array(
+			'@type'            => $article,
+			'@id'              => get_permalink() . '#article',
+			'headline'         => html_entity_decode( get_the_title( $post ), ENT_QUOTES, 'UTF-8' ),
+			'description'      => bwfd_seo_description(),
+			'url'              => get_permalink(),
+			'mainEntityOfPage' => array( '@id' => get_permalink() . '#webpage' ),
+			'isPartOf'         => $ref( 'site' ),
+			'image'            => $article_images,
+			'datePublished'    => get_the_date( DATE_W3C, $post ),
+			'dateModified'     => get_the_modified_date( DATE_W3C, $post ),
+			'author'           => $ref( 'person' ),
+			'publisher'        => $ref( 'org' ),
+			'inLanguage'       => get_bloginfo( 'language' ),
+			'articleSection'   => $types[ $post->post_type ]['section'] ?? null,
+			'dateline'         => 'NewsArticle' === $article ? bwfd_news_dateline( $post ) : null,
+			'keywords'         => 'BlogPosting' === $article ? ( bwfd_post_topic_names( $post ) ?: null ) : null,
+			'mentions'         => 'BlogPosting' === $article ? array_values( array_map(
+				static fn( WP_Post $chapter ): array => array(
+					'@type'    => 'Chapter',
+					'@id'      => get_permalink( $chapter ) . '#chapter',
+					'name'     => html_entity_decode( get_the_title( $chapter ), ENT_QUOTES, 'UTF-8' ),
+					'position' => bwfd_chapter_number( $chapter ) ?: null,
+					'url'      => get_permalink( $chapter ),
+					'isPartOf' => array( '@type' => 'Book', '@id' => $ids['book'], 'name' => $book['name'] ),
+				),
+				bwfd_post_chapters( $post )
+			) ) ?: null : null,
+			'wordCount'        => '' !== $plain ? str_word_count( $plain ) : null,
+			'isAccessibleForFree' => true,
+			'citation'         => ( $verse = bwfd_post_scripture( $post ) ) ? array(
+				'@type' => 'CreativeWork',
+				'name'  => $verse['reference'] ?: null,
+				'text'  => $verse['text'],
+			) : null,
+			'about'            => array(
+				'@type'  => 'Book',
+				'@id'    => $ids['book'],
+				'name'   => $book['name'],
+				'author' => $ref( 'person' ),
+				'url'    => $book_url,
+				'isbn'   => $editions['paperback']['isbn'],
+			),
+		);
+	}
+
 	if ( $event ) {
 		$graph[] = array(
 			'@type'               => 'Event',
@@ -715,6 +1023,56 @@ function bwfd_seo_json_ld(): void {
 	);
 }
 add_action( 'wp_head', 'bwfd_seo_json_ld', 3 );
+
+/**
+ * A BreadcrumbList node. The last item may have no URL (the current page).
+ *
+ * @param string                               $id    Node @id.
+ * @param array<int, array{0:string,1:string}> $items Name and URL pairs, in order.
+ * @return array<string, mixed>
+ */
+function bwfd_breadcrumb_list( string $id, array $items ): array {
+	$list = array();
+	foreach ( array_values( $items ) as $index => list( $name, $url ) ) {
+		$list[] = array(
+			'@type'    => 'ListItem',
+			'position' => $index + 1,
+			'name'     => $name,
+			'item'     => '' !== $url ? $url : null,
+		);
+	}
+	return array(
+		'@type'           => 'BreadcrumbList',
+		'@id'             => $id,
+		'itemListElement' => $list,
+	);
+}
+
+/**
+ * Title tag for the News and Insights archives from Settings → Structured
+ * data → Archives (blank keeps core's "News – Site"). Page two onwards
+ * gets the page number.
+ *
+ * @param array<string, string> $parts Title parts.
+ * @return array<string, string>
+ */
+function bwfd_seo_archive_title( array $parts ): array {
+	if ( ! is_post_type_archive() ) {
+		return $parts;
+	}
+	$key    = bwfd_archive_settings_key( (string) get_query_var( 'post_type' ) );
+	$custom = '' !== $key ? trim( (string) ( bwfd_schema_data()['archives'][ $key ]['title'] ?? '' ) ) : '';
+	if ( '' === $custom ) {
+		return $parts;
+	}
+	$out = array( 'title' => $custom );
+	if ( is_paged() ) {
+		/* translators: %d: page number */
+		$out['page'] = sprintf( __( 'Page %d', 'bwfd' ), (int) get_query_var( 'paged' ) );
+	}
+	return $out;
+}
+add_filter( 'document_title_parts', 'bwfd_seo_archive_title', 9 );
 
 /**
  * Trim what the site sends: no emoji script/styles, no generator tag, no
@@ -877,8 +1235,9 @@ add_action( 'template_redirect', 'bwfd_seo_redirect_author_archives', 0 );
 
 /**
  * Keep thin or duplicate views out of the index: search results, date
- * archives, attachment pages, not-found pages, and term archives that have
- * nothing in them yet. Links on those pages are still followed.
+ * archives, attachment pages, not-found pages, and term or post type
+ * archives that have nothing in them yet. Links on those pages are still
+ * followed.
  *
  * @param array<string, bool|string> $robots Robots directives.
  * @return array<string, bool|string>
@@ -886,7 +1245,7 @@ add_action( 'template_redirect', 'bwfd_seo_redirect_author_archives', 0 );
 function bwfd_seo_robots( array $robots ): array {
 	global $wp_query;
 
-	$empty_archive = ( is_category() || is_tag() || is_tax() ) && 0 === (int) $wp_query->post_count;
+	$empty_archive = ( is_category() || is_tag() || is_tax() || is_post_type_archive() ) && 0 === (int) $wp_query->post_count;
 
 	if ( is_search() || is_date() || is_author() || is_attachment() || is_404() || $empty_archive ) {
 		$robots['noindex'] = true;
@@ -907,7 +1266,7 @@ add_filter( 'wp_robots', 'bwfd_seo_robots' );
  * meta description comes from the Excerpt panel, see bwfd_seo_description().
  */
 function bwfd_seo_register_title_meta(): void {
-	foreach ( array( 'page', 'post' ) as $post_type ) {
+	foreach ( bwfd_seo_post_types() as $post_type ) {
 		register_post_meta(
 			$post_type,
 			'bwfd_seo_title',
@@ -947,7 +1306,7 @@ add_filter( 'document_title_parts', 'bwfd_seo_document_title' );
  */
 function bwfd_seo_editor_assets(): void {
 	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-	if ( ! $screen || ! in_array( (string) $screen->post_type, array( 'page', 'post' ), true ) ) {
+	if ( ! $screen || ! in_array( (string) $screen->post_type, bwfd_seo_post_types(), true ) ) {
 		return;
 	}
 	$asset_file = BWFD_DIR . '/build/admin/seo-panel.asset.php';
@@ -973,8 +1332,59 @@ function bwfd_seo_editor_assets(): void {
 		) . ';',
 		'before'
 	);
+
+	// The "Before you publish" checklist, on the article types only.
+	$rules = bwfd_seo_checklist_rules();
+	$file  = BWFD_DIR . '/build/admin/seo-checklist.asset.php';
+	if ( isset( $rules[ (string) $screen->post_type ] ) && file_exists( $file ) ) {
+		$checklist = require $file;
+		wp_enqueue_script( 'bwfd-seo-checklist', BWFD_URI . '/build/admin/seo-checklist.js', $checklist['dependencies'], $checklist['version'], true );
+		if ( file_exists( BWFD_DIR . '/build/admin/seo-checklist.css' ) ) {
+			wp_enqueue_style( 'bwfd-seo-checklist', BWFD_URI . '/build/admin/seo-checklist.css', array( 'wp-components' ), $checklist['version'] );
+		}
+		wp_add_inline_script(
+			'bwfd-seo-checklist',
+			'window.bwfdSeoChecklist = ' . wp_json_encode(
+				array(
+					'siteName'  => get_bloginfo( 'name' ),
+					'separator' => apply_filters( 'document_title_separator', '-' ),
+					'homeUrl'   => home_url( '/' ),
+					'rules'     => $rules,
+				)
+			) . ';',
+			'before'
+		);
+	}
 }
 add_action( 'enqueue_block_editor_assets', 'bwfd_seo_editor_assets' );
+
+/**
+ * Per-type rules for the editor's "Before you publish" checklist
+ * (src/admin/seo-checklist.js). Filter `bwfd_seo_checklist_rules` to tune
+ * the thresholds or add a type; a type with no entry gets no checklist.
+ *
+ * @return array<string, array<string, mixed>>
+ */
+function bwfd_seo_checklist_rules(): array {
+	return (array) apply_filters(
+		'bwfd_seo_checklist_rules',
+		array(
+			'bwfd_news'    => array(
+				'minWords'      => 150,
+				'imageRequired' => false,
+				'scripture'     => false,
+				'headingsFrom'  => 400,
+			),
+			'bwfd_insight' => array(
+				'minWords'      => 300,
+				'imageRequired' => false,
+				'scripture'     => true,
+				'topics'        => true,
+				'headingsFrom'  => 400,
+			),
+		)
+	);
+}
 
 /* -------------------------------------------------------------------------
  * Response headers

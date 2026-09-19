@@ -8,10 +8,12 @@
 		margin-right: auto;
 	}
 
+	// The iframe is inserted at the plugin's own width; max-width keeps it
+	// inside the block between the resize reloads in view.js.
 	iframe {
 		display: block;
-		width: 100%;
 		max-width: 100%;
+		margin: 0 auto;
 		border: 0;
 		border-radius: var(--wp--custom--radius--small, 3px);
 	}

@@ -6,7 +6,7 @@
  * Block Types: core/post-content
  * Post Types: page
  * Viewport Width: 1280
- * Description: Bulk order band, purchase cards, media kit downloads and trade information.
+ * Description: Bulk order band, purchase cards, media kit downloads, latest news and trade information.
  *
  * @package bwfd
  */
@@ -104,6 +104,8 @@ declare( strict_types=1 );
 	<!-- /wp:bwfd/card-grid -->
 </div>
 <!-- /wp:group -->
+
+<!-- wp:pattern {"slug":"bwfd/news-latest"} /-->
 
 <!-- wp:group {"className":"bwfd-section bwfd-section--last","style":{"spacing":{"padding":{"top":"60px"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group bwfd-section bwfd-section--last" style="padding-top:60px">

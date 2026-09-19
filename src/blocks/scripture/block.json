@@ -1,0 +1,35 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "bwfd/scripture",
+	"version": "1.0.0",
+	"title": "Scripture",
+	"category": "bwfd",
+	"icon": "book-alt",
+	"description": "A Bible verse with its reference: serif italic quotation, apricot rule and quote mark, reference linked to the passage online.",
+	"keywords": [ "bible", "verse", "scripture", "quote", "passage" ],
+	"textdomain": "bwfd",
+	"attributes": {
+		"text": { "type": "string", "default": "" },
+		"reference": { "type": "string", "default": "" },
+		"translation": { "type": "string", "default": "" },
+		"linkReference": { "type": "boolean", "default": true }
+	},
+	"supports": {
+		"anchor": true,
+		"html": false,
+		"align": false,
+		"spacing": { "margin": [ "top", "bottom" ] }
+	},
+	"example": {
+		"attributes": {
+			"text": "As a father has compassion on his children, so the Lord has compassion on those who fear him.",
+			"reference": "Psalm 103:13",
+			"translation": "NIV"
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}

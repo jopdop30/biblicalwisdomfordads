@@ -1,0 +1,63 @@
+<!-- wp:template-part {"slug":"header","tagName":"header","area":"header"} /-->
+
+<!-- wp:group {"tagName":"main","align":"full","className":"bwfd-sheet","style":{"spacing":{"padding":{"top":"0","bottom":"0"}}},"layout":{"type":"constrained"}} -->
+<main class="wp-block-group alignfull bwfd-sheet" style="padding-top:0;padding-bottom:0">
+	<!-- wp:group {"className":"bwfd-archive-body","style":{"spacing":{"padding":{"top":"50px","bottom":"90px"},"blockGap":"0"}},"layout":{"type":"constrained"}} -->
+	<div class="wp-block-group bwfd-archive-body" style="padding-top:50px;padding-bottom:90px">
+		<!-- wp:paragraph {"className":"bwfd-backlink"} -->
+		<p class="bwfd-backlink"><a href="/insights/">&larr; All insights</a></p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:group {"className":"bwfd-archive-head","style":{"spacing":{"blockGap":"12px"}},"layout":{"type":"default"}} -->
+		<div class="wp-block-group bwfd-archive-head">
+			<!-- wp:paragraph {"className":"bwfd-kicker","textColor":"blue"} -->
+			<p class="bwfd-kicker has-blue-color has-text-color">Insights on</p>
+			<!-- /wp:paragraph -->
+			<!-- wp:query-title {"type":"archive","showPrefix":false,"level":1} /-->
+			<!-- wp:group {"className":"bwfd-rule","layout":{"type":"default"}} -->
+			<div class="wp-block-group bwfd-rule"></div>
+			<!-- /wp:group -->
+			<!-- wp:term-description {"className":"bwfd-archive-head__intro","fontSize":"lg"} /-->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:group {"className":"bwfd-topics","style":{"spacing":{"margin":{"top":"28px"}}},"layout":{"type":"default"}} -->
+		<div class="wp-block-group bwfd-topics" style="margin-top:28px">
+			<!-- wp:tag-cloud {"taxonomy":"bwfd_topic","showTagCounts":false,"smallestFontSize":"13.5px","largestFontSize":"13.5px","className":"bwfd-pills"} /-->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:query {"queryId":7,"query":{"perPage":12,"pages":0,"offset":0,"postType":"bwfd_insight","order":"desc","orderBy":"date","inherit":true},"className":"bwfd-post-cards bwfd-insight-grid","style":{"spacing":{"margin":{"top":"40px"}}}} -->
+		<div class="wp-block-query bwfd-post-cards bwfd-insight-grid" style="margin-top:40px">
+			<!-- wp:post-template {"style":{"spacing":{"blockGap":"22px"}},"layout":{"type":"grid","minimumColumnWidth":"18rem"}} -->
+				<!-- wp:bwfd/card {"style":{"spacing":{"blockGap":"12px"}}} -->
+				<div class="wp-block-bwfd-card bwfd-card bwfd-card--accent-blue bwfd-card--marble bwfd-card--pad-regular" style="gap:12px">
+					<!-- wp:post-date {"className":"bwfd-card__date"} /-->
+					<!-- wp:post-title {"isLink":true,"level":2,"className":"bwfd-card__title"} /-->
+					<!-- wp:post-excerpt {"excerptLength":30,"className":"bwfd-card__excerpt"} /-->
+					<!-- wp:read-more {"content":"Read more","className":"bwfd-read-more"} /-->
+				</div>
+				<!-- /wp:bwfd/card -->
+			<!-- /wp:post-template -->
+
+			<!-- wp:query-pagination {"className":"bwfd-pagination","layout":{"type":"flex","flexWrap":"wrap"}} -->
+				<!-- wp:query-pagination-previous {"label":"Previous"} /-->
+				<!-- wp:query-pagination-numbers /-->
+				<!-- wp:query-pagination-next {"label":"Next"} /-->
+			<!-- /wp:query-pagination -->
+
+			<!-- wp:query-no-results -->
+				<!-- wp:paragraph {"className":"bwfd-empty-note"} -->
+				<p class="bwfd-empty-note">Nothing on this topic yet. Browse <a href="/insights/">all insights</a>.</p>
+				<!-- /wp:paragraph -->
+			<!-- /wp:query-no-results -->
+		</div>
+		<!-- /wp:query -->
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:bwfd/book-band {"primary":"buy","secondaryLabel":"About the book","coverWidth":144,"style":{"spacing":{"padding":{"top":"52px","bottom":"52px"}}}} /-->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer","area":"footer"} /-->

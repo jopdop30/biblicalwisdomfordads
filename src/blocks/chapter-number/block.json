@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "bwfd/chapter-number",
+	"version": "1.0.0",
+	"title": "Chapter number",
+	"category": "bwfd",
+	"icon": "book-alt",
+	"description": "The chapter's number, from its Order field: “Chapter 22”, “22” or “Chapter 22 of 40”. For chapter templates and lists.",
+	"keywords": [ "chapter", "number", "book" ],
+	"textdomain": "bwfd",
+	"usesContext": [ "postId", "postType" ],
+	"attributes": {
+		"format": { "type": "string", "default": "label" }
+	},
+	"supports": {
+		"html": false,
+		"color": { "text": true, "background": false, "link": false },
+		"typography": { "fontSize": true, "lineHeight": false },
+		"spacing": { "margin": true }
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}

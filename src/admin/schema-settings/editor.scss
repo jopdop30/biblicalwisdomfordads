@@ -49,6 +49,16 @@
 	.components-notice {
 		margin: 0 0 8px;
 	}
+
+	&__checks {
+		margin-bottom: 16px;
+
+		ul {
+			margin: 0;
+			padding-left: 18px;
+			list-style: disc;
+		}
+	}
 }
 
 .bwfd-schema-grid {

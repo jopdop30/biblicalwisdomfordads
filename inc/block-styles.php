@@ -28,6 +28,9 @@ function bwfd_register_block_styles(): void {
 			'bwfd-facebook'  => __( 'Facebook', 'bwfd' ),
 			'bwfd-instagram' => __( 'Instagram', 'bwfd' ),
 		),
+		'core/list'   => array(
+			'bwfd-numbered-list' => __( 'Numbered reasons', 'bwfd' ),
+		),
 		'core/table'  => array(
 			'bwfd-key-info' => __( 'Key information', 'bwfd' ),
 			'bwfd-pricing'  => __( 'Pricing', 'bwfd' ),

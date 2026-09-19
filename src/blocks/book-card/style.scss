@@ -1,0 +1,95 @@
+/* Book card: sticky aside beside an article (News item / Insight design). */
+.bwfd-book-card {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 14px;
+	box-sizing: border-box;
+	padding: 28px;
+	border-radius: var(--wp--custom--radius--small, 3px);
+	border-top: 4px solid var(--wp--preset--color--blue);
+	background: var(--wp--preset--color--white) var(--bwfd-tex-marble) center / cover no-repeat;
+	box-shadow: var(--wp--preset--shadow--card, 0 6px 20px rgba(0, 56, 91, 0.12));
+	color: var(--wp--preset--color--ink);
+
+	&--apricot {
+		border-top-color: var(--wp--preset--color--apricot);
+	}
+
+	&--sticky {
+		position: sticky;
+		top: 24px;
+	}
+
+	> * {
+		margin: 0;
+	}
+
+	&__cover {
+		display: block;
+		width: 118px;
+		height: auto;
+		border-radius: 2px;
+		box-shadow: 0 10px 26px rgba(0, 56, 91, 0.26);
+	}
+
+	&__title {
+		font-family: var(--wp--preset--font-family--serif);
+		font-weight: 600;
+		font-size: 20px;
+		line-height: 1.25;
+		color: var(--wp--preset--color--navy);
+	}
+
+	&__text {
+		font-size: var(--wp--preset--font-size--base);
+		line-height: 1.55;
+		text-wrap: pretty;
+	}
+
+	// Doubled selector so the theme's global .wp-element-button rules do not
+	// repaint it navy.
+	&.bwfd-book-card &__button,
+	&__button {
+		display: flex;
+		align-self: stretch;
+		align-items: center;
+		justify-content: center;
+		padding: 14px 22px;
+		border-radius: var(--wp--custom--radius--small, 3px);
+		background: var(--wp--preset--color--apricot);
+		color: var(--wp--preset--color--navy);
+		font-family: var(--wp--preset--font-family--sans);
+		font-weight: 600;
+		font-size: var(--wp--preset--font-size--md);
+		line-height: 1.2;
+		text-decoration: none;
+		transition: background-color 160ms ease;
+
+		&:hover,
+		&:focus {
+			background: var(--wp--preset--color--gold);
+			color: var(--wp--preset--color--navy);
+		}
+	}
+
+	&.bwfd-book-card &__button:hover,
+	&.bwfd-book-card &__button:focus {
+		background: var(--wp--preset--color--gold);
+		color: var(--wp--preset--color--navy);
+	}
+
+	&__link {
+		font-weight: 600;
+		font-size: var(--wp--preset--font-size--base);
+		color: var(--wp--preset--color--navy);
+		text-decoration: none;
+		border-bottom: 2px solid var(--wp--preset--color--apricot);
+		padding-bottom: 2px;
+
+		&:hover,
+		&:focus {
+			color: var(--wp--preset--color--blue);
+		}
+	}
+}

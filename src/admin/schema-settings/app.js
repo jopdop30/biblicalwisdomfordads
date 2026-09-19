@@ -93,6 +93,23 @@ export default function App() {
 		otherBooks: get( [ 'pages', 'other_books' ], 0 ),
 	};
 
+	// Groups Google reports as "missing field" when half filled. Mirrors
+	// the Search Console "Improve item appearance" checks.
+	const offer = data.offer ?? {};
+	const checks = [];
+	if ( offer.return_url && ! ( offer.return_days > 0 ) ) {
+		checks.push( __( 'Return window is blank. Google will report a missing returnPolicyCategory on the return policy.', 'bwfd' ) );
+	}
+	if ( ( offer.return_url || offer.return_days > 0 ) && ! offer.return_fees ) {
+		checks.push( __( 'Return postage is not stated. Google will report a missing returnFees on the return policy.', 'bwfd' ) );
+	}
+	if ( offer.return_fees === 'fixed' && ! offer.return_postage ) {
+		checks.push( __( 'A fixed return fee needs an amount.', 'bwfd' ) );
+	}
+	if ( ( offer.handling_max > 0 ) !== ( offer.transit_max > 0 ) ) {
+		checks.push( __( 'Delivery time needs both handling and transit “To” values. Until both are set it is left out of the structured data.', 'bwfd' ) );
+	}
+
 	const saveButton = (
 		<Button variant="primary" onClick={ save } isBusy={ isSaving } disabled={ isSaving || ! hasEdits } __next40pxDefaultSize>
 			{ isSaving ? __( 'Saving…', 'bwfd' ) : __( 'Save', 'bwfd' ) }
@@ -148,6 +165,7 @@ export default function App() {
 						help={ __( 'Two-letter code, for example en.', 'bwfd' ) }
 					/>
 					<Number label={ __( 'Pages', 'bwfd' ) } value={ get( [ 'book', 'pages' ], 0 ) } onChange={ set( [ 'book', 'pages' ] ) } />
+					<Number label={ __( 'Chapters', 'bwfd' ) } value={ get( [ 'book', 'chapters' ], 0 ) } onChange={ set( [ 'book', 'chapters' ] ) } help={ __( 'Used in “Chapter 22 of 40” and the chapter pages’ call to action.', 'bwfd' ) } />
 					<Text
 						type="date"
 						label={ __( 'Release date', 'bwfd' ) }
@@ -212,6 +230,15 @@ export default function App() {
 				title={ __( 'Shipping and returns', 'bwfd' ) }
 				description={ __( 'Delivery times and the return policy Google shows with merchant listings. The return policy is also attached to the publisher as the standard policy for the site. Leave a field blank to leave it out.', 'bwfd' ) }
 			>
+				{ checks.length > 0 && (
+					<Notice status="warning" isDismissible={ false } className="bwfd-schema__checks">
+						<ul>
+							{ checks.map( ( text, index ) => (
+								<li key={ index }>{ text }</li>
+							) ) }
+						</ul>
+					</Notice>
+				) }
 				<Grid>
 					<DayRange
 						label={ __( 'Handling time (days)', 'bwfd' ) }
@@ -219,7 +246,7 @@ export default function App() {
 						to={ get( [ 'offer', 'handling_max' ], 0 ) }
 						onChangeFrom={ set( [ 'offer', 'handling_min' ] ) }
 						onChangeTo={ set( [ 'offer', 'handling_max' ] ) }
-						help={ __( 'From order to dispatch. Leave “To” blank to leave it out.', 'bwfd' ) }
+						help={ __( 'From order to dispatch. Both handling and transit are needed for Google to use them.', 'bwfd' ) }
 					/>
 					<DayRange
 						label={ __( 'Transit time (days)', 'bwfd' ) }
@@ -276,6 +303,7 @@ export default function App() {
 			>
 				<Grid>
 					<Text label={ __( 'Name', 'bwfd' ) } value={ get( [ 'publisher', 'name' ] ) } onChange={ set( [ 'publisher', 'name' ] ) } />
+					<Text label={ __( 'City', 'bwfd' ) } value={ get( [ 'publisher', 'locality' ], '' ) } onChange={ set( [ 'publisher', 'locality' ] ) } help={ __( 'Opens each news item’s dateline: “Brisbane, 19 September 2026.” A news item can set its own.', 'bwfd' ) } />
 					<Full>
 						<UrlList
 							label={ __( 'Social profiles', 'bwfd' ) }
@@ -330,6 +358,22 @@ export default function App() {
 			</Section>
 
 			<Section
+				title={ __( 'News and Insights archives', 'bwfd' ) }
+				description={ __( 'The title tag and search description of the two archive pages. Blank falls back to the section name and its standard description.', 'bwfd' ) }
+			>
+				<Grid>
+					<Text label={ __( 'News archive title', 'bwfd' ) } value={ get( [ 'archives', 'news', 'title' ], '' ) } onChange={ set( [ 'archives', 'news', 'title' ] ) } help={ __( 'The whole title tag. Aim for under 60 characters.', 'bwfd' ) } />
+					<Text label={ __( 'Insights archive title', 'bwfd' ) } value={ get( [ 'archives', 'insights', 'title' ], '' ) } onChange={ set( [ 'archives', 'insights', 'title' ] ) } help={ __( 'The whole title tag. Aim for under 60 characters.', 'bwfd' ) } />
+					<LongText label={ __( 'News archive description', 'bwfd' ) } value={ get( [ 'archives', 'news', 'description' ], '' ) } onChange={ set( [ 'archives', 'news', 'description' ] ) } rows={ 3 } help={ __( 'One or two sentences, up to about 158 characters.', 'bwfd' ) } />
+					<LongText label={ __( 'Insights archive description', 'bwfd' ) } value={ get( [ 'archives', 'insights', 'description' ], '' ) } onChange={ set( [ 'archives', 'insights', 'description' ] ) } rows={ 3 } help={ __( 'One or two sentences, up to about 158 characters.', 'bwfd' ) } />
+					<Text label={ __( 'Chapters index title', 'bwfd' ) } value={ get( [ 'archives', 'chapters', 'title' ], '' ) } onChange={ set( [ 'archives', 'chapters', 'title' ] ) } help={ __( 'The whole title tag of /chapters/.', 'bwfd' ) } />
+					<LongText label={ __( 'Chapters index description', 'bwfd' ) } value={ get( [ 'archives', 'chapters', 'description' ], '' ) } onChange={ set( [ 'archives', 'chapters', 'description' ] ) } rows={ 3 } />
+					<Text label={ __( 'Topic page title', 'bwfd' ) } value={ get( [ 'archives', 'topic', 'title' ], '' ) } onChange={ set( [ 'archives', 'topic', 'title' ] ) } help={ __( 'Write {topic} where the topic name goes; the site name is added after it.', 'bwfd' ) } />
+					<LongText label={ __( 'Topic page description', 'bwfd' ) } value={ get( [ 'archives', 'topic', 'description' ], '' ) } onChange={ set( [ 'archives', 'topic', 'description' ] ) } rows={ 3 } help={ __( 'Used when the topic has no description of its own. {topic}, {author} and {book} are filled in.', 'bwfd' ) } />
+				</Grid>
+			</Section>
+
+			<Section
 				title={ __( 'Pages', 'bwfd' ) }
 				description={ __( 'Which pages carry which structured data. The About the book and Purchase pages also supply the Book and Offer URLs.', 'bwfd' ) }
 			>
@@ -355,7 +399,7 @@ export default function App() {
 				title={ __( 'Preview', 'bwfd' ) }
 				description={ __( 'The JSON-LD a page sends, so you can check a change after saving.', 'bwfd' ) }
 			>
-				<Preview pages={ pages } initialPageId={ pageIds.aboutBook } savedAt={ savedAt } />
+				<Preview pages={ pages } extras={ config.previews ?? [] } initialPageId={ pageIds.aboutBook } savedAt={ savedAt } />
 			</Section>
 
 			<div className="bwfd-schema__footer">{ saveButton }</div>

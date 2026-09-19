@@ -85,6 +85,7 @@ function bwfd_schema_defaults(): array {
 				'audience'       => 'Christian fathers',
 				'language'       => 'en',
 				'pages'          => 142,
+				'chapters'       => 40,
 				'release_date'   => '2026-10-27',
 				'image'          => bwfd_schema_cover_image(),
 				'editions'       => array(
@@ -128,8 +129,9 @@ function bwfd_schema_defaults(): array {
 				'refund_type'        => 'full_or_exchange',
 			),
 			'publisher' => array(
-				'name'    => 'Running Forever Press',
-				'same_as' => array(
+				'name'     => 'Running Forever Press',
+				'locality' => 'Brisbane',
+				'same_as'  => array(
 					'https://www.facebook.com/biblicalwisdomfordads',
 					'https://www.instagram.com/biblicalwisdomfordads',
 				),
@@ -158,6 +160,24 @@ function bwfd_schema_defaults(): array {
 						'url'   => 'https://amzn.to/3VhFBf1',
 						'image' => bwfd_schema_theme_image( 'heart-elder-front.webp', 700, 1067 ),
 					),
+				),
+			),
+			'archives'  => array(
+				'news'     => array(
+					'title'       => 'News and press releases about Biblical Wisdom for Dads',
+					'description' => 'Announcements and press releases about Biblical Wisdom for Dads, the book by Stephen Parker, from Running Forever Press.',
+				),
+				'insights' => array(
+					'title'       => 'Insights: short reflections on fatherhood from Stephen Parker',
+					'description' => 'Short reflections from Stephen Parker, author of Biblical Wisdom for Dads, on fatherhood and the wisdom found in Scripture.',
+				),
+				'chapters' => array(
+					'title'       => 'Biblical Wisdom for Dads, chapter by chapter',
+					'description' => 'What each of the 40 short chapters of Biblical Wisdom for Dads covers, with the insights that draw on it.',
+				),
+				'topic'    => array(
+					'title'       => 'Insights on {topic}',
+					'description' => 'Short reflections from {author} on {topic}: what Scripture shows dads about it, drawn from {book}.',
 				),
 			),
 			'pages'     => array(
@@ -215,6 +235,7 @@ function bwfd_schema_spec(): array {
 					'audience'       => $text( 'Audience' ),
 					'language'       => $text( 'Language' ),
 					'pages'          => $int( 'Pages' ),
+					'chapters'       => $int( 'Chapters' ),
 					'release_date'   => $text( 'Release date' ),
 					'image'          => $image( 'Cover' ),
 					'editions'       => array(
@@ -275,8 +296,9 @@ function bwfd_schema_spec(): array {
 			'publisher' => array(
 				'type'       => 'object',
 				'properties' => array(
-					'name'    => $text( 'Name' ),
-					'same_as' => $urls( 'Profiles' ),
+					'name'     => $text( 'Name' ),
+					'locality' => $text( 'City (news datelines)' ),
+					'same_as'  => $urls( 'Profiles' ),
 				),
 			),
 			'author'    => array(
@@ -300,6 +322,40 @@ function bwfd_schema_spec(): array {
 								'url'   => $text( 'Link', 'url' ),
 								'image' => $image( 'Cover' ),
 							),
+						),
+					),
+				),
+			),
+			'archives'  => array(
+				'type'       => 'object',
+				'title'      => 'Archives',
+				'properties' => array(
+					'news'     => array(
+						'type'       => 'object',
+						'properties' => array(
+							'title'       => $text( 'Title tag' ),
+							'description' => $text( 'Search description', 'multiline' ),
+						),
+					),
+					'insights' => array(
+						'type'       => 'object',
+						'properties' => array(
+							'title'       => $text( 'Title tag' ),
+							'description' => $text( 'Search description', 'multiline' ),
+						),
+					),
+					'chapters' => array(
+						'type'       => 'object',
+						'properties' => array(
+							'title'       => $text( 'Title tag' ),
+							'description' => $text( 'Search description', 'multiline' ),
+						),
+					),
+					'topic'    => array(
+						'type'       => 'object',
+						'properties' => array(
+							'title'       => $text( 'Title tag pattern' ),
+							'description' => $text( 'Search description pattern', 'multiline' ),
 						),
 					),
 				),
@@ -503,9 +559,44 @@ function bwfd_schema_admin_assets( string $hook ): void {
 			array(
 				'defaults' => bwfd_schema_defaults(),
 				'homeUrl'  => home_url( '/' ),
+				'previews' => bwfd_schema_preview_targets(),
 			)
 		) . ';',
 		'before'
 	);
 }
 add_action( 'admin_enqueue_scripts', 'bwfd_schema_admin_assets' );
+
+/**
+ * Extra targets for the preview panel besides the pages: each News and
+ * Insights archive and its three most recent items.
+ *
+ * @return array<int, array{title:string,link:string}>
+ */
+function bwfd_schema_preview_targets(): array {
+	$targets = array();
+	foreach ( bwfd_content_types() as $post_type => $type ) {
+		$archive = get_post_type_archive_link( $post_type );
+		if ( is_string( $archive ) ) {
+			$targets[] = array(
+				/* translators: %s: content type name, e.g. News. */
+				'title' => sprintf( __( '%s (archive)', 'bwfd' ), $type['plural'] ),
+				'link'  => $archive,
+			);
+		}
+		$recent = get_posts(
+			array(
+				'post_type'      => $post_type,
+				'post_status'    => 'publish',
+				'posts_per_page' => 3,
+			)
+		);
+		foreach ( $recent as $item ) {
+			$targets[] = array(
+				'title' => $type['plural'] . ': ' . html_entity_decode( get_the_title( $item ), ENT_QUOTES, 'UTF-8' ),
+				'link'  => (string) get_permalink( $item ),
+			);
+		}
+	}
+	return $targets;
+}
