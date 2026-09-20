@@ -1286,6 +1286,18 @@ img {
 		width: 96px;
 	}
 
+	/* Two buttons side by side are wider than a phone, and the button row
+	   could not shrink, so the whole page grew past the viewport. Stack
+	   them full width instead, like the core button rows further down. */
+	.bwfd-book-band__buttons {
+		flex: 1 1 100%;
+		min-width: 0;
+	}
+
+	.bwfd-book-band .bwfd-book-band__button {
+		flex: 1 1 auto;
+	}
+
 	.bwfd-news-rows__image {
 		flex-basis: 100%;
 		min-width: 0;
