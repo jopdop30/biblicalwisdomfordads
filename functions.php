@@ -24,6 +24,7 @@ require_once BWFD_DIR . '/inc/chapters.php';
 require_once BWFD_DIR . '/inc/schema-settings.php';
 require_once BWFD_DIR . '/inc/seo.php';
 require_once BWFD_DIR . '/inc/performance.php';
+require_once BWFD_DIR . '/inc/analytics.php';
 
 /**
  * Theme supports and editor assets.

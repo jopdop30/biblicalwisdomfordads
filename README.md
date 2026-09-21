@@ -220,6 +220,23 @@ The data is one option, `bwfd_schema`, exposed on the REST settings endpoint wit
 
 Framed image blocks output `width`/`height` so the browser reserves space and can lazy-load below-the-fold images.
 
+## Analytics events
+
+Site Kit prints the Google tag. `inc/analytics.php` adds `assets/js/analytics-events.js` (plain JavaScript, no build step), which sends the events below through the global `gtag()` and does nothing when that function is absent. Events are worked out from the markup the editor produces, so a new Square link, retailer or social button needs no code: the purchase option and price are read from the card heading the button sits in, the retailer and network from the link's domain.
+
+| Event | Fires on | Own parameters |
+| --- | --- | --- |
+| `begin_checkout` | A `square.link` or `squareup.com` link | `purchase_option` (`direct_delivery`, `local_pickup`, `bulk_20_plus`), `currency`, `value`, `items` |
+| `retailer_click` | Amazon, Koorong, Booktopia, Running Forever Press | `retailer`, `book_title` |
+| `contact_click` | A `mailto:` or `tel:` link (including Cloudflare's protected form) | |
+| `rsvp_click` | A TryBooking link | |
+| `social_click` | Facebook, Instagram, LinkedIn, YouTube, Goodreads | `social_network` |
+| `cta_click` | An internal link styled as a button (`wp-element-button`) | `link_url` |
+| `panel_open` | A Reveal panel opened | `panel_label` |
+| `content_read` | The end of a chapter, insight or news article scrolls into view | `content_type`, `chapter_number` |
+
+Every link event also carries `link_text`, `link_context` (the nearest card or section heading, or `Header`/`Footer`) and `link_location` (`hero`, `card`, `book_card`, `book_band`, `article`, `header`, `footer`, `content`). Register the parameters you want to report on as event-scoped custom dimensions in Analytics (Admin → Custom definitions), and mark `begin_checkout`, `contact_click`, `rsvp_click` and `retailer_click` as key events. Outbound clicks in general, file downloads, scroll depth and site search come from GA4 enhanced measurement, not from this script. Filter `bwfd_analytics_events` to `false` to leave the script out.
+
 ## Fonts
 
 Bitter and Source Sans 3 are bundled as variable woff2 files (SIL Open Font License) and declared in `theme.json`, so no requests go to Google Fonts. The files are subset with `pyftsubset` to ASCII, Latin-1, Œ/œ, typographic punctuation (dashes, curly quotes, ellipsis, bullets), the euro, trade mark, minus and the fi/fl ligatures, which is about 15% smaller than Google's latin subset. Rename the files when replacing them: they are cached for a year.
