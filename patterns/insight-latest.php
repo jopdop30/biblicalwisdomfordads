@@ -25,7 +25,7 @@ declare( strict_types=1 );
 	<!-- wp:buttons {"style":{"spacing":{"margin":{"top":"26px"}}}} -->
 	<div class="wp-block-buttons" style="margin-top:26px">
 		<!-- wp:button {"className":"is-style-bwfd-text-link"} -->
-		<div class="wp-block-button is-style-bwfd-text-link"><a class="wp-block-button__link wp-element-button" href="<?php echo bwfd_url( '/insights/' ); ?>"><?php esc_html_e( 'All insights', 'bwfd' ); ?></a></div>
+		<div class="wp-block-button is-style-bwfd-text-link"><a class="wp-block-button__link wp-element-button" href="/insights/"><?php esc_html_e( 'All insights', 'bwfd' ); ?></a></div>
 		<!-- /wp:button -->
 	</div>
 	<!-- /wp:buttons -->
